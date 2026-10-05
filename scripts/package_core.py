@@ -27,7 +27,7 @@ paths = set(modules) | {
     "scripts/check_core_browser.cjs", "scripts/replay_core_downloads.R",
     "validation/core_check_results.json", "validation/core_browser_results.json",
     "validation/core_replay_results.json", "validation/core_portable_results.json",
-    "validation/core_development_status.json",
+    "validation/core_development_status.json", "validation/core_github_sync.json",
 }
 files = {name: (root / name).read_bytes() for name in sorted(paths)}
 files["app.R"] = (root / "app_core.R").read_bytes()
