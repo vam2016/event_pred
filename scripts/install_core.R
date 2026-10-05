@@ -8,7 +8,13 @@ if(length(missing)) {
     if(!nzchar(target))stop("请设置可写的 R_LIBS_USER 目录。")
     dir.create(target,recursive=TRUE,showWarnings=FALSE);.libPaths(c(target,.libPaths()))
   }
-  install.packages(missing,repos="https://cloud.r-project.org",lib=target)
+  repos <- getOption("repos")
+  if(!length(repos) || any(repos == "@CRAN@")) repos <- c(CRAN="https://cloud.r-project.org")
+  mirror <- Sys.getenv("CORE_CRAN_REPO", unset="")
+  if(nzchar(mirror)) repos <- c(CRAN=mirror)
+  cores <- parallel::detectCores(logical=FALSE)
+  jobs <- if(is.na(cores)) 1L else max(1L,min(4L,cores))
+  install.packages(missing,repos=repos,lib=target,Ncpus=jobs)
 }
 remaining <- packages[!vapply(packages,requireNamespace,logical(1),quietly=TRUE)]
 if(length(remaining))stop(paste("未安装核心依赖：",paste(remaining,collapse=", ")))
