@@ -43,3 +43,9 @@ ADTTE 检查覆盖日期加项仅校验 AVAL 而不增加连续暴露、日/周/
 目标部署环境尚未指定；当前无 Docker 运行环境，Dockerfile 未构建，依赖尚未锁定。正式 v1.0.0 标记需在目标环境启动、资源限制与核心合成示例检查通过后创建。原 v0.19 的 3838 预览未替换。
 
 GitHub 核心源码提交：`e18a814b7af94341ddc65f47f77371431c2cfda5`；完整扩展提交：`49dc94d408bbf1fddbcdf0585b519b3384e7eaeb`。分别回读核对 51 和 185 个源码/文档/记录文件的 Git blob 摘要，全部一致。同步详情见 `validation/core_github_sync.json`。
+
+## Linux CI 安装修复
+
+首次 GitHub Actions 安装因缺失 libuv 和 libcurl 头文件失败，未进入 R 检查；运行记录 `37339695766`。补入 Ubuntu 的 libuv1-dev、libcurl4-openssl-dev 与 pkg-config；安装脚本尊重运行环境配置的 CRAN 镜像，并并行安装缺失包。Docker 核心准备文件同步补入系统库，镜像构建仍未运行。该失败属于依赖准备，不计为方法/数值检查通过。
+
+修复后 GitHub Actions 运行 [37341056792](https://github.com/vam2016/event_pred/actions/runs/37341056792) 成功：系统依赖、R 包安装及核心 50 项断言全部通过。检查提交为 `d2fcc441536ddf21afb2596dd21df111c7724f80`；后续同步仅补充文档/状态记录，不改变已检查计算源码。Docker 构建和指定部署环境检查仍待完成。

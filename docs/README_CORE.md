@@ -18,3 +18,5 @@ main 分支及核心包的 `app.R` 对应完整源码中的 `app_core.R`。v0.35
 [核心工作手册](docs/CORE_HANDBOOK.md)详述模型、推导、数据与复现。公式运行时随包提供，页面可下载离线 HTML。实际检查范围、修复和环境见[核心验证报告](docs/CORE_VALIDATION.md)；[1.0 发布计划](docs/V1_0_RELEASE_PLAN.md)与[2.0 计划](docs/V2_0_DEVELOPMENT_PLAN.md)说明后续工作。
 
 Dockerfile 为部署准备文件，未构建；镜像 R 4.5.1 与本机检查 R 4.6.0 不同，目标环境需重新确认。安装脚本安装缺失依赖，尚未锁定版本。正式 v1.0.0 标记在目标环境启动、资源限制和核心示例检查完成后创建。
+
+Linux 从源码安装 R 依赖时需要 libuv、libcurl 开发头文件与 pkg-config；GitHub CI 和核心 Dockerfile 已列出相应系统包。安装脚本使用当前 R 的 repos 配置，CORE_CRAN_REPO 可覆盖镜像，缺失包采用最多 4 个并行安装进程。

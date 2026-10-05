@@ -5,17 +5,29 @@
   "core": {
     "branch": "main",
     "source_commit": "e18a814b7af94341ddc65f47f77371431c2cfda5",
-    "files_verified": 51
+    "files_verified": 51,
+    "ci_fix_commit": "d2fcc441536ddf21afb2596dd21df111c7724f80"
   },
   "development": {
     "branch": "development/v0.35",
     "source_commit": "49dc94d408bbf1fddbcdf0585b519b3384e7eaeb",
-    "files_verified": 185
+    "files_verified": 185,
+    "ci_fix_commit": "af0d7d0b9eab53527778d2c64291258c0f587f9c"
   },
   "public_shiny_deployment": false,
   "advanced_new_modules_validated": false,
   "core_ci": {
-    "run_id": 37339695766,
-    "status": "in_progress"
+    "run_id": 37341056792,
+    "status": "completed",
+    "first_attempt": {
+      "run_id": 37339695766,
+      "status": "failure",
+      "reason": "Missing libuv/curl development headers; R checks not executed"
+    },
+    "fix": "Install libuv1-dev libcurl4-openssl-dev pkg-config; respect R repos and parallelize missing packages",
+    "conclusion": "success",
+    "core_checks": 50,
+    "url": "https://github.com/vam2016/event_pred/actions/runs/37341056792",
+    "tested_commit": "d2fcc441536ddf21afb2596dd21df111c7724f80"
   }
 }
