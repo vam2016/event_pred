@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0-rc.1",
+  "date": "2026-10-05",
+  "status": "core_locally_validated_release_candidate",
+  "entry": "app_core.R",
+  "full_development_entry": "app.R",
+  "full_development_version": "0.35.0",
+  "historical_validated_version": "0.19.0",
+  "tasks": [
+    "count",
+    "target",
+    "design"
+  ],
+  "models": [
+    "exponential",
+    "weibull",
+    "pwe"
+  ],
+  "manuscript": "docs/CORE_HANDBOOK.md",
+  "future_plan": "docs/V2_0_DEVELOPMENT_PLAN.md",
+  "checks_run": true,
+  "release_ready": false,
+  "r_load": true,
+  "numerical_validation": true,
+  "ui_validation": true,
+  "formula_validation": true,
+  "export_replay": true,
+  "deployed": false,
+  "github_synced": false,
+  "verified_preview_changed": false,
+  "package_validation": true
+}

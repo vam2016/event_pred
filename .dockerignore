@@ -1,0 +1,13 @@
+# Only runtime sources enter the core image; local uploads and reports are excluded.
+**
+!app_core.R
+!R/
+!R/**
+!www/
+!www/style.css
+!www/handbook.css
+!www/core-mathjax.js
+!docs/
+!docs/CORE_HANDBOOK.md
+!scripts/
+!scripts/install_core.R
