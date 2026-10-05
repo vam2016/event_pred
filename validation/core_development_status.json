@@ -26,7 +26,12 @@
   "formula_validation": true,
   "export_replay": true,
   "deployed": false,
-  "github_synced": false,
+  "github_synced": true,
   "verified_preview_changed": false,
-  "package_validation": true
+  "package_validation": true,
+  "github_branches": {
+    "core": "main",
+    "development": "development/v0.35"
+  },
+  "github_sync_date": "2026-10-06"
 }
