@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0-rc.1",
+  "status": "passed",
+  "package_entry": "app.R",
+  "numerical_checks": 50,
+  "download_replay_checks": 7,
+  "home_tasks": 3,
+  "formula": {
+    "equations": 17,
+    "errors": 0
+  },
+  "jsErrors": []
+}

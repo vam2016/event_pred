@@ -1,0 +1,65 @@
+tied <- validate_data(data.frame(id=c("E1","E2","A1"),entry=c(0,0,50),time=c(100,100,50),obs_day=100,status=c("event","event","active")),100)
+for (id in c("weibull","lognormal","loglogistic")) check(fails(fit_model(tied,id)),paste(id,"nonconverged tied-event fit rejected"))
+tc <- complete_config(cfg); tc$cut <- 100; tc$horizon <- 200; tc$sims <- 50; tc$target <- 3; tc$future_n <- 0; tc$methods <- c("exponential","weibull"); tc$uncertainty <- "plugin"
+tr <- run_forecast(tied,tc)
+check("weibull" %in% names(tr$failures) && !"weibull" %in% names(tr$counts),"failed fit excluded with visible reason")
+tc$methods <- "weibull"; check(fails(run_forecast(tied,tc)),"all failed candidates abort forecast")
+wm <- parameter_model("weibull",list(median=365.25,shape=.1))
+mm <- parameter_model("mixture_weibull",list(median=365.25,shape=.1,median2=365.25,shape2=.1,mix=.5))
+long <- sample_conditional(mm,0,u=1e-4)
+check(is.finite(long) && long>1e12 && near(long,sample_conditional(wm,0,u=1e-4)),"mixture retains finite extreme-tail lifetime beyond old cap")
+mm2 <- parameter_model("mixture_weibull",list(median=365,shape=.15,median2=800,shape2=1.5,mix=.3))
+z <- c(.0001,.1,1,10,100)
+check(near(model_cumhaz(mm2,inverse_cumhaz(mm2,z)),z,1e-8),"log-time mixture inversion covers distinct components and extreme hazards")
+lc <- complete_config(cfg); lc$input_mode <- "parameters"; lc$cut <- 0; lc$horizon <- 3650; lc$sims <- 2000; lc$target <- 6; lc$future_n <- 10; lc$enroll_rate <- 100; lc$dropout_rate <- 0; lc$seed <- 819; lc$ensemble <- FALSE; lc$uncertainty <- "plugin"
+ld <- parameter_cohort(0,0,0,0,"fixed")
+lc$methods <- "weibull"; lw <- run_forecast(ld,lc,models_override=list(weibull=wm))
+lc$methods <- "mixture_weibull"; lm <- run_forecast(ld,lc,models_override=list(mixture_weibull=mm))
+check(lm$diagnostics$failed==0 && lm$diagnostics$simulations==2000,"long-tail mixture retains all 2000 trials")
+check(identical(lw$counts$weibull,lm$counts$mixture_weibull),"identical mixture components reproduce single Weibull count trajectories")
+bc4 <- complete_config(cfg); bc4$methods <- "exponential"; bc4$sims <- 50; bc4$ensemble <- FALSE; bc4$future_n <- 0
+plan4 <- data.frame(cut=c(270,365),future_n=c(115,50),enroll_rate=c(.5,.3))
+check(fails(backtest_forecast(d,bc4,270,540)),"backtest missing historical plan rejected")
+reported4 <- bc4; reported4$clock <- "reported"; reported4$lag <- 1000
+check(fails(backtest_forecast(d,reported4,270,540,plan=plan4[1,])),"reported-clock backtest cannot use occurrence truth")
+check(fails(backtest_forecast(d,bc4,c(270,365),540,plan=plan4[1,])),"one historical plan per cut required")
+bad4 <- plan4; bad4$future_n[1] <- 1.5
+check(fails(backtest_forecast(d,bc4,c(270,365),540,plan=bad4)),"fractional historical enrollment cap rejected")
+br4 <- backtest_forecast(d,bc4,c(270,365),540,plan=plan4[2:1,])
+check(identical(br4$plan$cut,c(270,365)) && identical(br4$summary$planned_future_n,c(115,50)),"historical plans aligned to cuts and replace present-day remaining count")
+bc4$future_n <- 200; bc4$enroll_rate <- 10
+br42 <- backtest_forecast(d,bc4,c(270,365),540,plan=plan4)
+check(identical(br4$curves,br42$curves),"historical forecast independent of current enrollment cap and rate")
+bank <- matrix(rep(c(0,1),150),ncol=1); ww <- c(a=.99,b=.01)
+se <- probability_mcse(list(a=bank,b=bank),1,ww,300)
+check(near(se,sqrt(.25/300+sum(ww^2)*.25/299)),"AIC mixture MCSE includes unbiased bank-variance estimate")
+check(near(probability_mcse(list(a=bank),1),sqrt(.25/300)),"single-model MCSE retains independent Bernoulli formula")
+set.seed(840); reps <- 20000; nbank <- 300
+pa <- rbinom(reps,nbank,.5)/nbank; pb <- rbinom(reps,nbank,.5)/nbank
+pm <- .99*pa+.01*pb; observed <- rbinom(reps,nbank,pm)/nbank
+estimate_var <- pm*(1-pm)/nbank+(.99^2*pa*(1-pa)+.01^2*pb*(1-pb))/(nbank-1)
+exact_var <- .25/nbank+(1-1/nbank)*sum(ww^2)*.25/nbank
+check(abs(var(observed)/exact_var-1)<.04 && abs(mean(estimate_var)/exact_var-1)<.02,"independent two-stage repeated experiment confirms MCSE variance")
+check(all(is.finite(r$curves$probability_mcse)) && all(r$summary$reached_mcse>=0),"curve and milestone MCSE outputs available")
+for (id in r$summary$method) check(near(tail(r$curves$probability_mcse[r$curves$method==id],1),r$summary$reached_mcse[r$summary$method==id]),paste(id,"milestone MCSE matches curve endpoint"))
+km4 <- fit_model(data.frame(time=c(1,2,3),event=c(1,1,0)),"km_tail",tail_rate=.1)
+t4 <- sample_conditional(km4,0,u=.8)
+check(near(t4,1) && 1-model_survival(km4,t4)>=.2 && 1-model_survival(km4,t4-1e-8)<=.2,"KM jump satisfies generalized inverse inequality")
+check(near(parse_unit_numbers(convert_unit_inputs(list(backtest_enroll_rates="15,30"),"months","days")$backtest_enroll_rates),c(15,30)/30.4375),"historical enrollment rate lists follow selected time unit")
+shiny::testServer(e$server, {
+  tmp <- tempfile(fileext=".csv"); write.csv(adtte_template(),tmp,row.names=FALSE)
+  f <- time_factor("months")
+  session$setInputs(time_unit="months", input_mode="adtte", paramcd="OS", offset="1", dropout_codes="2", date_encoding="iso", analysis_flag="",flag_value="Y",gap_mode="strict",process_uncertainty="fixed",enroll_mode="constant",
+    cut=540/f,target=100,horizon=730/f,methods=c("exponential","weibull"),cuts="3,6,12",tail_rate=.06,uncertainty="plugin",prior_shape=.5,prior_rate=2,ensemble=TRUE,future_n=0,enroll_rate=15,dropout_rate=.0075,multiplier=1,lag=0,clock="occurred",sims=50,seed=42,origin="2025-01-01",file=list(datapath=tmp,name="adtte.csv"),aval_unit="days",lab_model="weibull",age=8,lab_horizon=24,lab_multiplier=1)
+  session$setInputs(run=1)
+  check(is.null(run_error()),"Shiny monthly ADTTE forecast ready for historical plan")
+  session$setInputs(backtest_cuts=as.character(270/f),backtest_future_n="",backtest_enroll_rates="",run_backtest=1)
+  check(!is.null(backtest_error()) && is.null(backtest()),"Shiny requires historical plan before backtest")
+  session$setInputs(backtest_future_n="115",backtest_enroll_rates="15",run_backtest=2)
+  check(is.null(backtest_error()) && near(backtest()$plan$enroll_rate,15/f),"Shiny historical monthly plan reaches day-based engine")
+  check(nzchar(output$backtest_table) && nzchar(output$backtest_plot) && all(nzchar(output$mcse_note)),"historical table plot and MCSE explanation render")
+  session$setInputs(clock="reported",lag=1,run=2)
+  session$setInputs(run_backtest=3)
+  check(grepl("报告日期",backtest_error()),"Shiny rejects reported-clock backtest with explanation")
+  unlink(tmp)
+})

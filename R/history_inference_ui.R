@@ -1,0 +1,57 @@
+register_history_inference_help <- function() {
+  h<-get("parameter_help",envir=parent.frame())
+  h<-c(h,c(
+    hi_file="本入口需要真实的两组历史ADTTE快照长表，支持CSV/XPT/SAS7BDAT。除常规字段外需IASEQ与DCO；每次均保留全部已入组患者及既往事件/退出记录。模板仅用于说明结构。",
+    hi_endpoint="选择一个PARAMCD，如OS或PFS；需与原方案的事件目标一致。配合分析标志，每个IASEQ内每位USUBJID只能有一条记录，不混用多个终点。",
+    hi_origin="研究起点日期用于生成统一研究时间，建议用方案起点或首例入组日。不得晚于任何STARTDT；每次DCO为实际截点日期，不按患者随访年龄填写。",
+    hi_look="选择截至哪次原分析进行推断。必须提供原次序1至该次的连续完整快照；未来日期、组别和结局记录不进入本次计算。建议选最近已完成的原分析。",
+    hi_group_column="指定真实治疗组变量，如TRTP或TRTA。所选历史前缀每次需两组且非空；患者组别跨快照不能变更。原盲态合并数据不能用于本入口。",
+    hi_control="从所选前缀的两组中指定Control，另一组作为Treatment。正Z表示Treatment获益，HR为Treatment/Control；请按方案指定，不按观察结果选择方向。",
+    hi_unit="结果中的研究经过时间显示为日、周或月，默认月；月固定按30.4375日。文件AVAL单位分别指定，日期不变；CSV的DCO_DAY和个体时间始终以日记录。",
+    hi_target="填写原方案最终累计事件目标D*，正整数1–1000000。例如模板配合D*=80和0.25,0.5,0.75,1。各历史事件数需恰等于原计划取整目标，不填写剩余事件数。",
+    hi_timing="原计划2–5个信息比例，逗号分隔、递增、首个至少0.1、末个1。如0.25,0.5,0.75,1；需包含尚未执行的原最终分析，不能删去早期分析或重编号。",
+    hi_sided="沿用原方案单侧Treatment获益或双侧差异。单侧常用alpha=0.025，双侧常用0.05；平台不根据数据自动调整alpha，需同时填写原总alpha。",
+    hi_alpha="原组序贯设计全路径总alpha，0.0001–0.2，不是本次名义p阈值。区间水平单侧为1−2alpha，双侧为1−alpha；建议直接查方案或统计分析计划。",
+    hi_spending="填写原OBF型或Pocock型alpha消耗函数。边界使用事件取整后的信息比例重新构建；仅支持此两种原设计，不能把其他边界近似替换后称为原设计。",
+    hi_allocation="原随机化Treatment分配概率p，0.01–0.99。1:1填0.5，Treatment:Control=2:1填2/3。用于I=D*p*(1−p)及HR近似，不使用各快照实际人数比例替代。",
+    hi_futility="单侧设计选择原方案无无效界或非约束性Z无效界。Z模式按原规则实际执行停止；若已忽略该规则继续需另行处理。双侧仅无无效界；单侧beta需原设计beta、消耗和HR参照。",
+    hi_futility_z="输入原计划K−1个有限无效界Z，逗号分隔、每项−5至5且低于对应效力界。两次分析例如0；四次分析需三项。不能按当前结果回填或调整原边界。"))
+  for(pair in list(c("hi_date_encoding","date_encoding"),c("hi_aval_unit","aval_unit"),c("hi_offset","offset"),c("hi_dropout_codes","dropout_codes"),c("hi_flag","analysis_flag"),c("hi_flag_value","flag_value")))h[pair[1]]<-h[pair[2]]
+  assign("parameter_help",h,envir=parent.frame())
+}
+history_inference_ui <- function() {
+  nav_panel("历史 IA 调整推断",value="history_inference",
+    div(class="page-title",h2("历史 IA 调整推断"),actionButton("hi_run","计算调整推断",class="btn-primary")),
+    p(class="field-note","提供已观察快照及原设计。该入口不需要未来生存模型、入组计划或模拟次数。新增入口待复核。"),
+    navset_card_tab(id="hi_tabs",
+      nav_panel("历史数据",value="hi_data",
+        section("ADTTE 历史快照",fileInput("hi_file","历史 ADTTE 文件",accept=c(".csv",".xpt",".sas7bdat")),
+          p(class="field-note","必填 USUBJID、PARAMCD、STARTDT、ADT、AVAL、CNSR、组别变量、IASEQ、DCO。IASEQ是原分析次序，DCO是该次截点日期。"),
+          fields(uiOutput("hi_endpoint_ui"),selectInput("hi_look","截至哪次原分析",character())),
+          fields(dateInput("hi_origin","研究起点日期","2025-01-01"),selectInput("hi_date_encoding","CSV 日期编码",c("YYYY-MM-DD"="iso","SAS 日期"="sas"))),
+          fields(selectInput("hi_aval_unit","文件 AVAL 单位",c("日"="days","周"="weeks","月"="months"),"days"),selectInput("hi_offset","AVAL 日数首日偏移",c("1"=1,"0"=0))),
+          fields(textInput("hi_dropout_codes","永久退出 CNSR 编码","2"),textInput("hi_flag","分析标志变量（可留空）","")),
+          textInput("hi_flag_value","分析标志保留值","Y"),
+          fields(uiOutput("hi_group_column_ui"),selectInput("hi_control","Control 组",character())),
+          selectInput("hi_unit","结果时间单位",c("日"="days","周"="weeks","月"="months"),"months"),
+          downloadButton("hi_template","下载历史 IA 结构模板"),uiOutput("hi_source_note"))),
+      nav_panel("原设计",value="hi_design",
+        section("原组序贯方案",fields(numericInput("hi_target","原最终事件目标 D*",80,min=1,max=1000000,step=1),textInput("hi_timing","原信息比例列表","0.25,0.5,0.75,1")),
+          fields(selectInput("hi_sided","检验方向",c("单侧 Treatment 获益"="benefit","双侧差异"="two")),numericInput("hi_alpha","原全路径总 alpha",.025,min=.0001,max=.2)),
+          fields(selectInput("hi_spending","原 alpha 消耗",c("OBF型"="asOF","Pocock型"="asP")),numericInput("hi_allocation","原 Treatment 分配概率 p",.5,min=.01,max=.99)),
+          conditionalPanel("input.hi_sided === 'benefit'",selectInput("hi_futility","原无效停止规则",c("不设无效界"="none","非约束性 Z 界（实际执行）"="z","约束性beta消耗（实际执行）"="beta")),
+            conditionalPanel("input.hi_futility === 'z'",textInput("hi_futility_z","原 K−1 个无效 Z 界","0,0,0")),conditionalPanel("input.hi_futility === 'beta'",
+              fields(numericInput("hi_beta","原设计beta",.2,min=.01,max=.5),selectInput("hi_beta_spending","原beta消耗",c("OBF型"="bsOF","Pocock型"="bsP","HSD型"="bsHSD"))),
+              conditionalPanel("input.hi_beta_spending === 'bsHSD'",numericInput("hi_beta_gamma","原HSD gamma",-2,min=-10,max=5)),numericInput("hi_design_hr","原设计备择HR",.67,min=.01,max=.99))),
+          p(class="field-note","原方案限普通 PH/log-rank、2–5次事件驱动分析。双侧仅支持不设无效界；单侧beta需填原设计参数并遵守无效停止；重估设计使用专门入口。"))),
+      nav_panel("结果",value="hi_results",uiOutput("hi_status"),uiOutput("hi_result_note"),
+        section("保存的原计划",DTOutput("hi_plan",fill=FALSE)),
+        section("已观察逐次路径",DTOutput("hi_path",fill=FALSE)),
+        section("患者与事件计数",DTOutput("hi_diagnostics",fill=FALSE)),
+        section("重复推断",DTOutput("hi_repeated",fill=FALSE)),
+        section("所选分析的停止推断",DTOutput("hi_final",fill=FALSE))),
+      nav_panel("导出",value="hi_exports",p(class="field-note","下载对应最近一次成功计算的配置及所选历史前缀。CSV个体时间和DCO_DAY固定为日；JSON/RDS/脚本含患者标识及观察记录。"),
+        div(class="export-bar",downloadButton("hi_path_download","历史路径 CSV"),downloadButton("hi_diagnostics_download","患者计数 CSV"),downloadButton("hi_records_download","规范化快照 CSV"),
+          downloadButton("hi_plan_download","原计划 CSV"),downloadButton("hi_repeated_download","重复推断 CSV"),downloadButton("hi_final_download","停止推断 CSV"),
+          downloadButton("hi_json_download","完整快照 JSON"),downloadButton("hi_rds_download","完整快照 RDS"),downloadButton("hi_script_download","复现 R 脚本"),downloadButton("hi_report_download","摘要 Markdown")))))
+}

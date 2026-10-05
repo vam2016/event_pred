@@ -1,0 +1,4 @@
+label,n,hr,time_scale,enroll_scale,dropout_scale,cut_value
+null,300,1,1,1,1,180
+benefit,300,0.7,1,1,1,180
+higher_D,400,0.7,1,1,1,240

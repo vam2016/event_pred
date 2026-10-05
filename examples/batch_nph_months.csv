@@ -1,0 +1,5 @@
+label,n,hr,time_scale,enroll_scale,dropout_scale,cut_value,profile
+null,200,1,1,1,1,24,H0
+delayed,200,1,1,1,1,24,delay
+waning,200,1,1,1,1,24,waning
+crossing,200,1,1,1,1,24,cross

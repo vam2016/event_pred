@@ -1,0 +1,56 @@
+register_batch_workspace_server <- function(input,output,session,result,job,error,kind,start_saved,activate) {
+  imported<-reactiveVal(NULL);import_note<-reactiveVal("请选择本平台新格式配置JSON。")
+  revision<-reactiveVal(0L);message<-reactiveVal(NULL);collection<-reactiveVal(NULL)
+  refresh<-function()revision(isolate(revision())+1L)
+  token<-reactive({req(input$ba_workspace_token);batch_workspace_root(input$ba_workspace_token);input$ba_workspace_token})
+  library<-reactive({revision();batch_list_runs(token(),isTRUE(input$ba_library_archived))})
+  table<-function(d){if(is.null(d)||!ncol(d))d<-data.frame(记录=character());study_table(d)}
+  guard<-function(expr)tryCatch(force(expr),error=function(e){message(conditionMessage(e));error(conditionMessage(e))})
+  selected<-function(){id<-input$ba_saved_run;if(is.null(id)||!nzchar(id))stop("请先选择保存研究。");batch_load_run(token(),id)}
+  available<-function(){if(!is.null(job()))stop("本会话已有后台任务，请等待或取消。");invisible(TRUE)}
+  observeEvent(input$ba_config_file,{
+    imported(NULL)
+    tryCatch({cfg<-batch_read_config(input$ba_config_file$datapath);imported(cfg);import_note("配置已载入。运行将仅使用文件参数；页面其他参数不参与本次计算。")},error=function(e)import_note(conditionMessage(e)))
+  },ignoreInit=TRUE)
+  output$ba_import_note<-renderUI(p(class="field-note",import_note()))
+  output$ba_import_summary<-renderDT({cfg<-imported();if(is.null(cfg))return(table(data.frame()));
+    sc<-batch_scenarios(cfg);table(data.frame(参数=c("模式","设计","效应","主分析","时间单位","情景数","每情景重复数","主种子","配置摘要"),值=c(cfg$mode,cfg$design_mode %||% "fixed",cfg$effect_mode %||% "ph",cfg$primary,cfg$display_unit,nrow(sc),cfg$reps,cfg$seed,batch_config_hash(cfg))))})
+  observe({source<-input$ba_run_source %||% "ui";cal<-identical(input$ba_mode,"calibration")
+    for(id in c("ba_baseline","ba_scenarios","ba_analysis")) {
+      hide<-source=="config_json"||(cal&&id!="ba_baseline")
+      if(hide)nav_hide("ba_tabs",id,session=session) else nav_show("ba_tabs",id,session=session)
+    }
+  })
+  observeEvent(input$ba_run_source,{nav_select("ba_tabs",if(input$ba_run_source=="config_json")"ba_results" else "ba_baseline",session=session)},ignoreInit=TRUE)
+  observeEvent(input$ba_library_refresh,refresh(),ignoreInit=TRUE)
+  observe({d<-library();choices<-if(nrow(d))setNames(d$run_id,paste(d$title,d$run_id,sep=" · ")) else character()
+    old<-isolate(input$ba_saved_run);updateSelectInput(session,"ba_saved_run",choices=choices,selected=if(length(old)==1&&old %in% unname(choices))old else head(unname(choices),1))
+    ids<-isolate(input$ba_collection_ids) %||% character();updateSelectizeInput(session,"ba_collection_ids",choices=choices,selected=intersect(ids,unname(choices)),server=TRUE)
+  })
+  output$ba_library_table<-renderDT(table(library()))
+  output$ba_library_note<-renderUI({m<-message();if(!is.null(m))p(class="field-note",m)})
+  observeEvent(input$ba_library_load,guard({available();r<-selected();activate(r);message(paste0("已载入：",r$run_title,"；状态 ",r$status,"。"))}),ignoreInit=TRUE)
+  observeEvent(input$ba_library_resume,guard({available();r<-selected();if(isTRUE(r$store_active))stop("该研究仍在其他会话运行。")
+    cfg<-r$config;batch_validate_continuation(r,cfg,"resume");if(r$completed>=r$total)stop("全部请求轮次已处理，可创建追加子研究。")
+    path<-batch_run_path(token(),r$run_id);store<-list(path=path,meta=batch_read_local(file.path(path,"meta.rds")))
+    start_saved(cfg,r,store,"resume");refresh();message("已提交未处理轮次；已处理失败记录保留。")
+  }),ignoreInit=TRUE)
+  observeEvent(input$ba_library_extend,guard({available();r<-selected();if(isTRUE(r$store_active))stop("请先等待原研究结束。")
+    cfg<-r$config;cfg$reps<-input$ba_extend_reps;validate_batch_config(cfg);batch_validate_continuation(r,cfg,"extend")
+    store<-batch_create_run(cfg,token(),paste0(substr(r$run_title,1,70)," · B=",cfg$reps),parent=r$run_id,operation="extend")
+    start_saved(cfg,r,store,"extend");refresh();message("已创建追加子研究，原研究记录保留。")
+  }),ignoreInit=TRUE)
+  observeEvent(input$ba_library_rename,guard({batch_update_run(token(),input$ba_saved_run,title=input$ba_rename);refresh();message("研究名称已保存。")}),ignoreInit=TRUE)
+  observeEvent(input$ba_library_archive,guard({batch_update_run(token(),input$ba_saved_run,archive=TRUE);refresh();message("已归档，文件保留。")}),ignoreInit=TRUE)
+  observeEvent(input$ba_library_restore,guard({batch_update_run(token(),input$ba_saved_run,archive=FALSE);refresh();message("已恢复归档。")}),ignoreInit=TRUE)
+  observeEvent(input$ba_collection_run,guard({r<-batch_collect_runs(token(),input$ba_collection_ids);collection(r);message("已生成并列汇总，后续研究变化需再次生成。")}),ignoreInit=TRUE)
+  output$ba_library_index<-downloadHandler(filename="batch_library_index.csv",content=function(file)write.csv(library(),file,row.names=FALSE))
+  for(k0 in c("overview","methods","policies","resources","overlaps"))local({k<-k0
+    output[[paste0("ba_collection_",k)]]<-renderDT({r<-collection();table(if(is.null(r))data.frame() else r[[k]])})
+    output[[paste0("ba_collection_",k,"_download")]]<-downloadHandler(filename=paste0("batch_collection_",k,"_days.csv"),content=function(file){r<-collection();req(r);write.csv(r[[k]],file,row.names=FALSE)})
+  })
+  output$ba_collection_configs<-downloadHandler(filename="batch_collection_configurations.json",content=function(file){r<-collection();req(r);jsonlite::write_json(list(schema="event_pred.batch_collection_configs.v1",configurations=r$configurations),file,auto_unbox=TRUE,pretty=TRUE,digits=NA)})
+  output$ba_collection_rds<-downloadHandler(filename="batch_collection_draft.rds",content=function(file){r<-collection();req(r);saveRDS(r,file,version=3)})
+  output$ba_collection_report<-downloadHandler(filename="batch_collection_draft.md",content=function(file){r<-collection();req(r);writeLines(batch_collection_report(r),file,useBytes=TRUE)},contentType="text/markdown; charset=utf-8")
+  list(imported=imported,refresh=refresh)
+}

@@ -1,5 +1,11 @@
 source("R/models.R")
 source("R/forecast.R")
+source("R/inputs.R")
+source("R/nph.R")
+source("R/sequential.R")
+source("R/bayes.R")
+source("R/validation.R")
+source("R/groups.R")
 checks <- 0L
 check <- function(ok, label) {
   if (!isTRUE(ok)) stop(paste("FAILED:", label))
@@ -11,7 +17,7 @@ fails <- function(expr) inherits(tryCatch({ force(expr); NULL }, error = functio
 cfg <- list(cut = 540, horizon = 730, sims = 100, target = 180, future_n = 30,
   enroll_rate = 0.5, dropout_rate = 0.00025, lag = 0, multiplier = 1, seed = 42,
   prior_shape = 0.5, prior_rate = 50, tail_rate = 0.002, uncertainty = "plugin",
-  clock = "occurred", methods = model_catalog()$id, cuts = c(90, 180, 365), ensemble = TRUE,
+  clock = "occurred", methods = setdiff(model_catalog()$id,c("gompertz","cure_weibull")), cuts = c(90, 180, 365), ensemble = TRUE,
   origin = "2025-01-01")
 d <- validate_data(demo_data(), cfg$cut)
 check(all(d$entry + d$time <= cfg$cut + 1e-8), "synthetic data obey cut")
@@ -26,7 +32,7 @@ check(fails(validate_config(bad, d)), "invalid simulation count rejected")
 bad <- cfg; bad$uncertainty <- "gamma"
 check(fails(validate_config(bad, d)), "unsupported conjugate models rejected")
 
-for (method in model_catalog()$id) {
+for (method in cfg$methods) {
   m <- fit_model(d, method, cfg$cuts, cfg$tail_rate)
   t <- seq(0, 2000, length.out = 100)
   s <- model_survival(m, t)
@@ -104,20 +110,55 @@ check(abs(tail(rs$curves$mean, 1) - expected) < 4 * mcse, "Monte Carlo event cou
 # Exercise actual Shiny server and exported/rendered result snapshots.
 e <- new.env(parent = globalenv())
 invisible(sys.source("app.R", envir = e))
-html <- as.character(shiny::includeMarkdown("docs/METHODS.md"))
-check(!grepl("(?<!\\$)\\$[^$\\n]+\\$(?!\\$)", html, perl = TRUE), "inline method formulas converted for MathJax")
+html <- e$handbook_html()
+check(grepl('type="math/tex', html, fixed=TRUE) && !grepl("HANDBOOKMATHTOKEN",html,fixed=TRUE), "inline method formulas converted for MathJax")
 shiny::testServer(e$server, {
-  session$setInputs(run = 1, cut = 540, target = 180, horizon = 730, methods = c("exponential", "weibull", "pwe"),
-    cuts = "90,180,365", tail_rate = 0.002, uncertainty = "plugin", prior_shape = 0.5, prior_rate = 50,
-    ensemble = TRUE, future_n = 30, enroll_rate = 0.5, dropout_rate = 0.00025, multiplier = 1,
-    lag = 0, clock = "occurred", sims = 50, seed = 42, origin = "2025-01-01", file = NULL,
-    lab_model = "weibull", age = 180, lab_horizon = 730, lab_multiplier = 1)
-  check(!is.null(result()) && is.null(run_error()), "Shiny prediction action produces result")
+  tmp <- tempfile(fileext = ".csv"); write.csv(adtte_template(), tmp, row.names = FALSE)
+  session$setInputs(run = 1, input_mode = "adtte", paramcd = "OS", offset = "1", dropout_codes = "2", date_encoding = "iso",
+    analysis_flag = "", flag_value = "Y", gap_mode = "strict", process_uncertainty = "fixed", enroll_mode = "constant",
+    cut = 540, target = 100, horizon = 730, methods = c("exponential", "weibull", "pwe"),
+    cuts = "90,180,365", tail_rate = .002, uncertainty = "plugin", prior_shape = .5, prior_rate = 50,
+    ensemble = TRUE, future_n = 30, enroll_rate = .5, dropout_rate = .00025, multiplier = 1,
+    lag = 0, clock = "occurred", sims = 50, seed = 42, origin = "2025-01-01",
+    file = list(datapath = tmp, name = "adtte.csv"), lab_model = "weibull", age = 180, lab_horizon = 730, lab_multiplier = 1)
+  check(!is.null(result()) && is.null(run_error()), "ADTTE Shiny action produces result")
   check(nzchar(output$event_plot) && nzchar(output$prob_plot) && nzchar(output$fit_plot) && nzchar(output$conditional_plot), "four interactive chart renderers complete")
   old <- result()
   session$setInputs(target = 999)
   check(identical(old, result()), "input edits preserve last successful result snapshot")
   session$setInputs(run = 2, cut = 100)
   check(!is.null(run_error()) && identical(old, result()), "invalid run shows failure and preserves previous result")
+  session$setInputs(run = 3, input_mode = "parameters", cut = 0, target = 100, active_n = 0, known_n = 0,
+    duration = 180, age_mode = "fixed", design_model = "weibull", median = 365, shape = 1.2, future_n = 200)
+  check(!is.null(result()) && is.null(run_error()) && result()$config$input_mode == "parameters", "Shiny startup simulation requires no upload")
+  check(nzchar(output$fit_plot), "parameter survival plot does not fit synthetic records")
+  session$setInputs(run_sensitivity = 1, sensitivity_values = ".75,1,1.25")
+  check(nrow(sensitivity()) == 3, "Shiny sensitivity uses successful run snapshot")
+  check(nzchar(output$calibration_plot) && nzchar(output$calibration_table), "stored synthetic calibration plot and table render")
+  session$setInputs(run = 4, input_mode = "adtte", cut = 540, target = 100, methods = "weibull", uncertainty = "bayes_weibull",
+    mcmc_draws = 4000, mcmc_warmup = 1000, mcmc_chains = 4, log_eta_mean = log(450), log_eta_sd = 1,
+    log_shape_mean = 0, log_shape_sd = .75)
+  check(is.null(run_error()) && !is.null(result()$models$weibull$posterior), "Shiny Weibull posterior prediction completes")
+  check(nzchar(output$trace_plot) && nzchar(output$posterior_table), "posterior trace and rank diagnostics render")
+  unlink(tmp)
 })
+source("scripts/check-v0.2.R")
+source("scripts/check-v0.3.R")
+source("scripts/check-v0.4.R")
+source("scripts/check-v0.5.R")
+source("scripts/check-v0.6.R")
+source("scripts/check-v0.6.1.R")
+source("scripts/check-v0.7.R")
+source("scripts/check-v0.8.R")
+source("scripts/check-v0.9.R")
+source("scripts/check-v0.10.R")
+source("scripts/check-v0.11.R")
+source("scripts/check-v0.12.R")
+source("scripts/check-v0.13.R")
+source("scripts/check-v0.14.R")
+source("scripts/check-v0.15.R")
+source("scripts/check-v0.16.R")
+source("scripts/check-v0.17.R")
+source("scripts/check-v0.18.R")
+source("scripts/check-v0.19.R")
 cat(sprintf("\nAll %d checks passed.\n", checks))

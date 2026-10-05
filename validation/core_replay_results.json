@@ -1,0 +1,6 @@
+{
+  "version": "1.0.0-rc.1",
+  "status": "passed",
+  "passed": 7,
+  "checks": ["actual event curve CSV replays from downloaded config", "actual target CSV replays with unreached mass retained", "actual data-fitted prediction CSV replays exactly", "actual uploaded ADTTE replays with declared date mapping", "actual known-group ADTTE prediction replays from treatment mapping", "actual downloaded simulation R script reproduces exported statistics", "downloaded observation/truth files remain separate"]
+}

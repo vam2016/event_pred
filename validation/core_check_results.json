@@ -1,0 +1,252 @@
+{
+  "version": "1.0.0-rc.1",
+  "R": "R version 4.6.0 (2026-04-24)",
+  "packages": {
+    "shiny": "1.14.0",
+    "bslib": "0.11.0",
+    "commonmark": "2.0.0",
+    "survival": "3.8.6",
+    "ggplot2": "4.0.3",
+    "plotly": "4.12.0",
+    "DT": "0.34.0",
+    "jsonlite": "2.0.0",
+    "scales": "1.4.0"
+  },
+  "checks": [
+    {
+      "label": "core UI constructs with all help definitions",
+      "status": "passed"
+    },
+    {
+      "label": "core entry does not load joint research servers",
+      "status": "passed"
+    },
+    {
+      "label": "R parses app_core.R",
+      "status": "passed"
+    },
+    {
+      "label": "R parses R/core_handbook.R",
+      "status": "passed"
+    },
+    {
+      "label": "R parses R/core_simulation_server.R",
+      "status": "passed"
+    },
+    {
+      "label": "R parses R/core_ui.R",
+      "status": "passed"
+    },
+    {
+      "label": "R parses R/core_workflow.R",
+      "status": "passed"
+    },
+    {
+      "label": "exponential median/rate equivalence in continuous days",
+      "status": "passed"
+    },
+    {
+      "label": "equivalent exponential forms produce identical distribution",
+      "status": "passed"
+    },
+    {
+      "label": "Weibull median/scale and AFT shape conversion",
+      "status": "passed"
+    },
+    {
+      "label": "equivalent Weibull forms produce identical distribution",
+      "status": "passed"
+    },
+    {
+      "label": "exit probability/rate conversion is an independent latent clock",
+      "status": "passed"
+    },
+    {
+      "label": "unit round trip days",
+      "status": "passed"
+    },
+    {
+      "label": "unit round trip weeks",
+      "status": "passed"
+    },
+    {
+      "label": "exponential MLE counts events and all observed exposure",
+      "status": "passed"
+    },
+    {
+      "label": "PWE independent exposure and events at cut boundaries",
+      "status": "passed"
+    },
+    {
+      "label": "PWE rejects unobserved exposure segments",
+      "status": "passed"
+    },
+    {
+      "label": "PWE zero-event exposed tail retains zero rate and warning",
+      "status": "passed"
+    },
+    {
+      "label": "Weibull fitted parameters agree with independent likelihood optimization",
+      "status": "passed"
+    },
+    {
+      "label": "Weibull conditioning uses existing risk age",
+      "status": "passed"
+    },
+    {
+      "label": "PWE independent cumulative hazard includes zero segments",
+      "status": "passed"
+    },
+    {
+      "label": "PWE inversion handles boundary and finite cumulative hazard",
+      "status": "passed"
+    },
+    {
+      "label": "invalid model parameters rejected",
+      "status": "passed"
+    },
+    {
+      "label": "exponential event count with independent permanent exits",
+      "status": "passed"
+    },
+    {
+      "label": "known events fixed and each trajectory is monotone",
+      "status": "passed"
+    },
+    {
+      "label": "unreachable targets retain all simulations and infinite quantiles",
+      "status": "passed"
+    },
+    {
+      "label": "already reached targets use observed event history",
+      "status": "passed"
+    },
+    {
+      "label": "fixed seed reproduces forecast trajectories",
+      "status": "passed"
+    },
+    {
+      "label": "weibull age-conditioned competing-exit event expectation",
+      "status": "passed"
+    },
+    {
+      "label": "pwe age-conditioned competing-exit event expectation",
+      "status": "passed"
+    },
+    {
+      "label": "constant capped future enrollment independent arrival integral",
+      "status": "passed"
+    },
+    {
+      "label": "piecewise capped future enrollment independent arrival integral",
+      "status": "passed"
+    },
+    {
+      "label": "grouped counts equal paired per-trajectory sum",
+      "status": "passed"
+    },
+    {
+      "label": "grouped starting events include both groups",
+      "status": "passed"
+    },
+    {
+      "label": "permanently withdrawn patients add no future events",
+      "status": "passed"
+    },
+    {
+      "label": "target is the D*-th event date, including tied events",
+      "status": "passed"
+    },
+    {
+      "label": "events after prediction window do not imply target attainment",
+      "status": "passed"
+    },
+    {
+      "label": "target probability MCSE uses all successful simulation paths",
+      "status": "passed"
+    },
+    {
+      "label": "ADTTE offset validates AVAL but does not add a continuous exposure day",
+      "status": "passed"
+    },
+    {
+      "label": "ADTTE AVAL units weeks",
+      "status": "passed"
+    },
+    {
+      "label": "ADTTE AVAL units months",
+      "status": "passed"
+    },
+    {
+      "label": "inconsistent AVAL rejected",
+      "status": "passed"
+    },
+    {
+      "label": "unconfirmed follow-up gap rejected",
+      "status": "passed"
+    },
+    {
+      "label": "duplicate analysis records rejected",
+      "status": "passed"
+    },
+    {
+      "label": "simulation cut uses event/exit/admin minimum and excludes future entry",
+      "status": "passed"
+    },
+    {
+      "label": "simulation seed reproduces truth and analyses",
+      "status": "passed"
+    },
+    {
+      "label": "observed simulation never extends beyond cutoff",
+      "status": "passed"
+    },
+    {
+      "label": "simulation event indicator matches observed status",
+      "status": "passed"
+    },
+    {
+      "label": "simulation ADTTE preserves declared date offset and censor codes",
+      "status": "passed"
+    },
+    {
+      "label": "observation outputs exclude latent truth clocks",
+      "status": "passed"
+    }
+  ],
+  "measurements": {
+    "exponential event count with independent permanent exits": {
+      "expected": 59.5069308924564,
+      "observed": 59.3745,
+      "mcse": 0.127676448543795,
+      "tolerance": 0.510706794175181
+    },
+    "weibull age-conditioned competing-exit event expectation": {
+      "expected": 66.8767750849072,
+      "observed": 66.72,
+      "mcse": 0.132030360175242,
+      "tolerance": 0.528122440700966
+    },
+    "pwe age-conditioned competing-exit event expectation": {
+      "expected": 70.3076550699633,
+      "observed": 70.18,
+      "mcse": 0.132900832637188,
+      "tolerance": 0.53160433054875
+    },
+    "constant capped future enrollment independent arrival integral": {
+      "expected": 6.22377644621141,
+      "observed": 6.2825,
+      "mcse": 0.0406838353923413,
+      "tolerance": 0.162736341569365
+    },
+    "piecewise capped future enrollment independent arrival integral": {
+      "expected": 6.29562723529323,
+      "observed": 6.3465,
+      "mcse": 0.0408172990403635,
+      "tolerance": 0.163270196161454
+    }
+  },
+  "passed": 50,
+  "tolerance_rule": "analytical means: 4 empirical Monte Carlo SE + 1e-6; deterministic default 1e-8; independent Weibull optimization 2e-5",
+  "status": "passed"
+}

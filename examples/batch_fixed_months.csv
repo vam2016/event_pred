@@ -1,0 +1,4 @@
+label,n,hr,time_scale,enroll_scale,dropout_scale,cut_value
+base,200,0.7,1,1,1,24
+larger_N,300,0.7,1,1,1,24
+slower_baseline,200,0.7,1.25,1,1,24

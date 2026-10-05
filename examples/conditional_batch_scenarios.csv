@@ -1,0 +1,4 @@
+label,control_event_q,treatment_event_q,control_enroll_q,treatment_enroll_q,control_dropout_q,treatment_dropout_q
+Treatment风险降低,1,0.8,1,1,1,1
+脱落增加,1,1,1,1,1.5,1.5
+入组放缓,1,1,0.8,0.8,1,1

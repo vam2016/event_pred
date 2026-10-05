@@ -1,0 +1,5 @@
+label,n,hr_scale,center_sd,subject_variance
+null_no_frailty,300,1,0,0
+null_center_frailty,300,1,0.3,0
+null_subject_frailty,300,1,0,0.5
+active_heterogeneous,300,0.67,0.3,0.5

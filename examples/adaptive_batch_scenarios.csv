@@ -1,0 +1,5 @@
+label,n1,n2,d1,d_plan,d_max,hr_assumed,cp_target,cp_min,true_hr,time_scale,enroll_scale,dropout_scale
+null_plan_A,250,400,80,200,300,0.67,0.8,0.3,1,1,1,1
+active_plan_A,250,400,80,200,300,0.67,0.8,0.3,0.67,1,1,1
+null_plan_B,250,400,100,240,340,0.67,0.8,0.3,1,1,1,1
+active_slow_enrollment,250,400,100,240,340,0.67,0.8,0.3,0.67,1,0.8,1.5

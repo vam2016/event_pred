@@ -1,0 +1,5 @@
+label,n,hr,enroll_scale,dropout_scale
+null,500,1,1,1
+active,500,0.67,1,1
+slow_entry,500,0.67,0.7,1
+more_dropout,500,0.67,1,1.5

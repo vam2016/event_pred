@@ -1,0 +1,3 @@
+label,n,hr,time_scale,enroll_scale,dropout_scale,cut_value
+D120,200,0.7,1,1,1,120
+D180,300,0.7,1,1,1,180
