@@ -97,9 +97,9 @@ core_simulation_ui <- function() {
         div(class="export-bar",downloadButton("sim_observed_download","观察数据 CSV"),downloadButton("sim_adtte_download","ADTTE CSV")),uiOutput("sim_export_note"),DTOutput("sim_data",fill=FALSE)),
       nav_panel("导出",div(class="export-bar",downloadButton("sim_truth_download","模拟真值 CSV"),downloadButton("sim_summary_download","生存摘要 CSV"),downloadButton("sim_fixed_download","固定时点 CSV"),downloadButton("sim_cuts_download","截点 CSV"),downloadButton("sim_config_download","配置 JSON"),downloadButton("sim_script_download","复现 R 脚本"),downloadButton("sim_report_download","报告 Markdown")))))
 }
-core_ui <- function() page_fillable(title="event_pred",theme=theme,fillable=FALSE,
+core_ui <- function() page_fillable(title=platform_title,theme=theme,fillable=FALSE,
   tags$head(tags$link(rel="icon",href="data:,"),tags$link(rel="stylesheet",href="style.css"),tags$link(rel="stylesheet",href="handbook.css"),core_math_head()),
-  div(class="app-header",div(span("event_pred",class="brand"),span("生存模拟与事件数预测",class="app-title")),div(class="header-meta",paste("1.0 核心候选版 ·",core_version,"· 发布候选"))),
+  div(class="app-header",div(span(platform_name,class="brand"),span(platform_title,class="app-title")),div(class="header-meta",paste("1.0 核心候选版 ·",core_version,"· 发布候选"))),
   navset_pill_list(id="nav",widths=c(2,10),well=FALSE,
     core_workflow_home(),core_prediction_inputs(),core_simulation_ui(),
     nav_panel("预测结果",value="forecast",div(class="page-title",h2("预测结果"),uiOutput("run_label")),uiOutput("run_status"),uiOutput("metrics"),
@@ -112,4 +112,4 @@ core_ui <- function() page_fillable(title="event_pred",theme=theme,fillable=FALS
         nav_panel("导出",conditionalPanel("output.task_goal === 'count'",downloadButton("curves_download","事件曲线 CSV")),conditionalPanel("output.task_goal === 'target'",downloadButton("summary_download","达标日期 CSV")),downloadButton("config_download","配置 JSON"),downloadButton("report_download","报告 Markdown")))),
     nav_panel("输入数据与分布",value="data",uiOutput("data_status"),DTOutput("data_table",fill=FALSE),plotlyOutput("fit_plot",height="360px")),
     nav_panel("工作手册",value="methods",core_handbook_ui())),
-  div(class="site-footer",paste("event_pred · 默认月 ·",core_version,"· 核心检查记录随源码提供")))
+  div(class="site-footer",paste("SurvCast · 默认月 ·",core_version,"· 核心检查记录随源码提供")))

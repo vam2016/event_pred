@@ -41,7 +41,7 @@ handbook_standalone_html <- function(path="docs/METHODS.md") {
   contents <- handbook_reading_html(path)
   runtime <- if(grepl('type="math/tex',contents,fixed=TRUE))
     '<script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>' else ''
-  paste0('<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>生存模拟与事件预测工作手册</title>',
+  paste0('<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SurvCast 生存事件预测与模拟工作台 · 工作手册</title>',
     '<style>:root{--ink:#173d50;--accent:#126b72;--muted:#607685;--line:#dce5e9}body{margin:0;font-family:system-ui,"PingFang SC",sans-serif;background:#f3f6f8}.handbook-content{max-width:980px;margin:auto;background:white}table{border-collapse:collapse}td,th{padding:8px;border:1px solid #dce5e9}',css,'</style>',
     runtime,'</head><body><main class="handbook-content">',contents,'</main></body></html>')
 }
@@ -64,7 +64,7 @@ handbook_ui <- function() {
     div(class="toc-group",span(class="toc-heading",group),links)
   })
   toolbar <- div(class="handbook-toolbar",
-    div(span(class="manual-label","event_pred · 工作手册"),p("模型推导、参数设置、平台操作与结果解释")),
+    div(span(class="manual-label","SurvCast · 工作手册"),p("模型推导、参数设置、平台操作与结果解释")),
     div(class="manual-actions",downloadButton("handbook_download","下载手册 Markdown"),downloadButton("handbook_html_download","下载阅读版 HTML"),
       tags$button(type="button",class="btn btn-outline-secondary",onclick="window.print()","打印 / 保存 PDF")))
   contents <- tags$details(class="handbook-toc",open=NA,tags$summary("章节目录"),

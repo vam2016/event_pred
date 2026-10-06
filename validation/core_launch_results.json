@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-06",
+  "platform": "SurvCast",
+  "version": "1.0.0-rc.1",
+  "status": "passed",
+  "checks": [
+    {
+      "port": 3841,
+      "source": "source Mac launcher",
+      "status": "passed",
+      "formula": 17,
+      "handbook_download_http": 200,
+      "jsErrors": 0,
+      "narrow_viewport": 390
+    },
+    {
+      "port": 3842,
+      "source": "extracted ZIP Mac launcher",
+      "status": "passed",
+      "formula": 17,
+      "handbook_download_http": 200,
+      "jsErrors": 0,
+      "narrow_viewport": 390
+    }
+  ],
+  "prepare_only": "passed",
+  "shell_syntax": "passed",
+  "zip_executable_permissions": "passed",
+  "windows_prepare": "pending CI"
+}

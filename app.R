@@ -3,6 +3,8 @@ library(bslib)
 library(ggplot2)
 library(plotly)
 library(DT)
+platform_name <- "SurvCast"
+platform_title <- "生存事件预测与模拟工作台"
 source("R/units.R", local = TRUE)
 source("R/help.R", local = TRUE)
 source("R/models.R", local = TRUE)

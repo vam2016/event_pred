@@ -16,3 +16,5 @@ table.dataTable.nowrap th,table.dataTable.nowrap td{white-space:nowrap;word-brea
 /* Repeated-study execution state */
 .study-actions{display:flex;gap:10px;flex-wrap:wrap}.study-progress{display:flex;align-items:center;gap:16px;margin:12px 0;font-variant-numeric:tabular-nums}.study-progress progress{width:min(360px,50%);accent-color:#126b72;height:12px}.study-actions .btn:disabled{opacity:.5}
 @media(max-width:700px){.study-progress{align-items:flex-start;flex-direction:column}.study-progress progress{width:100%}}
+
+@media(max-width:480px){.app-header>div:first-child{display:flex;flex-direction:column;justify-content:center;gap:2px}.app-title{margin-left:0;padding-left:0;border-left:0;font-size:11px}.brand{font-size:21px}}

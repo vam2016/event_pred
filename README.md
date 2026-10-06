@@ -1,15 +1,12 @@
-# event_pred 1.0 核心发布候选版
+# SurvCast 生存事件预测与模拟工作台
 
 版本 1.0.0-rc.1，2026-10-05。核心本机检查已通过；尚未部署公网，目标部署环境检查待完成。
 
 三个任务：未来事件数、达标日期、单终点生存数据生成。指数、Weibull、PWE；合并或已知两组；预测采用参数或 ADTTE CSV。日/周/月可选，默认月。
 
-在包或 GitHub main 分支的根目录启动：
+本机运行：Mac 双击 `Start-Mac.command`，Windows 双击 `Start-Windows.cmd`；Linux 执行 `sh Start-Linux.sh`。另一台电脑先安装 R，再完整解压 ZIP、运行对应入口；首次缺少依赖时联网安装。浏览器自动打开，窗口保持运行。详见[本机启动与转移说明](docs/LOCAL_START.md)。
 
-```r
-source("scripts/install_core.R")
-shiny::runApp(".", host="127.0.0.1", port=3839)
-```
+在解压目录的 R 中执行 `source("scripts/start_core.R")` 也可启动；终端执行 `Rscript --vanilla scripts/start_core.R`。默认优先本机 3839，占用时另选端口；实际地址显示在启动窗口。
 
 必要检查：`Rscript scripts/check_core.R`。浏览器检查另需 Node.js、Playwright 和 Chrome，先在 3839 启动核心应用，再执行 `node scripts/check_core_browser.cjs`。环境变量 `PLAYWRIGHT_MODULE`、`CHROME_PATH` 可指定运行环境；`CORE_CHECK_OUTPUT` 指定下载目录。同一目录执行 `Rscript scripts/replay_core_downloads.R` 复现真实下载结果。
 
