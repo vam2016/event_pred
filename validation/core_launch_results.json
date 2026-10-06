@@ -26,5 +26,17 @@
   "prepare_only": "passed",
   "shell_syntax": "passed",
   "zip_executable_permissions": "passed",
-  "windows_prepare": "pending CI"
+  "windows_prepare": "passed",
+  "invalid_port_rejected": true,
+  "linux_core_checks": 50,
+  "linux_prepare": "passed",
+  "windows_first_attempt": {
+    "run_id": 37398613819,
+    "status": "failed",
+    "reason": "Multiple Rscript.exe matches returned an array; fixed to choose first executable and search bin/x64"
+  },
+  "windows_retry_run": 37398811054,
+  "ci_status": "success",
+  "ci_url": "https://github.com/vam2016/event_pred/actions/runs/37398811054",
+  "checked_commit": "2f3fc730ce303c5f3c964ff28fd947404a6ef550"
 }

@@ -53,3 +53,5 @@ GitHub 核心源码提交：`e18a814b7af94341ddc65f47f77371431c2cfda5`；完整�
 ## 2026-10-06 命名与本机启动
 
 显示名称改为 SurvCast（生存事件预测与模拟工作台），仓库仍为 event_pred。新增 Mac / Windows / Linux 启动入口及 LOCAL_START.md。Mac 原目录与含空格新解压目录均通过启动、首页、17 个公式、离线手册标题及 390px 窄屏检查；ZIP 保留执行权限，安装包按 R 与系统架构独立缓存。实际记录见 validation/core_launch_results.json。Windows 准备流程由新的 CI 运行记录；未将本机 Mac 检查称为另一台 Windows 的浏览器实测。
+
+Windows 多 R 安装路径检查发现并修复多个 Rscript 匹配被拼接的问题；优先取 PATH 第一项，并补入 bin/x64 查找。修复后 [CI 37398811054](https://github.com/vam2016/event_pred/actions/runs/37398811054) 两个任务通过：Windows 实际 cmd/PowerShell 入口完成依赖准备，Linux 完成启动准备及 50 项核心检查。Windows 检查未启动桌面浏览器。
