@@ -49,7 +49,8 @@
     "display_only": true,
     "data_checks": 13,
     "browser_checks": 31,
-    "github_synced": false,
-    "github_ci": "pending"
+    "github_synced": true,
+    "github_ci": "passed",
+    "ci_run": 37401966422
   }
 }
