@@ -19,6 +19,7 @@ jobs:
       - run: Rscript scripts/install_core.R
       - run: Rscript scripts/start_core.R --prepare-only
       - run: Rscript scripts/check_core.R
+      - run: Rscript scripts/check_core_results.R
   windows-launch:
     runs-on: windows-latest
     steps:

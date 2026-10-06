@@ -1,0 +1,59 @@
+{
+  "status": "passed",
+  "passed": 13,
+  "checks": [
+    {
+      "label": "count distribution preserves all integer observations and actual successful denominator",
+      "status": "passed"
+    },
+    {
+      "label": "new counts shift support by fixed D0 without changing probabilities",
+      "status": "passed"
+    },
+    {
+      "label": "selected time readout uses exact original grid and saved units",
+      "status": "passed"
+    },
+    {
+      "label": "elapsed time slider maps saved months to the original study-day grid",
+      "status": "passed"
+    },
+    {
+      "label": "stale slider values clamp to new grid",
+      "status": "passed"
+    },
+    {
+      "label": "target bins include right endpoints and infinite unreached mass",
+      "status": "passed"
+    },
+    {
+      "label": "all unreached trials remain visible rather than disappearing",
+      "status": "passed"
+    },
+    {
+      "label": "already reached and exact window-end hits are classified without fabricating a historical date",
+      "status": "passed"
+    },
+    {
+      "label": "trajectory previews do not alter RNG or rerun simulation",
+      "status": "passed"
+    },
+    {
+      "label": "forecast plot retains grid identifiers for linked click readout",
+      "status": "passed"
+    },
+    {
+      "label": "count plot handles finite paths and saved calendar axis",
+      "status": "passed"
+    },
+    {
+      "label": "simulation display filters trial, cut and group independently",
+      "status": "passed"
+    },
+    {
+      "label": "display transformations leave underlying simulations unchanged",
+      "status": "passed"
+    }
+  ],
+  "scope": "display transformations; underlying inference unchanged"
+}

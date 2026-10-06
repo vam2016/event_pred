@@ -6,7 +6,7 @@
 
 |范围|结果与记录|
 |---|---|
-|R 加载、参数、独立数值和边界|50 项断言通过；`validation/core_check_results.json`|
+|R 加载、参数、独立数值和边界|51 项断言通过；`validation/core_check_results.json`|
 |真实浏览器任务操作、上传、分组、输出及窄屏|36 项断言通过；`validation/core_browser_results.json`|
 |真实下载文件和脚本复现|7 项断言通过；`validation/core_replay_results.json`|
 |独立源码包|解压至新目录，默认 app.R 启动；50 项 R 检查、7 项真实下载重放通过，首页三个入口及 17 个公式通过；`validation/core_portable_results.json`|
@@ -55,3 +55,11 @@ GitHub 核心源码提交：`e18a814b7af94341ddc65f47f77371431c2cfda5`；完整�
 显示名称改为 SurvCast（生存事件预测与模拟工作台），仓库仍为 event_pred。新增 Mac / Windows / Linux 启动入口及 LOCAL_START.md。Mac 原目录与含空格新解压目录均通过启动、首页、17 个公式、离线手册标题及 390px 窄屏检查；ZIP 保留执行权限，安装包按 R 与系统架构独立缓存。实际记录见 validation/core_launch_results.json。Windows 准备流程由新的 CI 运行记录；未将本机 Mac 检查称为另一台 Windows 的浏览器实测。
 
 Windows 多 R 安装路径检查发现并修复多个 Rscript 匹配被拼接的问题；优先取 PATH 第一项，并补入 bin/x64 查找。修复后 [CI 37398811054](https://github.com/vam2016/event_pred/actions/runs/37398811054) 两个任务通过：Windows 实际 cmd/PowerShell 入口完成依赖准备，Linux 完成启动准备及 50 项核心检查。Windows 检查未启动桌面浏览器。
+
+## 2026-10-06 交互结果展示
+
+本次修改只增加展示、显示筛选和读数导出，未修改模型、似然或模拟算法。核心 R 检查现为 51 项（新增展示模块解析项）；原浏览器 36 项和真实下载复现 7 项再次通过。新增 `check_core_results.R` 的 13 项检查覆盖整数概率质量、成功轮次分母、固定 D0 平移、网格与保存单位映射、无穷达标时间、端点分箱及显示不改变 RNG。
+
+`check_core_results_browser.cjs` 的 31 项检查通过，实际操作覆盖曲线点击、滑块拖动、轨迹与区间开关、当前读数 CSV、编辑输入单位后保留结果原单位、分组读数、KM 阶梯区间及显示筛选、观察状态、多 DCO、重复试验 NR 保留、观察表检索和 390px 结果布局。新增记录为 `validation/core_results_check.json` 与 `validation/core_results_browser.json`；没有未捕获浏览器脚本错误。
+
+所有显示筛选均使用已完成运行对象，未重新模拟。所选时点 CSV 对应筛选后的读数；完整报告/配置/曲线保留全部模型，观察 CSV/ADTTE 保留所选试验/截点的全部组别。历史源码包启动与 Windows 准备记录仍对应此前版本，新增展示在本机核心入口核对；本次包的独立解压检查另行记录。

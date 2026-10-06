@@ -31,6 +31,7 @@ source("R/simulation.R",local=TRUE)
 source("R/simulation_ui.R",local=TRUE)
 source("R/core_simulation_server.R",local=TRUE)
 source("R/core_workflow.R",local=TRUE)
+source("R/core_results.R",local=TRUE)
 source("R/core_ui.R",local=TRUE)
 source("R/core_handbook.R",local=TRUE)
 
@@ -47,7 +48,8 @@ server <- function(input, output, session) {
   current_unit <- reactiveVal("months")
   input_unit <- reactive(input$time_unit %||% "days")
   register_parameter_controls(input,output,session,input_unit)
-  register_core_simulation_server(input,output,session)
+  sim_result <- register_core_simulation_server(input,output,session)
+  register_core_simulation_results(input,output,session,sim_result)
   register_core_workflow_server(input,output,session,result)
   output$input_context <- renderUI({
     u <- time_label(input_unit()); div(class="context-strip",
@@ -253,42 +255,25 @@ server <- function(input, output, session) {
   output$grouped_result <- renderText({r <- result(); if(!is.null(r)&&r$config$analysis_mode=="grouped") "yes" else "no"})
   outputOptions(output,"grouped_result",suspendWhenHidden=FALSE)
   output$group_result_note <- renderUI({r <- result(); req(r$group_summary); p(class="field-note","分组区间分别由联合模拟计算；总事件目标 D* 使用全部组累计事件之和。总体区间端点不由各组端点相加。")})
-  output$group_event_plot <- renderPlotly({r <- result(); req(r$group_curves); d <- r$group_curves; d$date <- as.Date(r$config$origin)+d$day
-    p <- ggplot(d,aes(date,median,colour=model,fill=model))+geom_ribbon(aes(ymin=lower,ymax=upper),alpha=.12,colour=NA,show.legend=FALSE)+geom_line()+facet_wrap(~group)+labs(x="日期",y="各组累计事件数",colour=NULL,fill=NULL)+theme_chart(); chart_widget(p)})
   output$group_fit_table <- renderDT({r <- result(); req(r$group_fit); d <- r$group_fit; names(d) <- c("组别","拟合模型","组内AIC","信息"); tabular(d)})
-  output$group_event_table <- renderDT({r <- result(); req(r$group_summary); d <- r$group_summary; names(d) <- c("组别","模型","方法","已记录事件","仍随访","计划入组","窗口末均值","2.5%事件数","窗口末中位数","97.5%事件数","模拟次数"); tabular(d)})
-  output$event_plot <- renderPlotly({
-    r <- result(); req(r); d <- r$curves; d$date <- as.Date(r$config$origin) + d$day
-    p <- ggplot(d, aes(date, median, colour = model, fill = model, group = model)) +
-      geom_ribbon(aes(ymin = lower, ymax = upper), alpha = .12, colour = NA, show.legend = FALSE) + geom_line(linewidth = .8) +
-      (if(r$config$task!="count")geom_hline(yintercept = r$config$target, linetype = "dashed", colour = "#777486") else NULL) +
-      scale_colour_manual(values = rep(palette,length.out=length(unique(d$model)))) + scale_fill_manual(values = rep(palette,length.out=length(unique(d$model)))) +
-      labs(x = "日期", y = "累计事件数", colour = NULL, fill = NULL) + theme_chart()
-    chart_widget(p, tooltip = c("x", "y", "colour", "ymin", "ymax"))
-  })
-  count_end <- function(r) {d<-r$curves;d[d$day==max(d$day),c("model","mean","lower","median","upper"),drop=FALSE]}
+  output$group_event_table <- renderDT({r <- result(); req(r$group_summary); d <- r$group_summary; d<-d[d$method %in% core_result_methods(r,input$result_model %||% "all"),,drop=FALSE]; names(d) <- c("组别","模型","方法","已记录事件","仍随访","计划入组","窗口末均值","2.5%事件数","窗口末中位数","97.5%事件数","模拟次数"); tabular(d)})
+  count_end <- function(r) {d<-r$curves;d<-d[d$method %in% core_result_methods(r,input$result_model %||% "all"),,drop=FALSE];d[d$day==max(d$day),c("model","mean","lower","median","upper"),drop=FALSE]}
   output$count_end_table <- renderDT({r<-result();req(r);d<-count_end(r);names(d)<-c("模型","均值","2.5%事件数","中位事件数","97.5%事件数");tabular(d)})
   output$new_count_table <- renderDT({r<-result();req(r);d<-count_end(r)
     d[,c("mean","lower","median","upper")] <- d[,c("mean","lower","median","upper")] - r$known_events
     names(d)<-c("模型","新增均值","新增2.5%事件数","新增中位事件数","新增97.5%事件数");tabular(d)
   })
   export_config <- function(r) {c<-r$config;if(c$task=="count"){c$target<-NULL;c$entered_config$target<-NULL};c}
-  output$prob_plot <- renderPlotly({
-    r <- result(); req(r); d <- r$curves; d$date <- as.Date(r$config$origin) + d$day
-    p <- ggplot(d, aes(date, probability, colour = model)) + geom_line(linewidth = .8) + scale_y_continuous(limits = c(0, 1), labels = scales::label_percent()) +
-      scale_colour_manual(values = rep(palette,length.out=length(unique(d$model)))) + labs(x = "日期", y = "达标概率", colour = NULL) + theme_chart()
-    chart_widget(p)
-  })
   table_options <- list(scrollX = TRUE, language = list(search = "检索：", lengthMenu = "每页 _MENU_ 条", info = "第 _START_–_END_ 条，共 _TOTAL_ 条", infoEmpty = "0 条", zeroRecords = "无匹配记录", paginate = list(previous = "上一页", "next" = "下一页")))
   tabular <- function(d) {
-    g <- datatable(d, rownames = FALSE, options = c(table_options, list(dom = "t")), escape = TRUE)
+    g <- datatable(d, rownames = FALSE, class="display nowrap", options = c(table_options, list(dom = "t")), escape = TRUE)
     num <- names(d)[vapply(d, is.numeric, logical(1))]
     for (name in num) g <- formatRound(g,name,if(all(is.na(d[[name]]) | d[[name]]==round(d[[name]])))0 else 3)
     g
   }
   output$milestones <- renderDT({
-    r <- result(); req(r); d <- r$summary
-    tabular(data.frame(模型 = d$model, 窗口内达标概率 = sprintf("%.1f%%", 100 * d$reached), `概率 MCSE（百分点）` = 100 * d$reached_mcse, 未达标比例 = sprintf("%.1f%%",100*(1-d$reached)), 日期中位数 = milestone_dates(r),
+    r <- result(); req(r); d <- r$summary; d<-d[d$method %in% core_result_methods(r,input$result_model %||% "all"),,drop=FALSE]
+    tabular(data.frame(模型 = d$model, 窗口内达标概率 = sprintf("%.1f%%", 100 * d$reached), `概率 MCSE（百分点）` = 100 * d$reached_mcse, 未达标比例 = sprintf("%.1f%%",100*(1-d$reached)), 日期中位数 = milestone_dates(r)[match(d$method,r$summary$method)],
       `2.5%日期` = if (r$config$input_mode == "parameters" && r$config$target <= r$known_events) "历史日期未提供" else display_date(d$lower_day, r$config$origin),
       `97.5%日期` = if (r$config$input_mode == "parameters" && r$config$target <= r$known_events) "历史日期未提供" else display_date(d$upper_day, r$config$origin),
       窗口末事件数中位数 = d$median_events_end, check.names = FALSE))
@@ -344,12 +329,13 @@ server <- function(input, output, session) {
   output$summary_download <- downloadHandler(filename = "event_milestones.csv", content = function(file) { r <- result(); req(r); d <- r$summary; d$median_date <- milestone_dates(r); write.csv(unit_export(d, r$config$display_unit, c("lower_day", "median_day", "upper_day")), file, row.names = FALSE) })
   output$config_download <- downloadHandler(filename = "event_pred_config.json", content = function(file) { r <- result(); req(r); jsonlite::write_json(list(version = core_version, created_at = r$created_at, config = export_config(r), data_summary = r$data_summary, session = R.version.string), file, auto_unbox = TRUE, pretty = TRUE, digits = NA) })
   output$report_download <- downloadHandler(filename="event_pred_report.md",content=function(file) {
-    r<-result();req(r);counts<-identical(r$config$task,"count");d<-count_end(r)
+    r<-result();req(r);counts<-identical(r$config$task,"count");d<-r$curves[r$curves$day==max(r$curves$day),c("model","mean","lower","median","upper"),drop=FALSE]
     lines<-c(if(counts)"# 未来事件数预测" else "# 目标事件日期预测","",paste("核心入口版本：",core_version),paste("运行时间：",r$created_at),paste("显示单位：",time_label(r$config$display_unit)),"","## 配置","","```json",jsonlite::toJSON(export_config(r),auto_unbox=TRUE,pretty=TRUE,digits=NA),"```","")
     if(counts)lines<-c(lines,"## 窗口末累计事件数","","|模型|均值|2.5%|中位数|97.5%|","|---|---:|---:|---:|---:|",sprintf("|%s|%.3f|%.3f|%.3f|%.3f|",d$model,d$mean,d$lower,d$median,d$upper))
     else lines<-c(lines,"## 目标日期","","|模型|达标概率|概率MCSE（百分点）|日期中位数|","|---|---:|---:|---|",sprintf("|%s|%.1f%%|%.3f|%s|",r$summary$model,100*r$summary$reached,100*r$summary$reached_mcse,milestone_dates(r)),paste("MCSE范围：",r$mcse_scope))
     writeLines(c(lines,"","已记录事件固定；区间为条件于给定或拟合参数的逐点预测区间，未包含参数估计不确定性。"),file,useBytes=TRUE)
   })
 
+  register_core_forecast_results(input,output,session,result)
 }
 shinyApp(ui, server)

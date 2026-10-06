@@ -30,7 +30,9 @@ paths = set(modules) | {
     "docs/CORE_VALIDATION.md", "scripts/check_core.R",
     "scripts/check_core_browser.cjs", "scripts/replay_core_downloads.R",
     "validation/core_check_results.json", "validation/core_browser_results.json",
-    "validation/core_launch_results.json", "validation/core_replay_results.json", "validation/core_portable_results.json",
+    "validation/core_launch_results.json",
+    "scripts/check_core_results.R", "scripts/check_core_results_browser.cjs",
+    "validation/core_results_check.json", "validation/core_results_browser.json", "validation/core_replay_results.json", "validation/core_portable_results.json",
     "validation/core_development_status.json", "validation/core_github_sync.json",
 }
 files = {name: (root / name).read_bytes() for name in sorted(paths)}

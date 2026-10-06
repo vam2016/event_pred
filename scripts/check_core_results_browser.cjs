@@ -1,0 +1,64 @@
+// Interaction checks against actual Shiny outputs; uses only synthetic data.
+const fs=require('fs'),path=require('path');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+const base=process.env.CORE_CHECK_URL||'http://127.0.0.1:3839';
+const out=path.resolve(process.env.CORE_RESULTS_OUTPUT||'../../work/core-results');fs.mkdirSync(out,{recursive:true});
+const checks=[],errors=[];const check=(ok,s)=>{if(!ok)throw Error(s);checks.push(s);console.log('PASS '+s)};
+(async()=>{
+ const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH||'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
+ const page=await browser.newPage({viewport:{width:1440,height:1000},acceptDownloads:true});page.setDefaultTimeout(30000);
+ page.on('pageerror',e=>errors.push(e.message));
+ const tab=async name=>{await page.getByRole('tab',{name,exact:true}).click();await page.waitForTimeout(400)};
+ const fill=async(id,value)=>{await page.locator('#'+id).fill(String(value));await page.locator('#'+id).dispatchEvent('change');await page.waitForTimeout(250)};
+ const choose=async(id,value)=>{await page.locator('#'+id).waitFor({state:'attached'});await page.evaluate(({id,value})=>document.getElementById(id).selectize.setValue(value),{id,value});await page.waitForTimeout(650)};
+ const plot=async id=>{await page.waitForFunction(id=>{let p=document.getElementById(id);return !!p?._fullLayout&&!p.classList.contains('recalculating')},id);await page.waitForTimeout(350)};
+ const traces=id=>page.evaluate(id=>document.getElementById(id).data.map(t=>({name:t.name,type:t.type,x:t.x,y:t.y,fill:t.fill,shape:t.line?.shape,customdata:t.customdata})),id);
+ const noErrors=async()=>check((await page.locator('.shiny-output-error:visible:not(:empty)').allTextContents()).length===0,'visible result panels render without R output errors');
+ try {
+  await page.goto(base);await page.waitForSelector('#task_count');await page.waitForTimeout(1300);await page.locator('#task_count').click();
+  await tab('运行设置');await fill('sims',50);await tab('事件模型');await choose('design_model','exponential');await tab('未来入组与退出');await fill('future_n',40);await page.locator('#run').click();await plot('event_plot');await plot('count_distribution');
+  check(await page.locator('#result_readout').innerText().then(t=>t.includes('成功模拟次数')&&t.includes('新增均值')),'count result combines exact time readout and simulation denominator');
+  const d=await traces('count_distribution');check(d.every(t=>Math.abs(t.y.reduce((a,b)=>a+b,0)-1)<1e-12),'event distribution probabilities sum to one');
+  await choose('result_axis','elapsed');await plot('event_plot');
+  await page.locator("#event_plot").scrollIntoViewIfNeeded();
+  const pos=await page.evaluate(()=>{const p=document.getElementById('event_plot'),t=p.data.find(t=>t.customdata?.length>1),i=40,a=p._fullLayout.xaxis,b=p._fullLayout.yaxis,rect=p.getBoundingClientRect();return{x:rect.x+a._offset+a.d2p(t.x[i]),y:rect.y+b._offset+b.d2p(t.y[i])}});
+  await page.mouse.click(pos.x,pos.y);await page.waitForTimeout(1000);
+  check(await page.locator('#result_time_label').innerText().then(t=>t.includes('网格 41 / 121')),'clicking the forecast curve moves linked exact time readout');
+  const first=await page.locator('#result_readout').innerText();const handle=page.locator('#result_time').locator('..').locator('.irs-handle');const track=page.locator('#result_time').locator('..').locator('.irs-line');
+  await handle.scrollIntoViewIfNeeded();
+  const hb=await handle.boundingBox(),tb=await track.boundingBox();await page.mouse.move(hb.x+hb.width/2,hb.y+hb.height/2);await page.mouse.down();await page.mouse.move(tb.x+tb.width*.65,hb.y+hb.height/2,{steps:10});await page.mouse.up();await page.waitForTimeout(1000);
+  check(await page.locator('#result_readout').innerText()!==first,'dragging the time slider updates the table and count distribution');
+  await choose('result_count','new');await page.locator('#result_paths').check();await plot('event_plot');
+  check((await traces('event_plot')).length>=23,'trajectory toggle displays deterministic sample paths alongside interval and center');
+  await page.locator('#result_interval').uncheck();await plot('event_plot');check(!(await traces('event_plot')).some(t=>t.fill==='tonexty'),'prediction interval toggle removes the band');
+  await choose('result_center','mean');await noErrors();
+  await page.waitForFunction(()=>document.querySelector('#result_readout_download').getAttribute('href')?.includes('/download/'));const href=await page.locator('#result_readout_download').getAttribute('href');const response=await page.request.get(new URL(href,base).href);const csv=await response.text();fs.writeFileSync(path.join(out,'selected-time.csv'),csv);
+  check(response.status()===200&&csv.includes('成功模拟次数'),'selected readout CSV downloads exact displayed quantities');
+  await page.screenshot({path:path.join(out,'forecast-interactive.png'),fullPage:true});
+  await tab('任务参数');await tab('队列与资料');await choose('time_unit','days');await tab('预测结果');await tab('任务结果');await plot('event_plot');
+  check(await page.locator('.result-controls').innerText().then(t=>t.includes('距当前 DCO（月）')),'editing input units preserves original result display units');
+  await tab('任务参数');await choose('time_unit','months');await tab('预测结果');await tab('任务结果');
+  await page.setViewportSize({width:390,height:844});await page.waitForTimeout(700);check(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2),'interactive count results fit a 390px viewport');await page.screenshot({path:path.join(out,'forecast-mobile.png'),fullPage:true});await page.setViewportSize({width:1440,height:1000});
+  await tab('需求入口');await page.locator('#task_target').click();await tab('运行设置');await fill('target',10000);await page.locator('#run').click();await plot('target_distribution');await plot('prob_plot');
+  const td=await traces('target_distribution');check(td.every(t=>t.y[t.y.length-1]===1),'unreachable target remains a full probability mass beyond the window');
+  check(await page.locator('#milestones').innerText().then(t=>t.includes('超过预测窗口')),'date quantiles retain unreached trials');await noErrors();
+  await tab('需求入口');await page.locator('#task_count').click();await tab('队列与资料');await page.locator('input[name="analysis_mode"][value="grouped"]').check();await tab('分组参数');
+  for(const g of [1,2]){if(g===2)await page.locator('#group_inputs a[data-value="组 2 · B"]').click();await fill('g'+g+'_future_n',20)}
+  await page.locator('#run').click();await plot('event_plot');await tab('分组事件');await plot('group_event_plot');check(await page.locator('#group_readout').innerText().then(t=>t.includes('A')&&t.includes('B')),'grouped plots have a paired exact-time table');await page.locator('#result_paths').check();await plot('group_event_plot');await noErrors();
+  await tab('需求入口');await page.locator('#task_design').click();await tab('研究设置');await fill('sim_n',50);await fill('sim_reps',6);await fill('sim_cuts','1,12,24');await fill('sim_fixed','6,12,60');await page.locator('#sim_run').click();await plot('sim_km');await plot('sim_fixed_plot');await plot('sim_risk_plot');
+  check((await traces('sim_km')).some(t=>t.fill==='tonexty')&&(await traces('sim_km')).every(t=>!t.shape||t.shape==='hv'),'KM pointwise intervals use step interpolation');
+  check(await page.locator('#sim_fixed_table').innerText().then(t=>t.includes('超出观察范围')),'unsupported fixed times stay explicitly non-estimable');
+  await page.locator('#sim_display_ci').uncheck();await page.locator('#sim_display_censor').check();await plot('sim_km');check(!(await traces('sim_km')).some(t=>t.fill==='tonexty'),'KM interval switch hides confidence bands');
+  await choose('sim_display_group','A');await plot('sim_km');check((await traces('sim_km')).filter(t=>t.name==='B').length===0,'group selection filters observed KM output');
+  check(!(await page.locator('#sim_summary').innerText()).includes('B'),'group selection also filters companion observation tables');await choose('sim_display_group','all');
+  await tab('事件与截点');await plot('sim_status_plot');await plot('sim_cut_plot');const st=await traces('sim_status_plot');check(st.length===3&&st.every(t=>t.type==='bar'),'observed events and both censoring states are displayed separately');
+  check((await traces('sim_cut_plot')).every(t=>t.x.length===3),'cut comparison uses the same trial at all three submitted DCOs');await noErrors();await page.screenshot({path:path.join(out,'simulation-cuts.png'),fullPage:true});
+  await tab('重复试验');await plot('sim_repeat_events');await plot('sim_repeat_status');
+  check((await traces('sim_repeat_events')).every(t=>t.y.length===6),'repeated-trial event plots include every simulation');check((await traces('sim_repeat_status')).some(t=>t.name==='NR'&&t.y.some(v=>v>0)),'early DCO retains non-estimable median probability');await noErrors();
+  await choose('sim_view_cut','3');await plot('sim_repeat_median');check((await traces('sim_repeat_median')).filter(t=>t.type==='box').every(t=>t.y.every(Number.isFinite)),'median plot contains finite estimates only, with NR reported separately');
+  await tab('观察数据');await page.locator('#sim_data .dataTables_filter input').fill('SIM000');await page.waitForTimeout(500);check(await page.locator('#sim_data .dataTables_filter input').inputValue()==='SIM000','observation table supports text search');
+  await page.setViewportSize({width:390,height:844});await tab('生存与在险');await page.waitForTimeout(700);check(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2),'simulation result controls and graphics fit narrow viewport');await noErrors();
+  check(errors.length===0,'interactive panels have no uncaught JavaScript errors');
+  fs.writeFileSync('validation/core_results_browser.json',JSON.stringify({status:'passed',date:'2026-10-06',passed:checks.length,checks,errors},null,2)+'\n');
+ }catch(e){await page.screenshot({path:path.join(out,'failure.png'),fullPage:true});console.error('R ERRORS',await page.locator('.shiny-output-error:visible:not(:empty)').allTextContents());throw e}finally{await browser.close()}
+})().catch(e=>{console.error(e.stack);process.exit(1)});
