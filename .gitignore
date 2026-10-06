@@ -10,3 +10,6 @@ work/
 renv/library/
 renv/staging/
 .env
+
+.local-library/
+local-runtime.json

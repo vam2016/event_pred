@@ -109,7 +109,7 @@ register_core_simulation_server <- function(input,output,session) {
   })
   export_config<-function(r){cfg<-r$config;if(cfg$cut_mode=="fixed")cfg$target<-NULL;cfg}
   download("sim_config_download","survival_simulation_config.json",function(file){r<-sim_result();req(r);jsonlite::write_json(list(version=r$version,created_at=r$created_at,config=export_config(r),date_rule="floor; AVAL offset=1; same-day rows preserved",R=R.version.string),file,auto_unbox=TRUE,pretty=TRUE,digits=NA)})
-  download("sim_script_download","reproduce_survival_simulation.R",function(file){r<-sim_result();req(r);writeLines(c('# 在event_pred源码根目录执行；与原运行使用相同版本的R和依赖。',
+  download("sim_script_download","reproduce_survival_simulation.R",function(file){r<-sim_result();req(r);writeLines(c('# 在工作台解压目录（含R文件夹）执行；与原运行使用相同版本的R和依赖。',
     'source("R/models.R"); source("R/inputs.R"); source("R/forecast.R"); source("R/simulation.R")',
     paste0('cfg <- jsonlite::fromJSON(',encodeString(jsonlite::toJSON(export_config(r),auto_unbox=TRUE,digits=NA,null="null"),quote='"'),', simplifyVector = TRUE)'),
     '# 修复JSON中的组列表，保持独立组配置。',

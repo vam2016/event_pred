@@ -3,6 +3,8 @@ library(bslib)
 library(ggplot2)
 library(plotly)
 library(DT)
+platform_name <- "SurvCast"
+platform_title <- "生存事件预测与模拟工作台"
 source("R/units.R", local = TRUE)
 source("R/help.R", local = TRUE)
 source("R/models.R", local = TRUE)
@@ -119,9 +121,9 @@ register_expansion_two_help()
 source("R/expansion_two_server.R", local = TRUE)
 source("R/workflow.R", local = TRUE)
 
-ui <- page_fillable(title = "event_pred", theme = theme, fillable = FALSE,
+ui <- page_fillable(title = platform_title, theme = theme, fillable = FALSE,
   tags$head(tags$script(src="batch_workspace.js"),tags$script(HTML("Shiny.addCustomMessageHandler('studyBusy',function(s){document.getElementById('st_run').disabled=s.busy;document.getElementById('st_cancel').disabled=!s.busy;});")),tags$link(rel = "stylesheet", href = "style.css"),tags$link(rel="stylesheet",href="handbook.css")),
-  div(class = "app-header", div(tags$span("event_pred", class = "brand"), tags$span("生存模拟与事件数预测", class = "app-title")),
+  div(class = "app-header", div(tags$span(platform_name, class = "brand"), tags$span(platform_title, class = "app-title")),
     div(class = "header-meta", "内部开发 · v0.35.0（待复核）")),
   navset_pill_list(id = "nav", widths = c(2, 10), well = FALSE,
     workflow_home(),
@@ -243,7 +245,7 @@ ui <- page_fillable(title = "event_pred", theme = theme, fillable = FALSE,
       section("入组 / 脱落后验", tableOutput("process_table"))),
     nav_panel("方法与推导", value = "methods", handbook_ui()),
     nav_panel("开发记录", value = "roadmap", div(class = "reading-layout", includeMarkdown("docs/DEVELOPMENT_PLAN.md")))),
-  div(class = "site-footer", "event_pred · 日 / 周 / 月（默认月）· v0.35.0"))
+  div(class = "site-footer", "SurvCast · 日 / 周 / 月（默认月）· v0.35.0"))
 
 server <- function(input, output, session) {
   result <- reactiveVal(NULL); run_error <- reactiveVal(NULL)

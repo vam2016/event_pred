@@ -49,3 +49,7 @@ GitHub 核心源码提交：`e18a814b7af94341ddc65f47f77371431c2cfda5`；完整�
 首次 GitHub Actions 安装因缺失 libuv 和 libcurl 头文件失败，未进入 R 检查；运行记录 `37339695766`。补入 Ubuntu 的 libuv1-dev、libcurl4-openssl-dev 与 pkg-config；安装脚本尊重运行环境配置的 CRAN 镜像，并并行安装缺失包。Docker 核心准备文件同步补入系统库，镜像构建仍未运行。该失败属于依赖准备，不计为方法/数值检查通过。
 
 修复后 GitHub Actions 运行 [37341056792](https://github.com/vam2016/event_pred/actions/runs/37341056792) 成功：系统依赖、R 包安装及核心 50 项断言全部通过。检查提交为 `d2fcc441536ddf21afb2596dd21df111c7724f80`；后续同步仅补充文档/状态记录，不改变已检查计算源码。Docker 构建和指定部署环境检查仍待完成。
+
+## 2026-10-06 命名与本机启动
+
+显示名称改为 SurvCast（生存事件预测与模拟工作台），仓库仍为 event_pred。新增 Mac / Windows / Linux 启动入口及 LOCAL_START.md。Mac 原目录与含空格新解压目录均通过启动、首页、17 个公式、离线手册标题及 390px 窄屏检查；ZIP 保留执行权限，安装包按 R 与系统架构独立缓存。实际记录见 validation/core_launch_results.json。Windows 准备流程由新的 CI 运行记录；未将本机 Mac 检查称为另一台 Windows 的浏览器实测。
