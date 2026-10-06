@@ -2,14 +2,17 @@
 $launchArgs = $args
 $root = Split-Path -Parent $PSScriptRoot
 Set-Location -LiteralPath $root
-$found = Get-Command Rscript.exe -CommandType Application -ErrorAction SilentlyContinue
+$found = Get-Command Rscript.exe -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
 $rscript = if ($found) { $found.Source } else { $null }
 if (-not $rscript) {
   foreach ($key in @('HKCU:\SOFTWARE\R-core\R','HKLM:\SOFTWARE\R-core\R','HKLM:\SOFTWARE\WOW6432Node\R-core\R')) {
     $registered = Get-ItemProperty -LiteralPath $key -ErrorAction SilentlyContinue
     if ($registered -and $registered.InstallPath) {
-      $candidate = Join-Path $registered.InstallPath 'bin\Rscript.exe'
-      if (Test-Path -LiteralPath $candidate) { $rscript=$candidate; break }
+      foreach ($relative in @('bin\Rscript.exe','bin\x64\Rscript.exe')) {
+        $candidate = Join-Path $registered.InstallPath $relative
+        if (Test-Path -LiteralPath $candidate) { $rscript=$candidate; break }
+      }
+      if ($rscript) { break }
     }
   }
 }
@@ -19,8 +22,11 @@ if (-not $rscript) {
     foreach ($folder in @((Join-Path $base 'R'),(Join-Path $base 'Programs\R'))) {
       $installs = Get-ChildItem -LiteralPath $folder -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -match '^R-\d+\.\d+\.\d+' } | Sort-Object { [version]([regex]::Match($_.Name,'\d+\.\d+\.\d+').Value) } -Descending
       foreach ($install in $installs) {
-        $candidate = Join-Path $install.FullName 'bin\Rscript.exe'
-        if (Test-Path -LiteralPath $candidate) { $rscript=$candidate; break }
+        foreach ($relative in @('bin\Rscript.exe','bin\x64\Rscript.exe')) {
+          $candidate = Join-Path $install.FullName $relative
+          if (Test-Path -LiteralPath $candidate) { $rscript=$candidate; break }
+        }
+        if ($rscript) { break }
       }
       if ($rscript) { break }
     }
