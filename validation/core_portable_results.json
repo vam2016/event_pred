@@ -9,5 +9,14 @@
     "equations": 17,
     "errors": 0
   },
-  "jsErrors": []
+  "jsErrors": [],
+  "interactive_results_update": {
+    "date": "2026-10-06",
+    "archive": "SurvCast-v1.0.0-rc.1.zip",
+    "manifest_sha256_files_verified": 58,
+    "new_module_in_source_closure": true,
+    "extracted_R_display_checks": 13,
+    "status": "passed",
+    "scope": "independent ZIP extraction and R display checks; browser interaction checks ran against source launcher"
+  }
 }

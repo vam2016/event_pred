@@ -39,5 +39,18 @@
     "windows_scope": "dependency preparation via actual cmd/PowerShell entry",
     "linux_scope": "launcher preparation and 50 core checks",
     "mac_scope": "actual local and extracted ZIP server + browser checks"
+  },
+  "interactive_results": {
+    "date": "2026-10-06",
+    "core_commit": "4d115d79a954a90294e16f4798929cc267a61146",
+    "development_commit": "be547c150085413937b9eec4b5fa46a61ecd609a",
+    "core_files_verified": 23,
+    "development_files_verified": 20,
+    "ci_run": 37401966422,
+    "ci_conclusion": "success",
+    "linux_scope": "core 51 checks and display 13 checks",
+    "windows_scope": "actual cmd/PowerShell dependency preparation",
+    "browser_interaction_checks": 31,
+    "public_shiny_deployment": false
   }
 }
