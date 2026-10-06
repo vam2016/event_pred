@@ -43,5 +43,13 @@
     "Linux"
   ],
   "local_launch_validation": true,
-  "last_updated": "2026-10-06"
+  "last_updated": "2026-10-06",
+  "interactive_results": {
+    "status": "locally_checked",
+    "display_only": true,
+    "data_checks": 13,
+    "browser_checks": 31,
+    "github_synced": false,
+    "github_ci": "pending"
+  }
 }

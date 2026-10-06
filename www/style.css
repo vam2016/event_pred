@@ -18,3 +18,11 @@ table.dataTable.nowrap th,table.dataTable.nowrap td{white-space:nowrap;word-brea
 @media(max-width:700px){.study-progress{align-items:flex-start;flex-direction:column}.study-progress progress{width:100%}}
 
 @media(max-width:480px){.app-header>div:first-child{display:flex;flex-direction:column;justify-content:center;gap:2px}.app-title{margin-left:0;padding-left:0;border-left:0;font-size:11px}.brand{font-size:21px}}
+
+/* Results: shared controls and an exact time readout link plots to tables. */
+.result-controls{background:#fff;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:18px 22px;margin-bottom:20px}
+.result-control-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.result-control-grid .shiny-input-container{margin-bottom:8px}
+.result-switches{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:center}.result-switches .shiny-input-container{width:auto!important;margin-bottom:6px}
+.selected-reading{display:flex;align-items:baseline;gap:12px 24px;flex-wrap:wrap;padding:12px 0;border-top:1px solid var(--line);font-size:13px;font-variant-numeric:tabular-nums}.selected-reading>span{color:var(--muted)}.selected-reading>strong{font-family:Menlo,monospace;font-size:17px;font-weight:500}.result-controls .field-note{margin:2px 0 0}.js-plotly-plot{max-width:100%}.dataTables_filter input{max-width:100%;border:1px solid var(--line);border-radius:4px}
+@media(max-width:900px){.result-control-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.result-control-grid{grid-template-columns:1fr}.result-controls{padding:14px}.selected-reading{gap:6px 14px}.result-switches{gap:6px}.dataTables_filter,.dataTables_length{text-align:left!important;float:none!important}}

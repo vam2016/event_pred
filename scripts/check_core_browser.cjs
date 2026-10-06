@@ -1,5 +1,6 @@
 const fs=require('fs'),path=require('path');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+const baseURL=process.env.CORE_CHECK_URL||'http://127.0.0.1:3839';
 const root=process.cwd(),out=process.env.CORE_CHECK_OUTPUT||path.resolve(root,'../../work/core-check-downloads');
 fs.mkdirSync(out,{recursive:true});
 const checks=[],jsErrors=[],consoleErrors=[],requests=[];
@@ -8,14 +9,14 @@ const check=(ok,label)=>{if(!ok)throw Error(label);checks.push(label);console.lo
  const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH||'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
  const page=await browser.newPage({viewport:{width:1450,height:1050},acceptDownloads:true});page.setDefaultTimeout(30000);
  page.on('pageerror',e=>jsErrors.push(e.message));page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
- page.on('request',r=>{if(/^https?:/.test(r.url())&&!r.url().startsWith('http://127.0.0.1:3839'))requests.push(r.url())});
+ page.on('request',r=>{if(/^https?:/.test(r.url())&&!r.url().startsWith(baseURL))requests.push(r.url())});
  const choose=async(id,value)=>{await page.locator('#'+id).waitFor({state:'attached'});await page.evaluate(({id,value})=>document.getElementById(id).selectize.setValue(value),{id,value});await page.waitForTimeout(450)};
  const tab=async(name)=>{await page.getByRole('tab',{name,exact:true}).click();await page.waitForTimeout(250)};
  const fill=async(id,value)=>{await page.locator('#'+id).fill(String(value));await page.locator('#'+id).dispatchEvent('change');await page.waitForTimeout(200)};
  const download=async(id,name)=>{await page.locator('#'+id).waitFor({state:'visible'});const wait=page.waitForEvent('download');await page.locator('#'+id).click();const d=await wait;await d.saveAs(path.join(out,name));return fs.readFileSync(path.join(out,name),'utf8')};
  const noErrors=async()=>check((await page.locator('.shiny-output-error:visible:not(:empty)').allTextContents()).length===0,'visible outputs have no errors');
  try {
-  await page.goto('http://127.0.0.1:3839');await page.waitForSelector('#task_count');await page.waitForTimeout(1600);
+  await page.goto(baseURL);await page.waitForSelector('#task_count');await page.waitForTimeout(1600);
   check(await page.locator('.task-card').count()===3,'home contains exactly three core tasks');
   check(!(await page.getByRole('tab',{name:'任务参数',exact:true}).isVisible()),'home hides unrelated task forms');await page.screenshot({path:path.join(out,'home.png')});
   await page.locator('#task_count').click();await page.waitForSelector('#run',{state:'visible'});

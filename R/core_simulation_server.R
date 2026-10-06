@@ -68,13 +68,18 @@ register_core_simulation_server <- function(input,output,session) {
   })
   selected <- reactive({r<-sim_result();req(r,input$sim_trial,input$sim_view_cut);list(r=r,b=as.integer(input$sim_trial),k=as.integer(input$sim_view_cut))})
   subset_selected <- function(d,s)d[d$SIMID==s$b&d$CUTID==s$k,,drop=FALSE]
+  subset_display <- function(d,s) {
+    d<-subset_selected(d,s);g<-input$sim_display_group %||% "all"
+    if(g!="all") d<-d[d$group==g,,drop=FALSE]
+    d
+  }
   view_unit <- function(d,cols,r)unit_table(d,r$config$display_unit,cols)
   table <- function(d) {
     if("scope" %in% names(d))d$scope <- ifelse(d$scope=="overall","总体","组内")
     if("status" %in% names(d))d$status <- ifelse(d$status=="event","事件",ifelse(d$status=="dropout","永久退出",ifelse(d$status=="active","行政删失",d$status)))
     labels <- c(SIMID="试验序号",CUTID="截点序号",DCO_DAY="研究DCO",scope="范围",group="组别",n="人数",events="事件数",dropouts="永久退出人数",administrative="行政删失人数",median_day="中位时间",lower_day="中位时间95%下限",upper_day="中位时间95%上限",median_status="中位数状态",time_day="随访时间",survival="生存率",lower="生存率95%下限",upper="生存率95%上限",n_risk="在险人数",status="状态",entry_day="入组研究时间",obs_day="观察研究时间",event="事件指示")
     for(id in names(labels))names(d)<-sub(paste0("^",id,"(?=（|$)"),labels[[id]],names(d),perl=TRUE)
-    tab <- DT::datatable(d,rownames=FALSE,options=list(scrollX=TRUE,pageLength=8,dom="tip",language=list(info="显示 _START_ 至 _END_，共 _TOTAL_ 条",infoEmpty="无记录",emptyTable="无记录",paginate=list(previous="上一页",`next`="下一页"))))
+    tab <- DT::datatable(d,rownames=FALSE,class="display nowrap",options=list(scrollX=TRUE,pageLength=8,dom="lftip",language=list(search="检索：",lengthMenu="每页 _MENU_ 条",zeroRecords="无匹配记录",info="显示 _START_ 至 _END_，共 _TOTAL_ 条",infoEmpty="无记录",emptyTable="无记录",paginate=list(previous="上一页",`next`="下一页"))))
     cols <- names(d)[vapply(d,is.double,logical(1))]
     if(length(cols))DT::formatRound(tab,cols,digits=3) else tab
   }
@@ -85,19 +90,13 @@ register_core_simulation_server <- function(input,output,session) {
         p(class="field-note",paste("最近成功运行：",r$created_at,"。区间为KM估计区间；汇总分位数只在中位数可估计的试验中计算。当前不计算功效。")))
     })
   })
-  output$sim_overview <- renderDT({r<-sim_result();req(r);d<-simulation_result_overview(r);d$scope<-ifelse(d$scope=="overall","总体","组内");d<-view_unit(d,c("conditional_lower_day","conditional_median_day","conditional_upper_day"),r)
+  output$sim_overview <- renderDT({r<-sim_result();req(r);d<-simulation_result_overview(r);g<-input$sim_display_group %||% "all";if(g!="all")d<-d[d$group==g,,drop=FALSE];d$scope<-ifelse(d$scope=="overall","总体","组内");d<-view_unit(d,c("conditional_lower_day","conditional_median_day","conditional_upper_day"),r)
     names(d)[1:8]<-c("截点序号","范围","组别","试验数","平均人数","平均事件数","中位数可估计比例","可估计条件下2.5%分位数")
     names(d)[9:10]<-c("可估计条件下50%分位数","可估计条件下97.5%分位数");names(d)[8:10]<-paste0(names(d)[8:10],"（",time_label(r$config$display_unit),"）");table(d)})
-  output$sim_summary <- renderDT({s<-selected();d<-subset_selected(s$r$summary,s);d<-view_unit(d,c("DCO_DAY","median_day","lower_day","upper_day"),s$r);table(d)})
-  output$sim_fixed_table <- renderDT({s<-selected();d<-subset_selected(s$r$fixed,s);d<-view_unit(d,c("DCO_DAY","time_day"),s$r);table(d)})
-  output$sim_risk <- renderDT({s<-selected();d<-subset_selected(s$r$fixed,s);d<-d[d$scope=="group",c("group","time_day","n_risk","status"),drop=FALSE];table(view_unit(d,"time_day",s$r))})
-  output$sim_data <- renderDT({s<-selected();table(view_unit(subset_selected(s$r$observed,s),c("DCO_DAY","entry_day","time_day","obs_day"),s$r))})
-  output$sim_km <- renderPlotly({
-    s<-selected();d<-subset_selected(s$r$curves,s);validate(need(nrow(d)>0,"此截点前没有受试者入组。"));d<-d[d$scope=="group",,drop=FALSE]
-    d$time<-d$time_day/time_factor(s$r$config$display_unit)
-    p<-ggplot(d,aes(time,survival,colour=group))+geom_step(linewidth=.8)+coord_cartesian(ylim=c(0,1))+labs(x=paste0("个体随访时间（",time_label(s$r$config$display_unit),"）"),y="KM生存率",colour="组别")+theme_minimal(base_size=12)+theme(panel.grid.minor=element_blank(),legend.position="bottom")+scale_colour_manual(values=c("#126b72","#173d50","#b68245","#79608c","#477c66","#9b5661"))
-    plotly::ggplotly(p)
-  })
+  output$sim_summary <- renderDT({s<-selected();d<-subset_display(s$r$summary,s);d<-view_unit(d,c("DCO_DAY","median_day","lower_day","upper_day"),s$r);table(d)})
+  output$sim_fixed_table <- renderDT({s<-selected();d<-subset_display(s$r$fixed,s);d<-view_unit(d,c("DCO_DAY","time_day"),s$r);table(d)})
+  output$sim_risk <- renderDT({s<-selected();d<-subset_display(s$r$fixed,s);d<-d[d$scope=="group",c("group","time_day","n_risk","status"),drop=FALSE];table(view_unit(d,"time_day",s$r))})
+  output$sim_data <- renderDT({s<-selected();table(view_unit(subset_display(s$r$observed,s),c("DCO_DAY","entry_day","time_day","obs_day"),s$r))})
   output$sim_export_note <- renderUI({s<-selected();x<-simulation_adtte(subset_selected(s$r$observed,s),s$r$config);bad<-simulation_export_issues(x)
     p(class="field-note",paste0("ADTTE日期向下取整，AVAL含首日；CNSR=0事件、1行政删失、2永久退出。",if(nrow(bad))paste0(nrow(bad),"条同日起止记录不能进入当前预测接口；CSV保留这些记录，不改日期。") else "本次日期记录满足正经过时间要求。","生存分析使用连续时间，日期导出可能产生并列时间。"))
   })
