@@ -29,5 +29,15 @@
     "core_checks": 50,
     "url": "https://github.com/vam2016/event_pred/actions/runs/37341056792",
     "tested_commit": "d2fcc441536ddf21afb2596dd21df111c7724f80"
+  },
+  "local_start_and_branding": {
+    "platform": "SurvCast",
+    "core_commit": "2f3fc730ce303c5f3c964ff28fd947404a6ef550",
+    "development_commit": "596990d1125062505dda8fdddf6c90008311690e",
+    "ci_run": 37398811054,
+    "ci_conclusion": "success",
+    "windows_scope": "dependency preparation via actual cmd/PowerShell entry",
+    "linux_scope": "launcher preparation and 50 core checks",
+    "mac_scope": "actual local and extracted ZIP server + browser checks"
   }
 }

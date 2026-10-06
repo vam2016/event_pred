@@ -43,4 +43,4 @@ Ubuntu 从源码安装 R 包所需系统库可用 `sudo apt-get install libuv1-d
 
 ## 检查记录
 
-本机入口及独立包启动检查见 `validation/core_launch_results.json`；Windows 准备流程另外由 GitHub Actions 检查。自动化服务器检查不替代另一台电脑的真实浏览器操作。正式部署和扩展模块状态见核心验证报告。
+本机入口及独立包启动检查见 `validation/core_launch_results.json`；Windows 的 cmd/PowerShell 准备流程已通过 [GitHub Actions](https://github.com/vam2016/event_pred/actions/runs/37398811054) 检查（未启动桌面浏览器）。自动化服务器检查不替代另一台电脑的真实浏览器操作。正式部署和扩展模块状态见核心验证报告。

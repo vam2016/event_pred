@@ -20,7 +20,7 @@ def include_sources(path):
 
 include_sources(root / "app_core.R")
 paths = set(modules) | {
-    "R/_disable_autoload.R",
+    "R/_disable_autoload.R", ".gitignore",
     "Start-Mac.command", "Start-Windows.cmd", "Start-Linux.sh",
     "scripts/start_core.R", "scripts/start_windows.ps1", "docs/LOCAL_START.md",
     "app_core.R", "scripts/install_core.R", "scripts/package_core.py",
