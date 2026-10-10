@@ -1,0 +1,590 @@
+{
+  "date": "2026-10-10",
+  "timezone": "Asia/Shanghai",
+  "repository": "vam2016/event_pred",
+  "branch": "development/v2.0",
+  "baseline_commit": "51f2127612fad08c983d7b9327cfc85b1f703fd8",
+  "main_commit": "83555c112eca6231c4e8e254bf2a726704e546fb",
+  "status": "planning_complete_extension_load_blocked",
+  "R": "R version 4.6.0 (2026-04-24)",
+  "syntax": {
+    "total": 133,
+    "passed": 130,
+    "failed": 3,
+    "failures": [
+      {
+        "path": "R/research_workbench_ui.R",
+        "status": "failed",
+        "error": "R/research_workbench_ui.R:63:371: unexpected ')'\n63: 入基准的同轮情景差\",ia_overview=\"冻结IA统计量\",model_overview=\"准备模型与诊断状态\"))),research_export_panel(\"cb_\",\"条件研究\",c(scenario_pairs=\"情景配对CSV\",ia_ov\n                                                                                                                                                                                                                                                                                                                                                                                       ^"
+      },
+      {
+        "path": "R/round_five_server.R",
+        "status": "failed",
+        "error": "R/round_five_server.R:13:545: unexpected ';'\n13: (.01,10),survival=c(.01,10),future_n=c(0,10000),dco=c(0,3650/u));updateNumericInput(session,\"rc_lower\",label=parameter_label(\"rc_lower\",if(input$rc_solve==\"dco\")paste0(\"DCO下界（\",time_labe\n                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ^"
+      },
+      {
+        "path": "R/study_ui.R",
+        "status": "failed",
+        "error": "R/study_ui.R:135:1: unexpected ')'\n134: d\",\"停止汇总 CSV\")),downloadButton(\"st_truth_download\",\"选定轮次真值 CSV\"),downloadButton(\"st_config_download\",\"配置 JSON\"),downloadButton(\"st_script_download\",\"复现 R 脚本\"),d\n135: )\n     ^"
+      }
+    ],
+    "files": [
+      {
+        "path": "app.R",
+        "status": "passed"
+      },
+      {
+        "path": "app_core.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/_disable_autoload.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/adaptation_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/adaptation_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/adaptation.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/adaptive_batch_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/adaptive_batch_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/adaptive_batch.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/batch_analysis.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/batch_research_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/batch_research_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/batch_research.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/batch_sequential.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/batch_workspace_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/batch_workspace_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/batch_workspace.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/bayes.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/conditional_batch.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/conditional_prediction_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/conditional_prediction.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/conditional_simulation.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/conditional_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/core_handbook.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/core_results.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/core_simulation_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/core_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/core_workflow.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/design_search.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/expansion_help.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/expansion_two_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/expansion_two_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/fitting.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/flexible_models.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/flexible_prediction.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/flexible_splines.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/forecast.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/group_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/groups.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/handbook.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/help.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/heterogeneity.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/history_inference_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/history_inference_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/history_inference.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/ia_history.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/ia_reverse_calibration.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/inputs.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/joint_marginal.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/joint_research_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/joint_research_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/joint_research.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/joint_sequential.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/joint_survival_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/joint_survival_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/joint_survival.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/models.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/multiarm_design.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/multiarm_multiplicity.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/multistate_prediction.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/nph.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/observation_process.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/panel_multistate.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/parameter_calibration.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/parameter_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/parameter_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/parameters.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/patient_adaptation_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/patient_adaptation_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/patient_adaptation.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/patient_adaptive_prediction.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/patient_prediction_process.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/research_runtime.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/research_sources.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/research_workbench_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/research_workbench_ui.R",
+        "status": "failed",
+        "error": "R/research_workbench_ui.R:63:371: unexpected ')'\n63: 入基准的同轮情景差\",ia_overview=\"冻结IA统计量\",model_overview=\"准备模型与诊断状态\"))),research_export_panel(\"cb_\",\"条件研究\",c(scenario_pairs=\"情景配对CSV\",ia_ov\n                                                                                                                                                                                                                                                                                                                                                                                       ^"
+      },
+      {
+        "path": "R/reverse_calibration.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/round_five_server.R",
+        "status": "failed",
+        "error": "R/round_five_server.R:13:545: unexpected ';'\n13: (.01,10),survival=c(.01,10),future_n=c(0,10000),dco=c(0,3650/u));updateNumericInput(session,\"rc_lower\",label=parameter_label(\"rc_lower\",if(input$rc_solve==\"dco\")paste0(\"DCO下界（\",time_labe\n                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ^"
+      },
+      {
+        "path": "R/round_five_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/round_four_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/round_four_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/round_three_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/round_three_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/round_two_help.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/sequential_beta.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/sequential_inference.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/sequential_ordering.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/sequential_repeated_binding.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/sequential_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/sequential.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/shared_adaptation_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/shared_adaptation_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/shared_adaptation.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/shared_riskset.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/simulation_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/simulation_ui.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/simulation.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/study_server.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/study_ui.R",
+        "status": "failed",
+        "error": "R/study_ui.R:135:1: unexpected ')'\n134: d\",\"停止汇总 CSV\")),downloadButton(\"st_truth_download\",\"选定轮次真值 CSV\"),downloadButton(\"st_config_download\",\"配置 JSON\"),downloadButton(\"st_script_download\",\"复现 R 脚本\"),d\n135: )\n     ^"
+      },
+      {
+        "path": "R/study.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/units.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/validation.R",
+        "status": "passed"
+      },
+      {
+        "path": "R/workflow.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/batch_worker.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/calibrate.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check_core_results.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check_core.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.10.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.11.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.12.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.13.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.14.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.15.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.16.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.17.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.18.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.19.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.2.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.3.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.4.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.5.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.6.1.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.6.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.7.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.8.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check-v0.9.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/check.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/install_core.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/install.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/patient_adaptive_worker.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/replay_core_downloads.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/start_core.R",
+        "status": "passed"
+      },
+      {
+        "path": "scripts/study_worker.R",
+        "status": "passed"
+      }
+    ]
+  },
+  "fresh_checks": {
+    "core": {
+      "command": "Rscript scripts/check_core.R",
+      "status": "passed",
+      "assertions": 51
+    },
+    "display": {
+      "command": "Rscript scripts/check_core_results.R",
+      "status": "passed",
+      "assertions": 13
+    }
+  },
+  "not_run": ["successful full app.R loading", "advanced method validation", "browser interaction", "real-download replay", "Docker build", "target deployment"],
+  "implementation_changed": false,
+  "dependencies": {
+    "R_LIBS_USER": "/Users/lerist/Documents/Codex/2026-10-03/cha/work/R-library",
+    "shiny": "1.14.0",
+    "bslib": "0.11.0",
+    "survival": "3.8.6"
+  },
+  "next_work_item": "V2-001"
+}
