@@ -1,5 +1,10 @@
-name: Core R checks
+name: Core and extension loading checks
 on:
+  push:
+    branches: [development/v2.0]
+    paths: ['**/*.R', '.github/workflows/check.yml', 'scripts/*.cjs', 'www/**']
+  pull_request:
+    paths: ['**/*.R', '.github/workflows/check.yml', 'scripts/*.cjs', 'www/**']
   workflow_dispatch:
 jobs:
   core:
@@ -18,6 +23,8 @@ jobs:
           key: core-r-4.6.0-${{ runner.os }}-${{ hashFiles('scripts/install_core.R') }}
       - run: Rscript scripts/install_core.R
       - run: Rscript scripts/start_core.R --prepare-only
+      - name: Parse and construct both application entries
+        run: Rscript scripts/check_extensions.R
       - run: Rscript scripts/check_core.R
       - run: Rscript scripts/check_core_results.R
   windows-launch:

@@ -95,8 +95,9 @@ for (i in 1:6) {
 }
 parameter_label <- function(id, label) {
   if (is.null(label)) return(NULL)
+  if (!id %in% names(parameter_help)) stop(paste("缺少参数说明：", id))
   text <- parameter_help[[id]]
-  if (is.null(text)) stop(paste("缺少参数说明：", id))
+  if (is.null(text) || is.na(text) || !nzchar(text)) stop(paste("缺少参数说明：", id))
   tagList(label, bslib::popover(
     tags$button(type = "button", class = "parameter-help", "?", `aria-label` = paste("参数说明", id)),
     tags$p(text), title = "含义与输入建议", placement = "auto", options = list(trigger = "click")))

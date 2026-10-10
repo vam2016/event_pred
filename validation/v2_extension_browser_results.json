@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "scope": "full-entry initialization, seven task pages and reverse-planning labels; no advanced method validation",
+  "passed": 12,
+  "checks": [
+    "full entry connects with initialized browser inputs",
+    "study opens without visible output errors",
+    "study design and export panels remain in their tab container",
+    "conditional_batch opens without visible output errors",
+    "heterogeneity opens without visible output errors",
+    "joint_sequential opens without visible output errors",
+    "multiarm opens without visible output errors",
+    "design_search opens without visible output errors",
+    "reverse_calibration opens without visible output errors",
+    "reverse calibration DCO bounds update labels",
+    "reverse calibration bounds follow changed time units",
+    "no uncaught browser JavaScript errors"
+  ],
+  "jsErrors": []
+}

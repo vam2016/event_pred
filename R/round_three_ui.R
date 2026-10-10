@@ -7,6 +7,7 @@ round_three_help <- function(){h<-get("parameter_help",envir=parent.frame())
   for(pre in c("ms_","je_")){for(k in c("origin","cut","file_unit","max","allocation","enroll_rate","drop_control","drop_treatment")){id<-paste0(pre,k);if(!id %in% names(extra))extra[id]<-switch(k,origin="研究起点日期，用于导出日期。",cut="IA自研究起点经过时间；仍随访需确认到此时点。",file_unit="状态文件时间单位，独立于页面显示单位。",max="最大研究经过时间，IA之后且≤3650日。",allocation="未来Treatment简单随机分配概率，默认0.5。",enroll_rate="总体未来Poisson入组率，人/当前单位，例20人/月。","独立永久退出风险，非负，每当前单位；不等于停药。")}}
   for(g in c("control","treatment"))for(k in c("n0","n1","age","prog"))extra[paste0("ms_",g,"_",k)]<-switch(k,n0="IA尚未进展且仍随访人数，非负整数。",n1="IA已进展且仍随访人数，非负整数；PFS已知、OS待观察。",age="此组参数记录入组至IA的共同随访年龄，不超过IA。",prog="此组已进展患者的共同进展年龄，须正且不超过随访年龄。")
   for(tr in c("01","02","12")){extra[paste0("ms",tr,"_source")]<-"本转移二选一：按组实际精确路径拟合，或指定参数。参数记录模式仅指定；无风险暴露的转移须指定参数。";extra[paste0("ms",tr,"_fit_method")]<-"指数、Weibull或PWE；Weibull每组此转移至少2事件；PWE每段须有风险暴露。";extra[paste0("ms",tr,"_fit_cuts")]<-"拟合PWE风险年龄切点，正递增；12按所选时钟解释。例3,6月。"}
+  extra["je_compare"] <- "运行前选择是否同轮比较原事件计划与预定重估规则；两规则复用患者资料，主成功仍按预先指定的主规则统计，不按结果择优。"
   h[names(extra)]<-extra;assign("parameter_help",h,envir=parent.frame())
 }
 ms_state_entry_ui <- function(g,label){pre<-paste0("ms_",g,"_");section(label,fields(numericInput(paste0(pre,"n0"),"IA未进展仍随访人数",50,min=0,step=1),numericInput(paste0(pre,"n1"),"IA已进展仍随访人数",10,min=0,step=1)),fields(numericInput(paste0(pre,"age"),"共同随访年龄（月）",6,min=0),numericInput(paste0(pre,"prog"),"已进展的进展年龄（月）",3,min=.001)))}

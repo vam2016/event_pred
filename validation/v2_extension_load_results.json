@@ -1,0 +1,44 @@
+{
+  "status": "passed",
+  "scope": "R parsing, UI construction, unflushed server registration and study navigation; no advanced method validation",
+  "parsed_files": 134,
+  "checks": [
+    {
+      "label": "134 R source files parse",
+      "status": "passed"
+    },
+    {
+      "label": "app.R constructs UI and server",
+      "status": "passed"
+    },
+    {
+      "label": "app.R registers server without running a research task",
+      "status": "passed"
+    },
+    {
+      "label": "joint rule comparison includes parameter help",
+      "status": "passed"
+    },
+    {
+      "label": "missing help reports the parameter identifier",
+      "status": "passed"
+    },
+    {
+      "label": "study has one nested tab container",
+      "status": "passed"
+    },
+    {
+      "label": "all eight study panels remain inside the tab container",
+      "status": "passed"
+    },
+    {
+      "label": "app_core.R constructs UI and server",
+      "status": "passed"
+    },
+    {
+      "label": "app_core.R registers server without running a research task",
+      "status": "passed"
+    }
+  ],
+  "R": "R version 4.6.0 (2026-04-24)"
+}
