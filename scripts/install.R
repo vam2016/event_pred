@@ -1,5 +1,5 @@
 source("scripts/install_core.R")
-packages <- c("rmarkdown", "knitr", "haven", "posterior", "processx", "ps", "survRM2", "rpact", "mvtnorm")
+packages <- c("markdown", "rmarkdown", "knitr", "haven", "posterior", "processx", "ps", "survRM2", "rpact", "mvtnorm")
 missing <- packages[!vapply(packages, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing)) {
   target <- .libPaths()[1]

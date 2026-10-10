@@ -20,9 +20,11 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: core-r-4.6.0-${{ runner.os }}-${{ hashFiles('scripts/install_core.R') }}
+          key: core-extension-r-4.6.0-${{ runner.os }}-${{ hashFiles('scripts/install_core.R', 'scripts/install.R') }}
       - run: Rscript scripts/install_core.R
       - run: Rscript scripts/start_core.R --prepare-only
+      - name: Install full-entry document dependency
+        run: Rscript -e 'if (!requireNamespace("markdown", quietly = TRUE)) install.packages("markdown")'
       - name: Parse and construct both application entries
         run: Rscript scripts/check_extensions.R
       - run: Rscript scripts/check_core.R
