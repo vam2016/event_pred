@@ -22,7 +22,7 @@
 |能力|主要实现|当前状态|待完成|
 |---|---|---|---|
 |患者Bootstrap|`R/forecast.R`、`R/groups.R`|完整入口已有，核心限制plugin|患者/组别重抽样、拟合失败/有效次数、核心UI/解释/图表/导出及专项验证|
-|XPT/SAS7BDAT|`R/inputs.R::read_adtte`及核心UI|核心已接通；37项输入、40项浏览器、16项实际下载重放通过|远程CI回读；独立SAS系统/非英文编码样例未实测，见[SAS验收](V2_0_SAS_VALIDATION.md)|
+|XPT/SAS7BDAT|`R/inputs.R::read_adtte`及核心UI|核心已接通；37项输入、40项浏览器、16项实际下载重放通过|远程Linux/Windows通过；独立SAS系统/非英文编码样例未实测，见[SAS验收](V2_0_SAS_VALIDATION.md)|
 |Log-normal/Log-logistic|`R/models.R`、`R/parameters.R`及参数UI/server|已有拟合/分布/参数实现|核心白名单、换算、参考曲线、独立分布/似然对照、帮助/导出|
 |事件驱动模拟|`R/simulation.R`|已有cut_mode=target|核心接入、目标/窗口/并列/未达标、观察真值、复现|
 |历史回测|`R/validation.R::backtest_forecast`|已有实现|当前截点、后续观察仅评分、未来计划与实际资料分离、图表与复现|

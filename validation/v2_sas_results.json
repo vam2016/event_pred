@@ -4,7 +4,7 @@
   "work_item": "V2-101",
   "baseline_commit": "df95ec43396326daf1e43f22b660876fe634388d",
   "core_version": "2.0.0-dev",
-  "status": "local_passed_remote_ci_pending",
+  "status": "passed_local_and_remote",
   "syntax_files": 137,
   "load_checks": 9,
   "input_checks": 37,
@@ -19,5 +19,14 @@
     "Docker build",
     "public deployment"
   ],
-  "next_work_item": "V2-102"
+  "next_work_item": "V2-102",
+  "remote_ci": {
+    "commit": "8b832c2b9a2b513c117c9863ace4617cbd1633a7",
+    "run_id": 38057951632,
+    "url": "https://github.com/vam2016/event_pred/actions/runs/38057951632",
+    "conclusion": "success",
+    "linux": "optional SAS install, both entries, core/display regression and 37 synthetic input checks",
+    "windows": "default core launcher preparation",
+    "browser_and_replay": "local only"
+  }
 }

@@ -4,7 +4,7 @@ R Shiny 生存数据模拟与事件数/目标日期预测平台。当前为 **2.
 
 **2026-10-10：开始 2.0 开发，分支 `development/v2.0`。** 基于完整扩展分支推进，先恢复扩展入口加载，再整理 SAS 导入、常用扩展模型、患者 Bootstrap、事件驱动模拟与回测/少量情景对照。见 [已完成与待完成盘点](docs/V2_0_STATUS_INVENTORY.md)、[2.0 开发计划](docs/V2_0_DEVELOPMENT_PLAN.md)与[执行清单](docs/V2_0_WORK_PLAN.md)。本次核心 51 项及展示数据 13 项检查通过；M0 已修复 3 个语法阻塞、缺失参数帮助及 DCO 单位标签；134 个 R 文件解析、9 项加载/注册及12项浏览器检查通过，见 [M0验证报告](docs/V2_0_M0_VALIDATION.md)。自动检查已接入，Linux加载/回归及Windows启动准备均通过（提交db86b42、运行38052854015）。高级方法仍待专项验证。1.0 目标环境及正式发布收尾单独保留，见 [1.0 发布计划](docs/V1_0_RELEASE_PLAN.md)。
 
-独立核心入口 `app_core.R` 现为 **2.0.0-dev**，已接入CSV、XPT v5/v8、SAS7BDAT，事件数/达标日期均可使用。SAS读取需可选haven包，安装方式为 `Rscript scripts/install_core.R --with-sas`。V2-101本机37项输入、40项浏览器及16项实际下载重放通过，核心64项回归保持通过；详见 [SAS输入验收](docs/V2_0_SAS_VALIDATION.md)。远程CI待回读。GitHub main保留1.0核心候选，历史验收见 [核心验证报告](docs/CORE_VALIDATION.md)，`development/v0.35`保存完整扩展稿；下文历史记录不代表2.0全部开放或验证通过。尚未部署公网。
+独立核心入口 `app_core.R` 现为 **2.0.0-dev**，已接入CSV、XPT v5/v8、SAS7BDAT，事件数/达标日期均可使用。SAS读取需可选haven包，安装方式为 `Rscript scripts/install_core.R --with-sas`。V2-101本机37项输入、40项浏览器及16项实际下载重放通过，核心64项回归保持通过；详见 [SAS输入验收](docs/V2_0_SAS_VALIDATION.md)。远程CI已通过。GitHub main保留1.0核心候选，历史验收见 [核心验证报告](docs/CORE_VALIDATION.md)，`development/v0.35`保存完整扩展稿；下文历史记录不代表2.0全部开放或验证通过。尚未部署公网。
 
 ## 核心入口本机启动
 
