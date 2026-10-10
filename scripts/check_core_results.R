@@ -28,4 +28,4 @@ check(all(vapply(p$x$data,function(t)is.null(t$y)||all(is.finite(t$y)),logical(1
 d<-data.frame(SIMID=c(1,1,2,2),CUTID=c(1,2,1,2),scope="group",group=c("A","A","B","B"),events=1:4)
 check(nrow(core_sim_filter(d,1,NULL,"A"))==2&&core_sim_filter(d,NULL,2,"B")$events==4,"simulation display filters trial, cut and group independently")
 check(identical(r$counts$exponential,mat),"display transformations leave underlying simulations unchanged")
-jsonlite::write_json(list(status="passed",passed=length(checks),checks=checks,scope="display transformations; underlying inference unchanged"),"validation/core_results_check.json",pretty=TRUE,auto_unbox=TRUE)
+jsonlite::write_json(list(status="passed",passed=length(checks),checks=checks,scope="display transformations; underlying inference unchanged"),Sys.getenv("CORE_DISPLAY_OUTPUT",unset="validation/core_results_check.json"),pretty=TRUE,auto_unbox=TRUE)

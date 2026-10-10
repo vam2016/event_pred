@@ -9,6 +9,9 @@ import zipfile
 
 root = Path(__file__).resolve().parent.parent
 version = "1.0.0-rc.1"
+source_version = re.search(r'core_version\s*<-\s*"([^"]+)"', (root / "app_core.R").read_text()).group(1)
+if source_version != version:
+    raise SystemExit(f"Refusing to package {source_version} under the historical {version} release name; use the matching release checkout.")
 output = root.parent / f"SurvCast-v{version}.zip"
 modules = set()
 

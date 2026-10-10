@@ -1,6 +1,6 @@
 # SurvCast 本机启动与电脑间转移
 
-SurvCast（生存事件预测与模拟工作台），版本 1.0.0-rc.1；GitHub 仓库仍为 event_pred。本文针对三个核心入口。
+SurvCast（生存事件预测与模拟工作台）；GitHub 仓库仍为 event_pred。下列候选包说明对应历史1.0.0-rc.1。当前2.0开发分支请从源码运行`app_core.R`，不使用旧打包脚本生成1.0候选包。三个核心入口保留；新增XPT/SAS7BDAT导入需在源码目录运行`Rscript scripts/install_core.R --with-sas`，CSV和参数输入无需该可选依赖。
 
 ## 当前 Mac
 

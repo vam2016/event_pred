@@ -22,7 +22,7 @@
 |能力|主要实现|当前状态|待完成|
 |---|---|---|---|
 |患者Bootstrap|`R/forecast.R`、`R/groups.R`|完整入口已有，核心限制plugin|患者/组别重抽样、拟合失败/有效次数、核心UI/解释/图表/导出及专项验证|
-|XPT/SAS7BDAT|`R/inputs.R::read_adtte`|已有haven接口，核心仅CSV|可选依赖、上传、SAS日期/标签/终点筛选、跨格式合成样例等价|
+|XPT/SAS7BDAT|`R/inputs.R::read_adtte`及核心UI|核心已接通；37项输入、40项浏览器、16项实际下载重放通过|远程CI回读；独立SAS系统/非英文编码样例未实测，见[SAS验收](V2_0_SAS_VALIDATION.md)|
 |Log-normal/Log-logistic|`R/models.R`、`R/parameters.R`及参数UI/server|已有拟合/分布/参数实现|核心白名单、换算、参考曲线、独立分布/似然对照、帮助/导出|
 |事件驱动模拟|`R/simulation.R`|已有cut_mode=target|核心接入、目标/窗口/并列/未达标、观察真值、复现|
 |历史回测|`R/validation.R::backtest_forecast`|已有实现|当前截点、后续观察仅评分、未来计划与实际资料分离、图表与复现|
@@ -83,3 +83,7 @@
 ## 6. M0推进结果
 
 134个R文件全部解析、9项入口加载/注册及12项浏览器初始化/页面/单位检查通过；核心51项及展示13项再次通过。两个入口已恢复构造，七个受影响任务页面实测。远程Linux加载/回归及Windows启动准备均通过；未开展高级方法专项、Docker构建或部署。见[M0报告](V2_0_M0_VALIDATION.md)。
+
+## 7. V2-101推进结果
+
+核心版本2.0.0-dev已接通CSV、XPT v5/v8和SAS7BDAT，可选haven依赖、日期/原编码/筛选校验与冻结配置均落地。137个R文件及9项加载通过，核心64项回归通过；实际下载重放修复了空组别字段的JSON类型。未扩展核心统计模型或发布包。下一项V2-102。

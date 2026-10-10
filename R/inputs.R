@@ -2,20 +2,38 @@ if (!exists("time_factor", mode = "function")) source("R/units.R", local = TRUE)
 
 read_adtte <- function(path, filename = path) {
   ext <- tolower(tools::file_ext(filename))
-  switch(ext,
-    csv = read.csv(path, stringsAsFactors = FALSE, check.names = FALSE, na.strings = c("", "NA")),
-    xpt = { if (!requireNamespace("haven", quietly = TRUE)) stop("读取 XPT 需要 haven 包。"); as.data.frame(haven::read_xpt(path)) },
-    sas7bdat = { if (!requireNamespace("haven", quietly = TRUE)) stop("读取 SAS 数据需要 haven 包。"); as.data.frame(haven::read_sas(path)) },
-    stop("支持 CSV、XPT 和 SAS7BDAT。"))
+  if (!ext %in% c("csv", "xpt", "sas7bdat")) stop("ADTTE 支持 CSV、XPT 和 SAS7BDAT。")
+  if (ext != "csv" && !requireNamespace("haven", quietly = TRUE))
+    stop("读取 XPT / SAS7BDAT 需要可选 haven 包。请在源码目录运行 Rscript scripts/install_core.R --with-sas 后重试；CSV 和参数输入可直接使用。")
+  tryCatch({
+    x <- switch(ext,
+      csv = read.csv(path, stringsAsFactors = FALSE, check.names = FALSE, na.strings = c("", "NA")),
+      xpt = as.data.frame(haven::read_xpt(path, .name_repair = "check_unique")),
+      sas7bdat = as.data.frame(haven::read_sas(path, .name_repair = "check_unique")))
+    if (anyDuplicated(names(x)) || any(!nzchar(names(x)))) stop("变量名必须唯一且非空，不自动改名。")
+    # Preserve stored values and Date classes; SAS value labels do not recode CNSR or groups.
+    attr(x, "adtte_source") <- list(format = ext,
+      reader = if (ext == "csv") "utils::read.csv" else "haven",
+      reader_version = if (ext == "csv") as.character(getRversion()) else as.character(utils::packageVersion("haven")))
+    x
+  }, error = function(e) stop(paste0("读取 ADTTE（", toupper(ext), "）失败：", conditionMessage(e)), call. = FALSE))
 }
 
 adtte_date <- function(x, encoding = "iso") {
-  if (inherits(x, "Date")) return(x)
-  if (inherits(x, "POSIXt")) return(as.Date(x, tz = "UTC"))
+  if (inherits(x, "Date")) {
+    if (any(!is.finite(as.numeric(x))) || any(as.numeric(x) != floor(as.numeric(x)))) stop("日期必须为有效整日，不能缺失或包含时间部分。")
+    return(as.Date(x))
+  }
+  if (inherits(x, "POSIXt")) {
+    seconds <- as.numeric(as.POSIXct(x))
+    if (any(!is.finite(seconds)) || any(abs(seconds / 86400 - round(seconds / 86400)) > 1e-10))
+      stop("STARTDT / ADT 必须为日期或 UTC 零点；不自动截去时间部分。")
+    return(as.Date(x, tz = "UTC"))
+  }
   if (encoding == "sas") {
     if (!is.numeric(x) || any(!is.finite(x))) stop("SAS 日期需为自 1960-01-01 起的数值天数。")
     if (any(x != floor(x))) stop("SAS 日期不得包含时间部分。")
-    return(as.Date(x, origin = "1960-01-01"))
+    return(as.Date(as.numeric(x), origin = "1960-01-01"))
   }
   if (!is.character(x) || anyNA(x) || any(!grepl("^\\d{4}-\\d{2}-\\d{2}$", x))) stop("日期必须为 YYYY-MM-DD；数值 SAS 日期请选择 SAS 编码。")
   y <- as.Date(x, format = "%Y-%m-%d")

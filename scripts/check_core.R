@@ -150,5 +150,5 @@ check(!any(c("event_time_day","dropout_time_day")%in%names(sr$observed)),"observ
 # Freeze actual environment used; simulation limits/tolerances precede assessment.
 packages<-c("shiny","bslib","commonmark","survival","ggplot2","plotly","DT","jsonlite","scales")
 versions<-setNames(vapply(packages,function(p)as.character(packageVersion(p)),character(1)),packages)
-jsonlite::write_json(list(version=e$core_version,R=R.version.string,packages=as.list(versions),checks=checks,measurements=measurements,passed=length(checks),tolerance_rule="analytical means: 4 empirical Monte Carlo SE + 1e-6; deterministic default 1e-8; independent Weibull optimization 2e-5",status="passed"),"validation/core_check_results.json",auto_unbox=TRUE,pretty=TRUE,digits=NA)
+jsonlite::write_json(list(version=e$core_version,R=R.version.string,packages=as.list(versions),checks=checks,measurements=measurements,passed=length(checks),tolerance_rule="analytical means: 4 empirical Monte Carlo SE + 1e-6; deterministic default 1e-8; independent Weibull optimization 2e-5",status="passed"),Sys.getenv("CORE_NUMERIC_OUTPUT",unset="validation/core_check_results.json"),auto_unbox=TRUE,pretty=TRUE,digits=NA)
 cat("CORE_CHECKS_PASSED",length(checks),"\n")

@@ -5,7 +5,7 @@ core_workflow_home <- function() {
     tags$dl(tags$dt("输入"),tags$dd(inputs),tags$dt("结果"),tags$dd(results)),actionButton(id,"进入",class="btn-primary"))
   nav_panel("需求入口",value="home",
     div(class="page-title",h2("选择本次任务")),
-    p(class="field-note","预测可选择参数或 ADTTE CSV；数据模拟只需参数。"),
+    p(class="field-note","预测可选择参数或 ADTTE 数据（CSV / XPT / SAS7BDAT）；数据模拟只需参数。"),
     div(style="display:none",selectInput("task","任务",c("未选择"="home","事件数"="count","达标日期"="target","生存数据"="design"),"home")),
     div(class="task-grid",
       task_card("task_count","预测未来事件数","当前队列、事件模型、入组/退出和预测窗口","新增及累计事件数、预测区间"),

@@ -14,7 +14,7 @@ source("R/bayes.R", local = TRUE)
 source("R/groups.R", local = TRUE)
 
 
-core_version <- "1.0.0-rc.1"
+core_version <- "2.0.0-dev"
 core_models <- c("exponential", "weibull", "pwe")
 catalog <- model_catalog(); catalog <- catalog[catalog$id %in% core_models,,drop=FALSE]
 choices <- setNames(catalog$id, catalog$label)
@@ -97,8 +97,19 @@ server <- function(input, output, session) {
     current_unit(to)
   }, ignoreInit = FALSE)
   raw <- reactive({ req(input$file)
-    if (tolower(tools::file_ext(input$file$name))!="csv") stop("1.0 数据入口使用 ADTTE CSV。")
     read_adtte(input$file$datapath, input$file$name)
+  })
+  output$file_status <- renderUI({
+    if (is.null(input$file)) return(p(class="field-note",
+      if (requireNamespace("haven", quietly=TRUE)) "可读取 CSV、XPT 或 SAS7BDAT。" else "CSV 可直接读取；读取 XPT / SAS7BDAT 需安装可选 haven 包。"))
+    tryCatch({
+      x <- raw(); meta <- attr(x,"adtte_source")
+      date_fields <- intersect(c("STARTDT","ADT"),names(x))
+      decoded <- date_fields[vapply(x[date_fields],function(v)inherits(v,"Date") || inherits(v,"POSIXt"),logical(1))]
+      div(class="notice",paste(toupper(meta$format),"·",nrow(x),"条原始记录"),
+        p(if(length(decoded)) paste("已按文件日期类型解码：",paste(decoded,collapse="、"),"；未标记的数值日期仍按所选编码解释。") else "未标记的数值日期需明确选择 SAS 日期编码；字符日期使用 YYYY-MM-DD。"),
+        p("分析使用存储值；变量标签和 SAS 值标签不替代终点、删失编码或组别值。"))
+    },error=function(e) div(class="notice error",conditionMessage(e)))
   })
   output$endpoint_ui <- renderUI({
     x <- tryCatch(raw(), error = function(e) NULL)
@@ -120,7 +131,7 @@ server <- function(input, output, session) {
     if ((input$analysis_mode %||% "pooled")!="grouped") return(character())
     if(input$input_mode=="parameters") {
       n <- input$group_count %||% 2
-      validate(need(is.finite(n) && n==floor(n) && n==2,"1.0 已知组别模式使用两组。"))
+      validate(need(is.finite(n) && n==floor(n) && n==2,"核心已知组别模式使用两组。"))
       return(LETTERS[seq_len(n)])
     }
     x <- raw(); req(input$paramcd,input$group_column)
@@ -129,7 +140,7 @@ server <- function(input, output, session) {
     if(nzchar(input$analysis_flag %||% "")) rows <- rows & !is.na(x[[input$analysis_flag]]) & x[[input$analysis_flag]]==input$flag_value
     g <- as.character(x[[input$group_column]][rows])
     validate(need(!anyNA(g)&&all(nzchar(trimws(g))),"筛选后组别不能缺失或为空。"))
-    g <- sort(unique(g)); validate(need(length(g)==2,"1.0 已知组别模式筛选后需恰好两组。")); g
+    g <- sort(unique(g)); validate(need(length(g)==2,"核心已知组别模式筛选后需恰好两组。")); g
   })
   output$group_inputs <- renderUI({
     labels <- group_slots(); do.call(navset_card_tab,lapply(seq_along(labels),function(i) nav_panel(paste("组",i,"·",labels[i]),group_input_card(i,labels[i],input$input_mode,isolate(input_unit())))))
@@ -177,6 +188,7 @@ server <- function(input, output, session) {
         input$analysis_flag %||% "", input$flag_value, input$date_encoding, "strict", input$aval_unit %||% "days",group_column=if(cfg$analysis_mode=="grouped")input$group_column else NULL)
       cfg$adtte_mapping <- list(paramcd = input$paramcd, offset = as.numeric(input$offset), dropout_codes = parse_numbers(input$dropout_codes),
         flag = input$analysis_flag, flag_value = input$flag_value, date_encoding = input$date_encoding, aval_unit = input$aval_unit %||% "days",group_column=if(cfg$analysis_mode=="grouped")input$group_column else NULL)
+      cfg$adtte_source <- attr(raw(), "adtte_source")
     }
     if(cfg$analysis_mode=="grouped") {
       labels <- group_slots(); cfg$groups <- list(); override <- if(input$input_mode=="parameters") list() else NULL; cohorts <- list()
@@ -205,7 +217,7 @@ server <- function(input, output, session) {
       cfg$dropout_rate <- 0; cfg$multiplier <- 1; cfg$lag <- 0 # Actual values reside in each group configuration.
     }
     if (!cfg$task %in% c("count","target")) stop("请先选择事件数或达标日期任务。")
-    if (!length(cfg$methods) || any(!cfg$methods %in% core_models)) stop("1.0 使用指数、Weibull 或 PWE 模型。")
+    if (!length(cfg$methods) || any(!cfg$methods %in% core_models)) stop("当前核心入口使用指数、Weibull 或 PWE 模型。")
     cfg$core_version <- core_version
     list(data = d, config = cfg, override = override)
   }
@@ -327,10 +339,10 @@ server <- function(input, output, session) {
   output$template <- downloadHandler(filename = "adtte_synthetic.csv", content = function(file) write.csv(adtte_template(), file, row.names = FALSE))
   output$curves_download <- downloadHandler(filename = "event_curves.csv", content = function(file) { r <- result(); req(r); d<-r$curves;if(r$config$task=="count")d<-d[,setdiff(names(d),c("probability","probability_mcse")),drop=FALSE];write.csv(unit_export(d, r$config$display_unit, "day"), file, row.names = FALSE) })
   output$summary_download <- downloadHandler(filename = "event_milestones.csv", content = function(file) { r <- result(); req(r); d <- r$summary; d$median_date <- milestone_dates(r); write.csv(unit_export(d, r$config$display_unit, c("lower_day", "median_day", "upper_day")), file, row.names = FALSE) })
-  output$config_download <- downloadHandler(filename = "event_pred_config.json", content = function(file) { r <- result(); req(r); jsonlite::write_json(list(version = core_version, created_at = r$created_at, config = export_config(r), data_summary = r$data_summary, session = R.version.string), file, auto_unbox = TRUE, pretty = TRUE, digits = NA) })
+  output$config_download <- downloadHandler(filename = "event_pred_config.json", content = function(file) { r <- result(); req(r); jsonlite::write_json(list(version = core_version, created_at = r$created_at, config = export_config(r), data_summary = r$data_summary, session = R.version.string), file, auto_unbox = TRUE, pretty = TRUE, digits = NA, null = "null") })
   output$report_download <- downloadHandler(filename="event_pred_report.md",content=function(file) {
     r<-result();req(r);counts<-identical(r$config$task,"count");d<-r$curves[r$curves$day==max(r$curves$day),c("model","mean","lower","median","upper"),drop=FALSE]
-    lines<-c(if(counts)"# 未来事件数预测" else "# 目标事件日期预测","",paste("核心入口版本：",core_version),paste("运行时间：",r$created_at),paste("显示单位：",time_label(r$config$display_unit)),"","## 配置","","```json",jsonlite::toJSON(export_config(r),auto_unbox=TRUE,pretty=TRUE,digits=NA),"```","")
+    lines<-c(if(counts)"# 未来事件数预测" else "# 目标事件日期预测","",paste("核心入口版本：",core_version),paste("运行时间：",r$created_at),paste("显示单位：",time_label(r$config$display_unit)),"","## 配置","","```json",jsonlite::toJSON(export_config(r),auto_unbox=TRUE,pretty=TRUE,digits=NA,null="null"),"```","")
     if(counts)lines<-c(lines,"## 窗口末累计事件数","","|模型|均值|2.5%|中位数|97.5%|","|---|---:|---:|---:|---:|",sprintf("|%s|%.3f|%.3f|%.3f|%.3f|",d$model,d$mean,d$lower,d$median,d$upper))
     else lines<-c(lines,"## 目标日期","","|模型|达标概率|概率MCSE（百分点）|日期中位数|","|---|---:|---:|---|",sprintf("|%s|%.1f%%|%.3f|%s|",r$summary$model,100*r$summary$reached,100*r$summary$reached_mcse,milestone_dates(r)),paste("MCSE范围：",r$mcse_scope))
     writeLines(c(lines,"","已记录事件固定；区间为条件于给定或拟合参数的逐点预测区间，未包含参数估计不确定性。"),file,useBytes=TRUE)

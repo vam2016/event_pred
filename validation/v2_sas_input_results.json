@@ -1,0 +1,157 @@
+{
+  "status": "passed",
+  "scope": "synthetic ADTTE input and format equivalence; no independent SAS producer or new statistical method validation",
+  "checks": [
+    {
+      "label": "normalization matches independently declared patient dates, statuses and stored groups",
+      "status": "passed"
+    },
+    {
+      "label": "synthetic.csv reads uppercase extension and records decoder",
+      "status": "passed"
+    },
+    {
+      "label": "synthetic.csv retains selected endpoint, flag, date, censor code and treatment",
+      "status": "passed"
+    },
+    {
+      "label": "synthetic.csv reproduces all three model predictions and trajectories",
+      "status": "passed"
+    },
+    {
+      "label": "synthetic.csv reproduces known-group prediction",
+      "status": "passed"
+    },
+    {
+      "label": "synthetic-v5.xpt reads uppercase extension and records decoder",
+      "status": "passed"
+    },
+    {
+      "label": "synthetic-v5.xpt retains selected endpoint, flag, date, censor code and treatment",
+      "status": "passed"
+    },
+    {
+      "label": "synthetic-v5.xpt reproduces all three model predictions and trajectories",
+      "status": "passed"
+    },
+    {
+      "label": "synthetic-v5.xpt reproduces known-group prediction",
+      "status": "passed"
+    },
+    {
+      "label": "synthetic-v8.xpt reads uppercase extension and records decoder",
+      "status": "passed"
+    },
+    {
+      "label": "synthetic-v8.xpt retains selected endpoint, flag, date, censor code and treatment",
+      "status": "passed"
+    },
+    {
+      "label": "synthetic-v8.xpt reproduces all three model predictions and trajectories",
+      "status": "passed"
+    },
+    {
+      "label": "synthetic-v8.xpt reproduces known-group prediction",
+      "status": "passed"
+    },
+    {
+      "label": "synthetic.sas7bdat reads uppercase extension and records decoder",
+      "status": "passed"
+    },
+    {
+      "label": "synthetic.sas7bdat retains selected endpoint, flag, date, censor code and treatment",
+      "status": "passed"
+    },
+    {
+      "label": "synthetic.sas7bdat reproduces all three model predictions and trajectories",
+      "status": "passed"
+    },
+    {
+      "label": "synthetic.sas7bdat reproduces known-group prediction",
+      "status": "passed"
+    },
+    {
+      "label": "unformatted numeric SAS dates require explicit date encoding",
+      "status": "passed"
+    },
+    {
+      "label": "explicit numeric SAS dates agree with typed dates",
+      "status": "passed"
+    },
+    {
+      "label": "file week units agree with day data independently of display units",
+      "status": "passed"
+    },
+    {
+      "label": "incorrect file units are rejected",
+      "status": "passed"
+    },
+    {
+      "label": "SAS value labels never recode censor values or substitute group labels",
+      "status": "passed"
+    },
+    {
+      "label": "SAS tagged missing censor values are rejected",
+      "status": "passed"
+    },
+    {
+      "label": "unfiltered multiple analysis rows are rejected",
+      "status": "passed"
+    },
+    {
+      "label": "missing selected treatment values are rejected",
+      "status": "passed"
+    },
+    {
+      "label": "incorrect date offset cannot silently alter elapsed follow-up",
+      "status": "passed"
+    },
+    {
+      "label": "typed missing dates are rejected",
+      "status": "passed"
+    },
+    {
+      "label": "fractional typed dates are rejected",
+      "status": "passed"
+    },
+    {
+      "label": "datetime fractions are not silently truncated",
+      "status": "passed"
+    },
+    {
+      "label": "UTC midnight dates preserve calendar day",
+      "status": "passed"
+    },
+    {
+      "label": "numeric SAS datetime fractions are rejected",
+      "status": "passed"
+    },
+    {
+      "label": "invalid ISO calendar dates are rejected",
+      "status": "passed"
+    },
+    {
+      "label": "unsupported format reports supported extensions",
+      "status": "passed"
+    },
+    {
+      "label": "duplicate CSV column names are rejected rather than repaired",
+      "status": "passed"
+    },
+    {
+      "label": "damaged XPT reports format-specific import failure",
+      "status": "passed"
+    },
+    {
+      "label": "missing optional haven explains installation without blocking CSV",
+      "status": "passed"
+    },
+    {
+      "label": "CSV remains usable without optional haven",
+      "status": "passed"
+    }
+  ],
+  "passed": 37,
+  "R": "R version 4.6.0 (2026-04-24)",
+  "haven": "2.5.5"
+}

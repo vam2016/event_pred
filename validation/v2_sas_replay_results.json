@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "scope": "replay of actual browser-downloaded SAS/CSV configuration and curves with original synthetic files",
+  "passed": 16,
+  "checks": ["csv actual downloaded curves replay from source file and frozen configuration", "csv actual downloaded row/event counts replay", "v5 actual downloaded curves replay from source file and frozen configuration", "v5 actual downloaded row/event counts replay", "v8 actual downloaded curves replay from source file and frozen configuration", "v8 actual downloaded row/event counts replay", "sas actual downloaded curves replay from source file and frozen configuration", "sas actual downloaded row/event counts replay", "weeks actual downloaded curves replay from source file and frozen configuration", "weeks actual downloaded row/event counts replay", "grouped actual downloaded curves replay from source file and frozen configuration", "grouped actual downloaded row/event counts replay", "target actual downloaded milestone dates and probabilities replay with unreached mass retained", "target actual downloaded row/event counts replay", "numeric actual downloaded curves replay from source file and frozen configuration", "numeric actual downloaded row/event counts replay"],
+  "R": "R version 4.6.0 (2026-04-24)"
+}

@@ -13,3 +13,4 @@ renv/staging/
 
 .local-library/
 local-runtime.json
+sas-check-downloads/

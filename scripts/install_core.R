@@ -1,5 +1,6 @@
 # Dependencies for app_core.R only; no installation is performed during development.
 packages <- c("shiny","bslib","commonmark","survival","ggplot2","plotly","DT","jsonlite","scales")
+if ("--with-sas" %in% commandArgs(trailingOnly=TRUE)) packages <- c(packages,"haven")
 missing <- packages[!vapply(packages,requireNamespace,logical(1),quietly=TRUE)]
 if(length(missing)) {
   target <- .libPaths()[1]

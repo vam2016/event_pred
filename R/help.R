@@ -11,7 +11,7 @@ parameter_help <- c(
   file = "上传 ADTTE CSV、XPT 或 SAS7BDAT。必需变量为 USUBJID、PARAMCD、STARTDT、ADT、AVAL、CNSR。建议先用合成模板核对格式；筛选后每位受试者只能有一条记录。",
   paramcd = "选择一个目标终点，例如 PFS 或 OS。来自文件的 PARAMCD。建议与方案事件目标 D* 对应；不同终点不能在同一拟合中混合。",
   aval_unit = "文件 AVAL 的单位，独立于平台显示单位。默认日；若 AVALU 存在，需与选择一致。月固定按365.25/12日换算；建议按 ADTTE 元数据选择，保留足够小数以通过日期核对。",
-  date_encoding = "CSV 日期为 YYYY-MM-DD 或从1960-01-01起的 SAS 数值日。按文件定义选择；不要将 Excel 日期序号当作 SAS 日期。XPT/SAS 日期类型由 haven 读取。",
+  date_encoding = "未解码的字符日期使用 YYYY-MM-DD；未标记的数值日期需明确选择自1960-01-01起的 SAS 数值日。按文件定义选择，不按标签猜测编码。XPT/SAS 已解码日期直接使用；STARTDT/ADT 不自动截去时分秒，不将 Excel 日期序号当作 SAS 日期。",
   offset = "AVAL 换算为日后所用的日期加项：0或1。若分析定义为 ADT−STARTDT+1，选1；否则按定义选0。内部风险时间始终用实际经过日数 ADT−STARTDT。",
   dropout_codes = "明确表示永久退出目标终点随访的正整数 CNSR 编码，可逗号分隔或留空。CNSR=0始终为事件。建议查分析规格逐项填写；停药但继续 OS 随访者不属于 OS 永久退出。模板的2只是示例。",
   analysis_flag = "筛选唯一分析记录的标志变量，例如 ANL01FL。每个 USUBJID 在所选 PARAMCD 下必须唯一。建议有多条分析记录时选择规格指定的标志；已唯一时可不筛选。",
