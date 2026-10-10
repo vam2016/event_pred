@@ -3,7 +3,7 @@
   "timezone": "Asia/Shanghai",
   "baseline_commit": "5c1893065f663785a1a61d5d9261be2ada7a4b4f",
   "main_compared": "83555c112eca6231c4e8e254bf2a726704e546fb",
-  "status": "local_m0_passed_remote_ci_pending",
+  "status": "m0_passed",
   "syntax_files": 134,
   "load_checks": 9,
   "browser_checks": 12,
@@ -14,5 +14,15 @@
     "Docker build",
     "public deployment"
   ],
-  "next_work_item": "V2-101"
+  "next_work_item": "V2-101",
+  "remote_ci": {
+    "commit": "db86b4268ee3b663c076dbe4080e4803813c517b",
+    "run_id": 38052854015,
+    "url": "https://github.com/vam2016/event_pred/actions/runs/38052854015",
+    "conclusion": "success",
+    "linux": "parsing, both entries, core and display regression",
+    "windows": "launcher preparation",
+    "first_run_id": 38052643770,
+    "first_run_failure": "full entry missing markdown dependency; repaired"
+  }
 }
