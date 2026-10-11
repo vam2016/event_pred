@@ -36,9 +36,14 @@
       "status": "passed"
     }
   },
-  "remote_status": "authorized_pending_sync",
-  "remote_source_sha": null,
-  "remote_run": null,
+  "remote_status": "passed",
+  "remote_source_sha": "28bc8e8e960256155a88936e6602a06beb5b968b",
+  "remote_run": {
+    "id": 38107692014,
+    "url": "https://github.com/vam2016/event_pred/actions/runs/38107692014",
+    "status": "completed",
+    "conclusion": "success"
+  },
   "next_work_item": "V2-201",
   "limits": [
     "plugin predictive intervals; no bootstrap validation",
@@ -48,5 +53,26 @@
   "local_commit": "3fe3cfc0b416153fa340bbbcf6cab27fc209afee",
   "upload_file_count": 20,
   "remote_block_reason": null,
-  "upload_authorized": true
+  "upload_authorized": true,
+  "remote_jobs": [
+    {
+      "id": 114376574880,
+      "name": "core",
+      "status": "completed",
+      "conclusion": "success",
+      "parsed_files": 139,
+      "loading_checks": 9,
+      "core_checks": 51,
+      "display_checks": 13,
+      "log_models_checks": 43,
+      "sas_input_checks": 37
+    },
+    {
+      "id": 114376574679,
+      "name": "windows-launch",
+      "status": "completed",
+      "conclusion": "success",
+      "scope": "default core dependencies and Start-Windows.cmd --prepare-only; no browser session"
+    }
+  ]
 }

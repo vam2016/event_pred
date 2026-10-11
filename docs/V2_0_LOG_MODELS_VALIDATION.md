@@ -1,6 +1,6 @@
 # V2-102 Log-normal / Log-logistic 验收
 
-日期：2026-10-11（北京时间）。分支 `development/v2.0`，核心 `2.0.0-dev`；基线提交 `a97eb7ea27a2f8ad432dae873b7052e32c5afd8f`。本机验收通过，本机源码提交`3fe3cfc0b416153fa340bbbcf6cab27fc209afee`；本批20文件同步及远程自动检查已获用户明确授权，远程CI待运行；未生成发布候选包或部署。
+日期：2026-10-11（北京时间）。分支 `development/v2.0`，核心 `2.0.0-dev`；基线提交 `a97eb7ea27a2f8ad432dae873b7052e32c5afd8f`。本机验收通过，本机源码提交`3fe3cfc0b416153fa340bbbcf6cab27fc209afee`；本批20文件已同步至GitHub，远程Linux/Windows检查通过；未生成发布候选包或部署。
 
 ## 已完成与模型契约
 
@@ -41,8 +41,17 @@ Log-normal 的 log(T) 为正态分布，Log-logistic 的 log(T) 为 Logistic 分
 
 浏览器准备：使用 `scripts/create_sas_fixtures.R::create_sas_fixtures()`生成合成文件，在127.0.0.1:3852启动`app_core.R`；配置 `SAS_CHECK_FIXTURES`、`LOG_MODELS_DOWNLOADS`（绝对路径）后执行`node scripts/check_log_models_browser.cjs`。可用 `LOG_MODELS_URL`、`PLAYWRIGHT_MODULE`、`CHROME_PATH`指定环境。然后在相同环境变量下运行`Rscript scripts/replay_log_models_downloads.R`。
 
-环境：macOS、R version 4.6.0 (2026-04-24)、survival 3.8.6、本机Chrome/Playwright。服务器仅在本机监听，验收后关闭。远程Linux工作流已加入独立模型检查；浏览器及下载重放目前仅有本机证据。未开展Bootstrap、覆盖率研究、事件驱动截点或高级研究方法验收；这些仍按后续工作项处理。下一单元V2-201：先完成原三模型的患者/组别Bootstrap、失败/有效次数、区间解释与下载重放，再逐项核验扩展模型。
+环境：macOS、R version 4.6.0 (2026-04-24)、survival 3.8.6、本机Chrome/Playwright。服务器仅在本机监听，验收后关闭。远程Linux工作流已执行并通过独立模型检查；浏览器及下载重放为本机证据，未在远程重复。未开展Bootstrap、覆盖率研究、事件驱动截点或高级研究方法验收；这些仍按后续工作项处理。下一单元V2-201：先完成原三模型的患者/组别Bootstrap、失败/有效次数、区间解释与下载重放，再逐项核验扩展模型。
 
-## 同步状态
+## 同步及远程证据
 
-自动审批以此前M0/V2-101授权未覆盖本批20文件及GitHub目的地为由，拒绝本次`vam2016/event_pred`的树对象上传。用户现已明确授权将V2-102本批20文件同步至该分支并运行自动检查。继续原同步流程；同步前远程分支为基线`a97eb7ea27a2f8ad432dae873b7052e32c5afd8f`。本机源码与验收记录已保存，正在按授权同步并核验CI。
+首次自动审批以此前M0/V2-101授权未覆盖本批20文件及GitHub目的地为由拒绝上传。用户随后明确授权V2-102本批同步及自动检查，原上传流程成功执行，未采用绕过方式。
+
+源码提交 `28bc8e8e960256155a88936e6602a06beb5b968b` 已同步至 `vam2016/event_pred` 的 `development/v2.0`，本机与远程文件树核对一致。[远程运行38107692014](https://github.com/vam2016/event_pred/actions/runs/38107692014)最终为success，两项任务均完成：
+
+|远程任务|实测结果|
+|---|---|
+|Linux core|139个R文件解析、9项两入口构造/注册、51项核心、13项展示、43项独立模型检查及37项SAS输入均通过|
+|Windows windows-launch|默认核心依赖安装和Start-Windows.cmd启动准备通过；没有启动浏览器服务|
+
+检查日志已逐项核对；本机浏览器34项和实际下载重放21项未在远程重复。随后的文档/JSON状态提交只记录验收结果，不改动已验证源码。下一项V2-201。

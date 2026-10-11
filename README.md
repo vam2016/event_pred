@@ -6,7 +6,7 @@ R Shiny 生存数据模拟与事件数/目标日期预测平台。当前为 **2.
 
 独立核心入口 `app_core.R` 现为 **2.0.0-dev**，已接入CSV、XPT v5/v8、SAS7BDAT，事件数/达标日期均可使用。SAS读取需可选haven包，安装方式为 `Rscript scripts/install_core.R --with-sas`。V2-101本机37项输入、40项浏览器及16项实际下载重放通过，核心64项回归保持通过；详见 [SAS输入验收](docs/V2_0_SAS_VALIDATION.md)。远程CI已通过。GitHub main保留1.0核心候选，历史验收见 [核心验证报告](docs/CORE_VALIDATION.md)，`development/v0.35`保存完整扩展稿；下文历史记录不代表2.0全部开放或验证通过。尚未部署公网。
 
-2026-10-11：V2-102已在核心接通Log-normal/Log-logistic，用于参数/右删失拟合、合并/已知两组预测与固定DCO模拟。43项独立公式/似然/积分检查、34项真实浏览器与21项实际下载重放通过；新增参数说明和在线/离线手册。区间仍条件于给定/拟合参数，患者Bootstrap为下一单元；远程同步/CI待执行。详见[模型验收](docs/V2_0_LOG_MODELS_VALIDATION.md)。
+2026-10-11：V2-102已在核心接通Log-normal/Log-logistic，用于参数/右删失拟合、合并/已知两组预测与固定DCO模拟。43项独立公式/似然/积分检查、34项真实浏览器与21项实际下载重放通过；新增参数说明和在线/离线手册。区间仍条件于给定/拟合参数，患者Bootstrap为下一单元；[远程CI](https://github.com/vam2016/event_pred/actions/runs/38107692014)已通过（源码28bc8e8，Linux模型/回归及Windows启动准备）。详见[模型验收](docs/V2_0_LOG_MODELS_VALIDATION.md)。
 
 ## 核心入口本机启动
 

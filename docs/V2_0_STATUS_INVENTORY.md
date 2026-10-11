@@ -23,7 +23,7 @@
 |---|---|---|---|
 |患者Bootstrap|`R/forecast.R`、`R/groups.R`|完整入口已有，核心限制plugin|患者/组别重抽样、拟合失败/有效次数、核心UI/解释/图表/导出及专项验证|
 |XPT/SAS7BDAT|`R/inputs.R::read_adtte`及核心UI|核心已接通；37项输入、40项浏览器、16项实际下载重放通过|远程Linux/Windows通过；独立SAS系统/非英文编码样例未实测，见[SAS验收](V2_0_SAS_VALIDATION.md)|
-|Log-normal/Log-logistic|`R/models.R`、`R/parameters.R`及参数UI/server|核心已接通并通过本机验收：43项独立参照、34项浏览器、21项下载重放|远程同步/CI待执行；Bootstrap后续单独验收，见[模型报告](V2_0_LOG_MODELS_VALIDATION.md)|
+|Log-normal/Log-logistic|`R/models.R`、`R/parameters.R`及参数UI/server|核心已接通并通过本机验收：43项独立参照、34项浏览器、21项下载重放|远程Linux/Windows已通过；Bootstrap后续单独验收，见[模型报告](V2_0_LOG_MODELS_VALIDATION.md)|
 |事件驱动模拟|`R/simulation.R`|已有cut_mode=target|核心接入、目标/窗口/并列/未达标、观察真值、复现|
 |历史回测|`R/validation.R::backtest_forecast`|已有实现|当前截点、后续观察仅评分、未来计划与实际资料分离、图表与复现|
 |少量情景比较|现有冻结配置、预测结果与研究工具|需确定轻量输出契约|预定情景、每场景配置；有配对才报告配对MCSE；不接入全部研究库复杂度|
@@ -90,4 +90,4 @@
 
 ## 8. V2-102推进结果（2026-10-11）
 
-核心2.0.0-dev新增Log-normal、Log-logistic；合并/已知两组的参数及右删失拟合、事件数/目标日期、固定DCO模拟均接通。mu/中位数形式、sigma、单位换算、重尾无穷均值、条件抽样、冻结配置/实际下载和在线/离线手册完成本机验收。独立参照43项、浏览器34项、重放21项通过；原核心64项及SAS输入37项回归通过。远程同步/CI待执行；本项没有开放Bootstrap或生成发布候选包。下一项V2-201。
+核心2.0.0-dev新增Log-normal、Log-logistic；合并/已知两组的参数及右删失拟合、事件数/目标日期、固定DCO模拟均接通。mu/中位数形式、sigma、单位换算、重尾无穷均值、条件抽样、冻结配置/实际下载和在线/离线手册完成本机验收。独立参照43项、浏览器34项、重放21项通过；原核心64项及SAS输入37项回归通过。远程源码28bc8e8及CI运行38107692014已通过（Linux模型/加载/回归、Windows启动准备）；本项没有开放Bootstrap或生成发布候选包。下一项V2-201。
