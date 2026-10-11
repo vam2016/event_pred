@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "passed": 4,
+  "checks": [
+    "full entry renders all new shared group count columns",
+    "full entry retains both original treatment group rows",
+    "full entry group result table and plots have no visible errors",
+    "full entry compatibility run has no uncaught JavaScript errors"
+  ],
+  "errors": [],
+  "scope": "shared group summary display compatibility; parameter-mode two-group count forecast; no advanced method validation"
+}

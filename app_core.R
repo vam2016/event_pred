@@ -16,6 +16,13 @@ source("R/groups.R", local = TRUE)
 
 core_version <- "2.0.0-dev"
 core_models <- c("exponential", "weibull", "pwe", "lognormal", "loglogistic")
+core_bootstrap_models <- c("exponential", "weibull", "pwe")
+validate_core_uncertainty <- function(cfg) {
+  if (!cfg$uncertainty %in% c("plugin","bootstrap")) stop("核心预测支持固定参数或患者 Bootstrap。")
+  if (cfg$uncertainty=="bootstrap" && (cfg$input_mode!="adtte" || any(!cfg$methods %in% core_bootstrap_models)))
+    stop("患者 Bootstrap 当前支持 ADTTE 数据的指数、Weibull、PWE。Log-normal/Log-logistic 请使用固定拟合参数。")
+  invisible(TRUE)
+}
 catalog <- model_catalog(); catalog <- catalog[catalog$id %in% core_models,,drop=FALSE]
 choices <- setNames(catalog$id, catalog$label)
 parameter_choices <- choices
@@ -150,7 +157,7 @@ server <- function(input, output, session) {
     cfg <- list(common_methods = input$methods, analysis_mode = am %||% "pooled", input_mode = input$input_mode, cut = input$cut, horizon = input$horizon, target = if (identical(input$task,"count")) 1 else input$target,
       methods = if (input$input_mode == "parameters") input$design_model else input$methods,
       cuts = if(input$input_mode=="adtte" && am!="grouped" && "pwe" %in% input$methods)parse_numbers(input$cuts) else numeric(), tail_rate = if(input$input_mode=="adtte" && "km_tail" %in% input$methods)input$tail_rate else .002,
-      uncertainty = if (input$input_mode == "parameters") "plugin" else "plugin",
+      uncertainty = if (input$input_mode == "parameters") "plugin" else input$uncertainty %||% "plugin",
       prior_shape = if(input$input_mode=="adtte" && "plugin"=="gamma")input$prior_shape else .5, prior_rate = if(input$input_mode=="adtte" && "plugin"=="gamma")input$prior_rate else 50/time_factor(input_unit()),
       ensemble = input$input_mode == "adtte" && FALSE,
       future_n = if(am=="grouped")0 else input$future_n, enroll_rate = if(am=="grouped" || input$future_n==0)0 else input$enroll_rate, dropout_rate = if(am=="grouped")0 else dropout_input_rate(list(drop_input=input$drop_input,dropout_rate=input$dropout_rate,drop_prob=input$drop_prob,drop_period=input$drop_period)),
@@ -218,6 +225,9 @@ server <- function(input, output, session) {
     }
     if (!cfg$task %in% c("count","target")) stop("请先选择事件数或达标日期任务。")
     if (!length(cfg$methods) || any(!cfg$methods %in% core_models)) stop("当前核心入口使用指数、Weibull、PWE、Log-normal 或 Log-logistic 模型。")
+    validate_core_uncertainty(cfg)
+    if(cfg$uncertainty=="bootstrap") cfg$bootstrap <- list(unit="patient",scheme="ordinary",
+      strata=if(cfg$analysis_mode=="grouped")"group" else "pooled",refit_cohort="resampled",prediction_cohort="original",min_success_fraction=.9)
     cfg$core_version <- core_version
     list(data = d, config = cfg, override = override)
   }
@@ -247,11 +257,14 @@ server <- function(input, output, session) {
       margin = list(l = 60, r = 20, b = 100, t = 20)) |> config(displaylogo = FALSE)
   }
   palette <- c("#126b72", "#22818b", "#ba7141", "#a55375", "#548054", "#777486", "#333147")
-  output$run_label <- renderUI({ r <- result(); if (is.null(r)) span("尚未运行", class = "field-note") else span(paste(if (r$config$input_mode == "parameters") "参数输入" else paste("ADTTE", r$config$adtte_mapping$paramcd), "·", r$config$sims, "次模拟 ·", time_label(r$config$display_unit)), class = "run-label") })
+  output$run_label <- renderUI({ r <- result(); if (is.null(r)) span("尚未运行", class = "field-note") else span(paste(if (r$config$input_mode == "parameters") "参数输入" else paste("ADTTE", r$config$adtte_mapping$paramcd), "· 请求", r$config$sims, "轮 ·", time_label(r$config$display_unit)), class = "run-label") })
   output$run_status <- renderUI({
     if (!is.null(run_error())) return(div(class = "notice error", run_error(), p("已有结果仍为上一次成功运行。")))
     r <- result(); if (is.null(r)) return(div(class = "empty-state", "在输入设置中填写参数或选择 ADTTE 文件，然后运行预测。"))
-    notes <- "预测区间采用给定或拟合参数，未包含参数估计不确定性。"
+    notes <- forecast_interval_note(r$config)
+    dg <- r$diagnostics
+    notes <- c(notes,paste(sprintf("%s：请求 %d / 有效 %d / 失败 %d（拟合 %d，模拟 %d）",dg$model,dg$requested,dg$simulations,dg$failed,dg$fit_failed,dg$simulation_failed),collapse="；"))
+    if(nrow(r$simulation_failures)) notes <- c(notes,paste("失败原因：",paste(head(unique(paste(r$simulation_failures$group,r$simulation_failures$reason,sep=" / ")),3),collapse="；")))
     if (r$config$task != "count" && r$config$target > r$potential_events) notes <- c(notes, "目标大于当前事件数 + 当前仍随访人数 + 未来入组人数。")
     if (length(r$failures)) notes <- c(notes, paste(names(r$failures), r$failures, collapse = "；"))
     gaps <- sum(r$observed_data$status == "active" & r$observed_data$obs_day < r$config$cut - 1e-7)
@@ -268,7 +281,7 @@ server <- function(input, output, session) {
   outputOptions(output,"grouped_result",suspendWhenHidden=FALSE)
   output$group_result_note <- renderUI({r <- result(); req(r$group_summary); p(class="field-note","分组区间分别由联合模拟计算；总事件目标 D* 使用全部组累计事件之和。总体区间端点不由各组端点相加。")})
   output$group_fit_table <- renderDT({r <- result(); req(r$group_fit); d <- r$group_fit; names(d) <- c("组别","拟合模型","组内AIC","信息"); tabular(d)})
-  output$group_event_table <- renderDT({r <- result(); req(r$group_summary); d <- r$group_summary; d<-d[d$method %in% core_result_methods(r,input$result_model %||% "all"),,drop=FALSE]; names(d) <- c("组别","模型","方法","已记录事件","仍随访","计划入组","窗口末均值","2.5%事件数","窗口末中位数","97.5%事件数","模拟次数"); tabular(d)})
+  output$group_event_table <- renderDT({r <- result(); req(r$group_summary); d <- r$group_summary; d<-d[d$method %in% core_result_methods(r,input$result_model %||% "all"),,drop=FALSE]; names(d) <- c("组别","模型","方法","已记录事件","仍随访","计划入组","窗口末均值","2.5%事件数","窗口末中位数","97.5%事件数","有效联合次数","请求次数","联合失败次数"); tabular(d)})
   count_end <- function(r) {d<-r$curves;d<-d[d$method %in% core_result_methods(r,input$result_model %||% "all"),,drop=FALSE];d[d$day==max(d$day),c("model","mean","lower","median","upper"),drop=FALSE]}
   output$count_end_table <- renderDT({r<-result();req(r);d<-count_end(r);names(d)<-c("模型","均值","2.5%事件数","中位事件数","97.5%事件数");tabular(d)})
   output$new_count_table <- renderDT({r<-result();req(r);d<-count_end(r)
@@ -288,10 +301,13 @@ server <- function(input, output, session) {
     tabular(data.frame(模型 = d$model, 窗口内达标概率 = sprintf("%.1f%%", 100 * d$reached), `概率 MCSE（百分点）` = 100 * d$reached_mcse, 未达标比例 = sprintf("%.1f%%",100*(1-d$reached)), 日期中位数 = milestone_dates(r)[match(d$method,r$summary$method)],
       `2.5%日期` = if (r$config$input_mode == "parameters" && r$config$target <= r$known_events) "历史日期未提供" else display_date(d$lower_day, r$config$origin),
       `97.5%日期` = if (r$config$input_mode == "parameters" && r$config$target <= r$known_events) "历史日期未提供" else display_date(d$upper_day, r$config$origin),
-      窗口末事件数中位数 = d$median_events_end, check.names = FALSE))
+      窗口末事件数中位数 = d$median_events_end, 请求次数=d$requested,有效次数=d$simulations,失败次数=d$failed,check.names = FALSE))
   })
   output$mcse_note <- renderUI({ r <- result(); req(r); p(class = "field-note", paste("MCSE为概率估计的模拟标准误：", r$mcse_scope, "。它不是预测区间；边界概率下的0估计不代表真实概率已确定。")) })
-  output$diagnostics <- renderDT({ r <- result(); req(r); d <- r$diagnostics[, c("model", "aic", "simulations", "failed", "note")]; names(d) <- c("模型", "AIC", "模拟次数", "排除次数", "信息"); tabular(d) })
+  output$diagnostics <- renderDT({ r <- result(); req(r); d <- r$diagnostics[, c("model", "aic", "requested", "simulations", "fit_failed", "simulation_failed", "failed", "note")]; names(d) <- c("模型", "AIC", "请求次数", "有效次数", "拟合失败", "模拟失败", "失败合计", "信息"); tabular(d) })
+  output$simulation_failures <- renderDT({r<-result();req(r);d<-r$simulation_failures;d$stage<-ifelse(d$stage=="fit","拟合","未来模拟");names(d)<-c("模型标识","轮次","组别","阶段","原因");tabular(d)})
+  output$diagnostics_download <- downloadHandler(filename="forecast_diagnostics.csv",content=function(file){r<-result();req(r);write.csv(r$diagnostics,file,row.names=FALSE)})
+  output$failures_download <- downloadHandler(filename="forecast_failures.csv",content=function(file){r<-result();req(r);write.csv(r$simulation_failures,file,row.names=FALSE)})
   equivalent_table <- reactive({
     r <- result(); req(r)
     do.call(rbind,lapply(r$models,function(m) cbind(model=m$label,group=m$group %||% "合并",model_equivalents(m,r$config$display_unit))))
@@ -339,13 +355,16 @@ server <- function(input, output, session) {
   output$template <- downloadHandler(filename = "adtte_synthetic.csv", content = function(file) write.csv(adtte_template(), file, row.names = FALSE))
   output$curves_download <- downloadHandler(filename = "event_curves.csv", content = function(file) { r <- result(); req(r); d<-r$curves;if(r$config$task=="count")d<-d[,setdiff(names(d),c("probability","probability_mcse")),drop=FALSE];write.csv(unit_export(d, r$config$display_unit, "day"), file, row.names = FALSE) })
   output$summary_download <- downloadHandler(filename = "event_milestones.csv", content = function(file) { r <- result(); req(r); d <- r$summary; d$median_date <- milestone_dates(r); write.csv(unit_export(d, r$config$display_unit, c("lower_day", "median_day", "upper_day")), file, row.names = FALSE) })
-  output$config_download <- downloadHandler(filename = "event_pred_config.json", content = function(file) { r <- result(); req(r); jsonlite::write_json(list(version = core_version, created_at = r$created_at, config = export_config(r), data_summary = r$data_summary, session = R.version.string), file, auto_unbox = TRUE, pretty = TRUE, digits = NA, null = "null") })
+  output$config_download <- downloadHandler(filename = "event_pred_config.json", content = function(file) { r <- result(); req(r); jsonlite::write_json(list(version = core_version, created_at = r$created_at, config = export_config(r), data_summary = r$data_summary, diagnostics=r$diagnostics,simulation_failures=r$simulation_failures,session = R.version.string), file, auto_unbox = TRUE, pretty = TRUE, digits = NA, null = "null") })
   output$report_download <- downloadHandler(filename="event_pred_report.md",content=function(file) {
     r<-result();req(r);counts<-identical(r$config$task,"count");d<-r$curves[r$curves$day==max(r$curves$day),c("model","mean","lower","median","upper"),drop=FALSE]
     lines<-c(if(counts)"# 未来事件数预测" else "# 目标事件日期预测","",paste("核心入口版本：",core_version),paste("运行时间：",r$created_at),paste("显示单位：",time_label(r$config$display_unit)),"","## 配置","","```json",jsonlite::toJSON(export_config(r),auto_unbox=TRUE,pretty=TRUE,digits=NA,null="null"),"```","")
     if(counts)lines<-c(lines,"## 窗口末累计事件数","","|模型|均值|2.5%|中位数|97.5%|","|---|---:|---:|---:|---:|",sprintf("|%s|%.3f|%.3f|%.3f|%.3f|",d$model,d$mean,d$lower,d$median,d$upper))
     else lines<-c(lines,"## 目标日期","","|模型|达标概率|概率MCSE（百分点）|日期中位数|","|---|---:|---:|---|",sprintf("|%s|%.1f%%|%.3f|%s|",r$summary$model,100*r$summary$reached,100*r$summary$reached_mcse,milestone_dates(r)),paste("MCSE范围：",r$mcse_scope))
-    writeLines(c(lines,"","已记录事件固定；区间为条件于给定或拟合参数的逐点预测区间，未包含参数估计不确定性。"),file,useBytes=TRUE)
+    dg<-r$diagnostics
+    lines<-c(lines,"","## 请求与有效次数","","|模型|请求|有效|拟合失败|模拟失败|失败合计|","|---|---:|---:|---:|---:|---:|",sprintf("|%s|%d|%d|%d|%d|%d|",dg$model,dg$requested,dg$simulations,dg$fit_failed,dg$simulation_failed,dg$failed),
+      "","## 失败记录","","```json",jsonlite::toJSON(r$simulation_failures,auto_unbox=TRUE,pretty=TRUE),"```","",forecast_interval_note(r$config),"已记录事件固定；区间为逐点预测区间，不是整条曲线的同时区间。")
+    writeLines(lines,file,useBytes=TRUE)
   })
 
   register_core_forecast_results(input,output,session,result)

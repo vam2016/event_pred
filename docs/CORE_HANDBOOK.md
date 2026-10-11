@@ -77,6 +77,28 @@ $$K(c+u)=K_0+\sum_{i\in A_c}I(R_{T,i}\le u,\ R_{T,i}\le R_{D,i})+\sum_{j\in F}I(
 
 A_c 为当前仍随访者，F 为计划未来患者；未来入组 E_j 从当前 DCO 起计。已发生事件固定，永久退出者不续推。参数模式的相同年龄或均匀年龄是用户给定假设，不表示从人数识别真实年龄分布。
 
+### 3.1 患者 Bootstrap 与参数不确定性
+
+ADTTE右删失预测可选择“使用固定拟合参数”或“患者 Bootstrap”；参数输入没有经验患者样本，继续使用给定参数。Bootstrap本阶段支持指数、Weibull、PWE；Log-normal/Log-logistic使用固定拟合参数。
+
+每轮从已筛选且每人一行的观察记录有放回抽取同样人数。时间、事件/退出状态及患者完整记录作为一个抽样单位，不分别重抽事件或时间，也不按事件状态分层。已知两组在各组内分别抽取原组人数，不能跨组交换患者。令第b轮拟合参数为：
+
+$$\widehat\theta^{*(b)}=\operatorname{fit}\{D^{*(b)}\},\qquad D^{*(b)}=(D_{I_1},\ldots,D_{I_n}),\quad I_j\sim\operatorname{Uniform}\{1,\ldots,n\}.$$
+
+新拟合参数用于原始当前队列的条件预测，而非继续预测重抽样队列中的重复患者。已记录事件数/日期、永久退出者、仍随访人数及各人的风险年龄保持原观察定义，未来入组/退出计划固定，每次成功重拟合生成一条未来轨迹。它是观察记录case resampling，不是从删失分布生成新删失时间，也不是贝叶斯后验。
+
+区间由有效轮次的未来轨迹取分位数，近似同时反映模型参数估计和未来随机性；条件于输入资料、模型、独立非信息性右删失及固定未来计划。模型误设、资料选择/测量误差、未来计划参数误差和正式覆盖率保证不由此自动获得。拟合曲线/等价参数表仍展示原数据的点估计，不是Bootstrap平均参数。
+
+请求B轮后不补抽失败轮次。每轮记录拟合失败或未来模拟失败及原因；两组任一组失败，则整轮联合轨迹从总体和全部组的结果中排除。失败超过请求数的10%时整次提交停止，保留上一次成功结果；最多10%失败时明确展示请求、有效和失败数，结果属于有效轮次条件结果。
+
+$$B_{\rm valid}=B-B_{\rm failed},\qquad \widehat p_{\rm valid}=\frac{\#\{b:\ b\text{有效且窗口内达标}\}}{B_{\rm valid}}.$$
+
+失败轮次是未知结果，不能记为未达标或零事件。有效但窗口未达标的轮次保留为无穷日期，进入概率分母和无条件日期分位数；这里的“无条件日期”仍是在有效轮次条件下。失败可能改变重抽样分布，少量失败也需检查原因；10%门槛是运行拒绝规则，不是统计准确性的证明。MCSE描述有限有效轮次的模拟误差，不是置信区间或Bootstrap方法误差。
+
+“参数与计算记录”显示请求/有效、拟合失败/模拟失败及逐轮失败原因，提供次数和失败CSV；配置JSON和报告包含同一冻结记录。时间读数CSV及目标日期CSV也带请求/有效/失败数。编辑模型、区间方式、种子或文件后，下载仍使用最近一次成功运行；失败的新提交不改写旧结果。
+
+方法类型参照[R boot的censboot说明](https://search.r-project.org/CRAN/refmans/boot/html/censboot.html)中的ordinary case resampling与组内分层观察记录抽样。当前实现、独立参照及重放范围见`docs/V2_0_BOOTSTRAP_VALIDATION.md`。
+
 <a id="core-section-4"></a>
 
 ## 4. 指数模型
@@ -145,7 +167,7 @@ $$\ell(\mu,\sigma)=\sum_i\{\delta_i\log f(t_i)+(1-\delta_i)\log S(t_i)\},\qquad 
 
 条件抽样仍使用第3节的累计风险反演。数值计算保留 log S，避免极小尾部生存率直接下溢后失去已有年龄的条件信息。单位变化只平移对数位置，sigma 不变；所选单位 f 日时 mu_day=mu_unit+log(f)。两组可分别使用不同分布，固定 DCO 数据模拟也使用同一参数定义。
 
-参数化参照：[R survival 分布说明](https://stat.ethz.ch/R-manual/R-devel/library/survival/html/survreg.distributions.html)及[survreg 拟合说明](https://stat.ethz.ch/R-manual/R-devel/library/survival/html/survreg.html)。2.0本阶段核验范围见 `docs/V2_0_LOG_MODELS_VALIDATION.md`。预测区间仍条件于给定/拟合参数；患者 Bootstrap 在后续工作项中开发。
+参数化参照：[R survival 分布说明](https://stat.ethz.ch/R-manual/R-devel/library/survival/html/survreg.distributions.html)及[survreg 拟合说明](https://stat.ethz.ch/R-manual/R-devel/library/survival/html/survreg.html)。2.0本阶段核验范围见 `docs/V2_0_LOG_MODELS_VALIDATION.md`。对数时间模型目前使用固定拟合参数；患者 Bootstrap 已对指数、Weibull、PWE开放，对数时间模型的Bootstrap尚未开放。
 
 <a id="core-section-6"></a>
 
@@ -189,7 +211,7 @@ ADTTE 导出日期向下取整，AVAL 按含首日 offset=1 及所选单位计�
 
 ## 8. 结果、误差与复现
 
-事件数图按每个预测时点返回均值和分位数，逐点 95% 预测区间采用 2.5%/97.5% 分位数。新增事件数为 K−K0；核心严格观察口径下 K0 固定。区间条件于给定或拟合参数，未包括参数估计不确定性，也不保证全部时点同时覆盖。多个候选模型分别返回结果，首版不按 AIC 自动合并。
+事件数图按每个预测时点返回均值和分位数，逐点 95% 预测区间采用 2.5%/97.5% 分位数。新增事件数为 K−K0；核心严格观察口径下 K0 固定。固定参数模式未包括参数估计不确定性；患者Bootstrap模式按第3.1节重抽样，近似包括估计误差和未来随机性。两种模式均不保证全部时点同时覆盖，Bootstrap也不保证名义覆盖率。多个候选模型分别返回结果，核心不按 AIC 自动合并。
 
 ### 交互读数与图表
 

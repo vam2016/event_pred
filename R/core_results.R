@@ -64,6 +64,8 @@ core_forecast_readout <- function(r,index,method="all") {
     out$`达标概率（%）` <- 100*d$probability
     out$`概率MCSE（百分点）` <- 100*d$probability_mcse
   }
+  requested <- if(is.null(r$config$sims)) out$成功模拟次数 else rep(r$config$sims,nrow(out))
+  out$请求次数 <- requested;out$失败次数 <- requested-out$成功模拟次数
   out
 }
 core_count_mass <- function(r,index,method="all",new=FALSE) {

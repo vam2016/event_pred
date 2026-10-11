@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "version": "2.0.0-dev",
+  "R": "R version 4.6.0 (2026-04-24)",
+  "passed": 33,
+  "checks": ["exponential core permits patient bootstrap on ADTTE", "weibull core permits patient bootstrap on ADTTE", "pwe core permits patient bootstrap on ADTTE", "core keeps log-time bootstrap outside the current validated scope", "given-parameter inputs do not invent an empirical bootstrap population", "resampling retains complete patient time, event, exit and metadata records with replacement", "bootstrap exponential refit agrees with independent events/exposure likelihood", "bootstrap PWE refit agrees with independently counted segment events and exposure", "bootstrap Weibull refit agrees with independent censored likelihood optimization", "complete bootstrap forecast matches independently refitted exponential paths on original current patients", "bootstrap keeps known events and permanent exits fixed, rather than predicting resampled duplicates", "zero failures produce explicit requested/effective counts and an empty typed failure table", "exponential seed reproduces bootstrap counts, target summary and failures", "exponential a different seed changes bootstrap trajectories", "weibull seed reproduces bootstrap counts, target summary and failures", "weibull a different seed changes bootstrap trajectories", "pwe seed reproduces bootstrap counts, target summary and failures", "pwe a different seed changes bootstrap trajectories", "predictive bootstrap mean agrees with exhaustive sample enumeration within four MCSE", "actual low-event fit failures agree with independently enumerated resample probability", "target probability and MCSE use effective paths including valid unreached paths", "target summary distinguishes failed fits from valid misses and requested denominator", "exactly ten percent refit failures are retained and excluded without replacement draws", "failure records preserve attempt numbers, reasons and original cohort baseline", "more than ten percent failure stops with valid/requested counts and cause", "future simulation failures are distinct from bootstrap refit failures", "each group is independently resampled at its original patient count without mixing patients", "grouped bootstrap jointly sums complete paths with both original known-event baselines", "one-group failures exclude the entire joint replicate from every group and total", "group-specific failure reason and phase survive joint exclusion", "grouped target bins retain all valid unreachable paths without counting failed fits as misses", "bootstrap result explanation states parameter uncertainty and conditional failure scope", "fixed fitted-parameter explanation retains its original scope"],
+  "measurements": {
+    "enumerated_bootstrap": {
+      "samples": 3125,
+      "valid_samples": 3104,
+      "failure_probability": 0.00672,
+      "expected_mean": 4.7840352474608,
+      "observed_mean": 4.77917505030181,
+      "mcse": 0.00930556303598538,
+      "tolerance": 0.0372232521439415,
+      "requested": 2000,
+      "effective": 1988,
+      "failed": 12
+    }
+  },
+  "tolerances": "deterministic 1e-9; independent Weibull optimization 2e-5; enumerated bootstrap predictive mean and fit-failure count four MCSE; no coverage-rate claim"
+}

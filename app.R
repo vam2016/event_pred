@@ -491,7 +491,7 @@ server <- function(input, output, session) {
   output$group_event_plot <- renderPlotly({r <- result(); req(r$group_curves); d <- r$group_curves; d$date <- as.Date(r$config$origin)+d$day
     p <- ggplot(d,aes(date,median,colour=model,fill=model))+geom_ribbon(aes(ymin=lower,ymax=upper),alpha=.12,colour=NA,show.legend=FALSE)+geom_line()+facet_wrap(~group)+labs(x="日期",y="各组累计事件数",colour=NULL,fill=NULL)+theme_chart(); chart_widget(p)})
   output$group_fit_table <- renderDT({r <- result(); req(r$group_fit); d <- r$group_fit; names(d) <- c("组别","拟合模型","组内AIC","信息"); tabular(d)})
-  output$group_event_table <- renderDT({r <- result(); req(r$group_summary); d <- r$group_summary; names(d) <- c("组别","模型","方法","已记录事件","仍随访","计划入组","窗口末均值","2.5%事件数","窗口末中位数","97.5%事件数","模拟次数"); tabular(d)})
+  output$group_event_table <- renderDT({r <- result(); req(r$group_summary); d <- r$group_summary; names(d) <- c("组别","模型","方法","已记录事件","仍随访","计划入组","窗口末均值","2.5%事件数","窗口末中位数","97.5%事件数","有效联合次数","请求次数","联合失败次数"); tabular(d)})
   output$event_plot <- renderPlotly({
     r <- result(); req(r); d <- r$curves; d$date <- as.Date(r$config$origin) + d$day
     p <- ggplot(d, aes(date, median, colour = model, fill = model, group = model)) +

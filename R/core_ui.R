@@ -8,6 +8,8 @@ for (i in 1:2) {
   parameter_help[paste0("g",i,"_median")] <- parameter_help["median"]
   parameter_help[paste0("s",i,"_median")] <- parameter_help["median"]
 }
+parameter_help["uncertainty"] <- "固定拟合参数只包含未来随机性；患者 Bootstrap 每轮按完整患者记录有放回重抽样、重新拟合，预测原始当前队列，两组在各组内抽样。当前支持指数、Weibull、PWE。失败不作为未达标；结果条件于有效轮次，失败超过10%停止。"
+parameter_help["sims"] <- "请求的预测轮次数，整数50–2000。Bootstrap每轮重抽样、拟合并生成一条未来轨迹；有效次数与失败次数按模型分别记录，不补抽失败轮次。MCSE只描述有限有效轮次的模拟误差。"
 # Release fields reuse the shared parameter conversion controls and identifiers.
 event_parameter_fields <- function(prefix="",unit="months",d=group_input_defaults(unit,1),simulation=FALSE) {
   id <- function(x)paste0(prefix,x); u <- time_label(unit)
@@ -67,7 +69,9 @@ core_prediction_inputs <- function() {
         conditionalPanel("input.input_mode === 'parameters' && input.analysis_mode !== 'grouped'",event_parameter_fields()),
         conditionalPanel("input.input_mode === 'adtte'",checkboxGroupInput("methods","拟合模型",choices,c("exponential","weibull","pwe"),inline=TRUE),
           conditionalPanel("input.analysis_mode !== 'grouped' && input.methods.indexOf('pwe') >= 0",textInput("cuts","PWE 切点（随访月数）","3,6,12")),
-          p(class="field-note","使用拟合参数预测，区间包含未来随机性，未包含参数估计不确定性。"))),
+          selectInput("uncertainty","预测区间中的参数不确定性",c("使用固定拟合参数"="plugin","患者 Bootstrap"="bootstrap"),"plugin"),
+          conditionalPanel("input.uncertainty === 'plugin'",p(class="field-note","使用拟合参数预测，区间包含未来随机性，未包含参数估计不确定性。")),
+          conditionalPanel("input.uncertainty === 'bootstrap'",p(class="field-note","Bootstrap目前支持指数、Weibull、PWE；已知两组在组内抽样。每轮重新拟合后预测原始当前队列，区间近似包含参数估计及未来随机性，不保证名义覆盖率。")))),
       nav_panel("分组参数",value="groupparams",uiOutput("group_inputs")),
       nav_panel("未来入组与退出",value="future",
         conditionalPanel("input.analysis_mode !== 'grouped'",numericInput("future_n","未来入组人数",300,min=0,max=1000,step=1),
@@ -112,7 +116,7 @@ core_ui <- function() page_fillable(title=platform_title,theme=theme,fillable=FA
           conditionalPanel("output.task_goal === 'count'",section(textOutput("count_curve_title",inline=TRUE),plotlyOutput("event_plot",height="390px")),section("所选时点的模拟事件数分布",plotlyOutput("count_distribution",height="310px")),section("窗口末累计及新增事件数",DTOutput("count_end_table",fill=FALSE),DTOutput("new_count_table",fill=FALSE))),
           conditionalPanel("output.task_goal === 'target'",section("达标日期",DTOutput("milestones",fill=FALSE),uiOutput("mcse_note")),section("窗口内达标概率",plotlyOutput("prob_plot",height="360px")),section("达标时间分布",plotlyOutput("target_distribution",height="350px"),uiOutput("target_distribution_note")))),
         nav_panel("分组事件",value="groupresults",uiOutput("group_result_note"),plotlyOutput("group_event_plot",height="390px"),section("所选时点各组累计事件数",DTOutput("group_readout",fill=FALSE)),DTOutput("group_event_table",fill=FALSE),downloadButton("group_curves_download","分组曲线 CSV"),downloadButton("group_summary_download","分组汇总 CSV")),
-        nav_panel("参数与计算记录",DTOutput("model_parameters",fill=FALSE),downloadButton("parameters_download","等价参数 CSV"),DTOutput("diagnostics",fill=FALSE),DTOutput("group_fit_table",fill=FALSE)),
+        nav_panel("参数与计算记录",DTOutput("model_parameters",fill=FALSE),downloadButton("parameters_download","等价参数 CSV"),DTOutput("diagnostics",fill=FALSE),downloadButton("diagnostics_download","计算次数 CSV"),DTOutput("simulation_failures",fill=FALSE),downloadButton("failures_download","失败记录 CSV"),DTOutput("group_fit_table",fill=FALSE)),
         nav_panel("导出",conditionalPanel("output.task_goal === 'count'",downloadButton("curves_download","事件曲线 CSV")),conditionalPanel("output.task_goal === 'target'",downloadButton("summary_download","达标日期 CSV")),downloadButton("config_download","配置 JSON"),downloadButton("report_download","报告 Markdown")))),
     nav_panel("输入数据与分布",value="data",uiOutput("data_status"),DTOutput("data_table",fill=FALSE),plotlyOutput("fit_plot",height="360px")),
     nav_panel("工作手册",value="methods",core_handbook_ui())),

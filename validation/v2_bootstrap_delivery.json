@@ -1,0 +1,63 @@
+{
+  "work_item": "V2-201",
+  "date": "2026-10-11",
+  "branch": "development/v2.0",
+  "core_version": "2.0.0-dev",
+  "base_sha": "0f05b305b2dc318a8eb969c75e7fd7de287427db",
+  "local_status": "passed",
+  "checks": {
+    "v2_bootstrap_results.json": {
+      "passed": 33,
+      "status": "passed"
+    },
+    "v2_bootstrap_browser_results.json": {
+      "passed": 34,
+      "status": "passed"
+    },
+    "v2_bootstrap_full_entry_browser_results.json": {
+      "passed": 4,
+      "status": "passed"
+    },
+    "v2_bootstrap_replay_results.json": {
+      "passed": 25,
+      "status": "passed"
+    },
+    "v2_bootstrap_extension_load_results.json": {
+      "parsed_files": 142,
+      "status": "passed",
+      "checks_passed": 9
+    },
+    "v2_core_check_results.json": {
+      "passed": 51,
+      "status": "passed"
+    },
+    "v2_core_display_results.json": {
+      "passed": 13,
+      "status": "passed"
+    },
+    "v2_sas_input_results.json": {
+      "passed": 37,
+      "status": "passed"
+    },
+    "v2_log_models_results.json": {
+      "passed": 43,
+      "status": "passed"
+    }
+  },
+  "synthetic_fixture_helper": "exact sparse/partial CSV byte equivalence passed",
+  "remote_status": "authorized_pending_sync",
+  "remote_source_sha": null,
+  "remote_run": null,
+  "next_work_item": "V2-301",
+  "limits": [
+    "ordinary case resampling; no nominal coverage-rate guarantee",
+    "bootstrap core restricted to exponential, Weibull, PWE on ADTTE",
+    "future plans fixed; synthetic data only; no deployment",
+    "browser and actual download replay local only",
+    "full entry browser check only shared group-table display compatibility"
+  ],
+  "local_source_commit": "bdfb366",
+  "upload_file_count": 25,
+  "remote_authorization": "User explicitly authorized V2-201 25-file sync to vam2016/event_pred development/v2.0 and remote automated checks on 2026-10-11.",
+  "previous_upload_rejection": "Automatic approval rejected V2-201 upload because prior batch approvals did not explicitly cover this 25-file export to vam2016/event_pred development/v2.0."
+}

@@ -8,6 +8,8 @@ R Shiny 生存数据模拟与事件数/目标日期预测平台。当前为 **2.
 
 2026-10-11：V2-102已在核心接通Log-normal/Log-logistic，用于参数/右删失拟合、合并/已知两组预测与固定DCO模拟。43项独立公式/似然/积分检查、34项真实浏览器与21项实际下载重放通过；新增参数说明和在线/离线手册。区间仍条件于给定/拟合参数，患者Bootstrap为下一单元；[远程CI](https://github.com/vam2016/event_pred/actions/runs/38107692014)已通过（源码28bc8e8，Linux模型/回归及Windows启动准备）。详见[模型验收](docs/V2_0_LOG_MODELS_VALIDATION.md)。
 
+2026-10-11：V2-201已接通ADTTE指数/Weibull/PWE患者Bootstrap，组内重抽样后预测原始当前队列，明确请求/有效次数、拟合/模拟失败及原因，配置与下载冻结。33项专项、34项核心浏览器、4项扩展表格兼容、25项实际下载重放通过；142文件/9项加载和原有回归通过。远程同步/CI待执行，详见[Bootstrap验收](docs/V2_0_BOOTSTRAP_VALIDATION.md)。区间近似包含估计与未来随机性，不保证名义覆盖率；对数时间Bootstrap尚未开放。下一单元为事件驱动模拟。
+
 ## 核心入口本机启动
 
 Mac 双击 `Start-Mac.command`，Windows 双击 `Start-Windows.cmd`。其他方式和转移到另一台电脑见 [启动说明](docs/LOCAL_START.md)。这些入口始终启动核心候选版；下文保留扩展稿的启动方式。

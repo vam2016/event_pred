@@ -19,6 +19,25 @@ fit_candidates <- function(data, methods, cuts, tail_rate) {
   list(models = models, failures = failures)
 }
 
+# One analysis row per validated patient; retain the full observed record as a unit.
+bootstrap_patient_model <- function(data, method, cuts, tail_rate) {
+  indices <- sample.int(nrow(data), nrow(data), replace = TRUE)
+  fit_model(data[indices, , drop = FALSE], method, cuts, tail_rate)
+}
+empty_simulation_failures <- function() data.frame(method=character(), replicate=integer(),
+  group=character(), stage=character(), reason=character(), stringsAsFactors=FALSE)
+forecast_failure_guard <- function(requested, valid, label, failures) {
+  if (valid < .9 * requested) {
+    reasons <- paste(head(unique(failures$reason),3),collapse="；")
+    stop(paste0(label,"：有效 ",valid," / 请求 ",requested,"；超过10%拟合/模拟失败。",reasons," 请检查数据、切点或模型。"))
+  }
+}
+forecast_interval_note <- function(cfg) {
+  if (identical(cfg$uncertainty,"bootstrap"))
+    "患者 Bootstrap 每轮有放回重抽样、重新拟合并预测原始当前队列；已知组别在组内抽样。区间近似包含拟合参数估计与未来随机性，条件于输入数据、模型和未来计划，不保证名义覆盖率。拟合/模拟失败轮次排除，概率和分位数条件于有效轮次；未达标有效轮次仍保留。"
+  else "预测区间采用给定或拟合参数，未包含参数估计不确定性。"
+}
+
 validate_config <- function(cfg, data) {
   cfg <- complete_config(cfg)
   scalar <- function(x) is.numeric(x) && length(x) == 1 && is.finite(x)
@@ -124,41 +143,50 @@ run_forecast <- function(data, cfg, progress = function(value, detail) NULL, mod
   }
   pp <- process_posterior(data, cfg)
   grid <- seq(cfg$cut, cfg$cut + cfg$horizon, length.out = 121)
-  predictions <- list(); milestones <- list(); counts <- list(); weights <- list(); diagnostics <- list()
+  predictions <- list(); milestones <- list(); counts <- list(); weights <- list(); diagnostics <- list(); failure_tables <- list()
   for (method in names(models)) {
     model <- models[[method]]
     mat <- matrix(NA_real_, cfg$sims, length(grid))
     hit <- rep(Inf, cfg$sims)
-    failures <- 0L
+    records <- empty_simulation_failures()
     for (b in seq_len(cfg$sims)) {
       draw <- model
       if (cfg$uncertainty == "bootstrap") {
-        # Refit resampled subjects, then forecast the original observed cohort.
-        draw <- tryCatch(fit_model(data[sample.int(nrow(data), replace = TRUE), , drop = FALSE], method, cfg$cuts, cfg$tail_rate), error = function(e) NULL)
+        # Refit resampled patients, then forecast the original observed cohort.
+        draw <- tryCatch(bootstrap_patient_model(data,method,cfg$cuts,cfg$tail_rate),error=identity)
       } else if (cfg$uncertainty == "gamma") {
         draw <- gamma_posterior_draw(model, cfg$prior_shape, cfg$prior_rate)
       } else if (cfg$uncertainty == "bayes_weibull") {
         draw <- posterior_model_draw(model)
       }
-      trial <- if (is.null(draw)) NULL else tryCatch(simulate_trial(data, draw, process_draw(cfg, pp)), error = function(e) NULL)
-      if (is.null(trial)) { failures <- failures + 1L; next }
-      dates <- trial[[cfg$clock]]
-      mat[b, ] <- findInterval(grid, dates)
-      # Censor the milestone at the chosen forecast window, never silently drop misses.
-      if (length(dates) >= cfg$target && dates[cfg$target] <= max(grid)) hit[b] <- dates[cfg$target]
+      stage <- "fit"
+      trial <- if(inherits(draw,"error")) draw else {
+        stage <- "simulation"
+        tryCatch(simulate_trial(data,draw,process_draw(cfg,pp)),error=identity)
+      }
+      if (inherits(trial,"error")) {
+        records <- rbind(records,data.frame(method=method,replicate=b,group="合并",stage=stage,reason=conditionMessage(trial)))
+      } else {
+        dates <- trial[[cfg$clock]]
+        mat[b, ] <- findInterval(grid, dates)
+        # Valid misses remain infinite; fitting failures are a different state.
+        if (length(dates) >= cfg$target && dates[cfg$target] <= max(grid)) hit[b] <- dates[cfg$target]
+      }
       if (b %% 25 == 0) progress((match(method, names(models)) - 1 + b / cfg$sims) / length(models), paste(model$label, b, "/", cfg$sims))
     }
-    ok <- !is.na(mat[, 1])
-    if (sum(ok) < 0.9 * cfg$sims) stop(paste(model$label, "超过 10% 模拟失败；请检查数据/切点或更换模型。"))
+    ok <- !is.na(mat[, 1]); failures <- nrow(records)
+    forecast_failure_guard(cfg$sims,sum(ok),model$label,records)
     mat <- mat[ok, , drop = FALSE]; hit <- hit[ok]
-    if (failures) model$warning <- c(model$warning, paste(failures, "次拟合/模拟失败并已排除；结果基于成功轮次，请检查稳定性。"))
+    failure_tables[[method]] <- records
+    if (failures) model$warning <- c(model$warning, paste0("请求 ",cfg$sims,"、有效 ",sum(ok),"、失败 ",failures,"；结果条件于有效轮次。",paste(head(unique(records$reason),3),collapse="；")))
     q <- apply(mat, 2, quantile_with_inf)
     predictions[[method]] <- data.frame(model = model$label, method = method, day = grid,
       mean = colMeans(mat), lower = q[1, ], median = q[2, ], upper = q[3, ], probability = colMeans(mat >= cfg$target),
       probability_mcse = probability_mcse(setNames(list(mat), method), cfg$target))
     counts[[method]] <- mat; milestones[[method]] <- hit
     diagnostics[[method]] <- data.frame(method = method, model = model$label, aic = model$aic,
-      simulations = nrow(mat), failed = failures, note = paste(model$warning, collapse = "；"))
+      simulations = nrow(mat), failed = failures, note = paste(model$warning, collapse = "；"),
+      requested=cfg$sims,fit_failed=sum(records$stage=="fit"),simulation_failed=sum(records$stage=="simulation"))
   }
   # AIC weights are predictive-mixture heuristics, not posterior model probabilities.
   eligible <- names(models)[vapply(models, function(m) is.finite(m$aic), logical(1))]
@@ -183,13 +211,15 @@ run_forecast <- function(data, cfg, progress = function(value, detail) NULL, mod
     label <- if (m == "ensemble") "AIC 加权预测混合" else models[[m]]$label
     data.frame(model = label, method = m, reached = mean(is.finite(hit)),
       reached_mcse = tail(predictions[[m]]$probability_mcse, 1), lower_day = q[1], median_day = q[2], upper_day = q[3],
-      median_events_end = quantile_with_inf(counts[[m]][, length(grid)])[2], simulations = length(hit))
+      median_events_end = quantile_with_inf(counts[[m]][, length(grid)])[2], simulations = length(hit),
+      requested=cfg$sims,failed=if(m=="ensemble")NA_integer_ else diagnostics[[m]]$failed)
   }))
   capacity <- sum(data$status == "event") + sum(data$status == "active") + cfg$future_n
   list(curves = do.call(rbind, predictions), summary = summary, diagnostics = do.call(rbind, diagnostics),
     models = models, counts = counts, milestones = milestones, weights = weights, failures = fit$failures,
+    simulation_failures=do.call(rbind,failure_tables),
     config = cfg, known_events = sum(data$status == "event"), potential_events = capacity,
     process_posterior = pp,
-    mcse_scope = if (cfg$uncertainty == "bayes_weibull") "条件于当前有限 MCMC 后验样本库；不含后验采样误差" else "条件于输入数据、模型设定与成功轮次；混合结果含轨迹库及重抽样两层误差",
+    mcse_scope = if (cfg$uncertainty == "bootstrap") "患者重抽样及未来轨迹的有限模拟误差；条件于输入数据、模型、未来计划与有效轮次；未达标有效轮次保留" else if (cfg$uncertainty == "bayes_weibull") "条件于当前有限 MCMC 后验样本库；不含后验采样误差" else "条件于输入数据、模型设定与成功轮次；混合结果含轨迹库及重抽样两层误差",
     data_summary = list(n = nrow(data), events = sum(data$status == "event"), active = sum(data$status == "active"), dropout = sum(data$status == "dropout")))
 }

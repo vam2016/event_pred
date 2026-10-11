@@ -21,7 +21,7 @@
 
 |能力|主要实现|当前状态|待完成|
 |---|---|---|---|
-|患者Bootstrap|`R/forecast.R`、`R/groups.R`|完整入口已有，核心限制plugin|患者/组别重抽样、拟合失败/有效次数、核心UI/解释/图表/导出及专项验证|
+|患者Bootstrap|`R/forecast.R`、`R/groups.R`|核心已接通指数/Weibull/PWE；本机33项数值、34项核心浏览器、4项扩展表格兼容、25项重放通过|远程同步/CI待执行；对数时间Bootstrap未开放，见[Bootstrap报告](V2_0_BOOTSTRAP_VALIDATION.md)|
 |XPT/SAS7BDAT|`R/inputs.R::read_adtte`及核心UI|核心已接通；37项输入、40项浏览器、16项实际下载重放通过|远程Linux/Windows通过；独立SAS系统/非英文编码样例未实测，见[SAS验收](V2_0_SAS_VALIDATION.md)|
 |Log-normal/Log-logistic|`R/models.R`、`R/parameters.R`及参数UI/server|核心已接通并通过本机验收：43项独立参照、34项浏览器、21项下载重放|远程Linux/Windows已通过；Bootstrap后续单独验收，见[模型报告](V2_0_LOG_MODELS_VALIDATION.md)|
 |事件驱动模拟|`R/simulation.R`|已有cut_mode=target|核心接入、目标/窗口/并列/未达标、观察真值、复现|
@@ -91,3 +91,7 @@
 ## 8. V2-102推进结果（2026-10-11）
 
 核心2.0.0-dev新增Log-normal、Log-logistic；合并/已知两组的参数及右删失拟合、事件数/目标日期、固定DCO模拟均接通。mu/中位数形式、sigma、单位换算、重尾无穷均值、条件抽样、冻结配置/实际下载和在线/离线手册完成本机验收。独立参照43项、浏览器34项、重放21项通过；原核心64项及SAS输入37项回归通过。远程源码28bc8e8及CI运行38107692014已通过（Linux模型/加载/回归、Windows启动准备）；本项没有开放Bootstrap或生成发布候选包。下一项V2-201。
+
+## 9. V2-201推进结果（2026-10-11）
+
+核心开放ADTTE指数、Weibull、PWE的患者Bootstrap：完整患者记录有放回抽样、组内抽样，重拟合后预测原始当前队列。已记录事件/退出/当前风险年龄不因抽样改变；未来计划固定。明确请求、有效、拟合失败、模拟失败及逐轮原因，两组失败整轮排除，失败超过10%停止且保留旧结果；未达标有效轮次仍在分母。冻结JSON/次数CSV/失败CSV/报告及读数同源。本机验收通过，远程待执行；对数时间模型仍使用plugin。下一项V2-301。
