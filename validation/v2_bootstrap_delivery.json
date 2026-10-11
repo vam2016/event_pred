@@ -45,9 +45,36 @@
     }
   },
   "synthetic_fixture_helper": "exact sparse/partial CSV byte equivalence passed",
-  "remote_status": "authorized_pending_sync",
-  "remote_source_sha": null,
-  "remote_run": null,
+  "remote_status": "passed",
+  "remote_source_sha": "3e4ee7871cd08e73c8e4a3eddcab69a37c7266d7",
+  "remote_run": {
+    "id": 38111317693,
+    "url": "https://github.com/vam2016/event_pred/actions/runs/38111317693",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 114387307151,
+        "name": "core",
+        "conclusion": "success",
+        "checks": {
+          "parsed_files": 142,
+          "loading": 9,
+          "core_numeric": 51,
+          "core_display": 13,
+          "log_models": 43,
+          "bootstrap": 33,
+          "sas_inputs": 37
+        }
+      },
+      {
+        "id": 114387307206,
+        "name": "windows-launch",
+        "conclusion": "success",
+        "scope": "Windows launcher prepare-only"
+      }
+    ]
+  },
   "next_work_item": "V2-301",
   "limits": [
     "ordinary case resampling; no nominal coverage-rate guarantee",
@@ -59,5 +86,6 @@
   "local_source_commit": "bdfb366",
   "upload_file_count": 25,
   "remote_authorization": "User explicitly authorized V2-201 25-file sync to vam2016/event_pred development/v2.0 and remote automated checks on 2026-10-11.",
-  "previous_upload_rejection": "Automatic approval rejected V2-201 upload because prior batch approvals did not explicitly cover this 25-file export to vam2016/event_pred development/v2.0."
+  "previous_upload_rejection": "Automatic approval rejected V2-201 upload because prior batch approvals did not explicitly cover this 25-file export to vam2016/event_pred development/v2.0.",
+  "local_tree_matches_remote": true
 }
