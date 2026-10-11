@@ -1,0 +1,35 @@
+{
+  "status": "passed",
+  "passed": 7,
+  "checks": [
+    {
+      "figure": "conditional-survival.svg",
+      "matches_retained_svg": true
+    },
+    {
+      "figure": "count-forecast.svg",
+      "matches_retained_svg": true
+    },
+    {
+      "figure": "count-mass.svg",
+      "matches_retained_svg": true
+    },
+    {
+      "figure": "km-observed.svg",
+      "matches_retained_svg": true
+    },
+    {
+      "figure": "patient-clocks.svg",
+      "matches_retained_svg": true
+    },
+    {
+      "figure": "pwe-hazard.svg",
+      "matches_retained_svg": true
+    },
+    {
+      "figure": "survival-hazard.svg",
+      "matches_retained_svg": true
+    }
+  ],
+  "scope": "Seven scientific SVGs regenerated from current checked CSV data; exact byte comparison with retained originals"
+}

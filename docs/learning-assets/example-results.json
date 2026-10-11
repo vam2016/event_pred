@@ -1,0 +1,53 @@
+{
+  "benchmark": {
+    "analytic_mean": 90,
+    "analytic_sd": 5,
+    "analytic_quantiles": [80, 90, 100],
+    "simulated_mean": 89.765,
+    "simulated_sd": 5.0152694771,
+    "simulated_quantiles": [80, 90, 99]
+  },
+  "process": {
+    "lambda_month": 0.05776226504666,
+    "dropout_mu_month": 0.005,
+    "active_prob_12": 0.4869651967423,
+    "active_expected_100": 48.696519674233,
+    "future_expected_capped_60": 23.525516587245,
+    "uncapped_future_expected": 32.851265591565,
+    "simulated_total_mean": 112.11,
+    "analytic_total_mean": 112.222036261479
+  },
+  "weibull": {
+    "median": 12,
+    "shape": 2,
+    "eta": 14.413468905437,
+    "age": 8,
+    "u": 0.4,
+    "cumhaz_age": 0.3080654135822,
+    "target_cumhaz": 1.224356145456,
+    "total_time": 15.948593845972,
+    "remaining_time": 7.948593845972,
+    "remaining_event_prob_6": 0.4702684528204
+  },
+  "pwe": {
+    "survival_at_cuts": [0.9139311852712, 0.7633794943369, 0.4448580662229],
+    "median": 10.701635339555,
+    "cumhaz_age8": 0.45,
+    "total_time_u04": 21.271512197903
+  },
+  "adtte": {
+    "continuous_times": [45, 64, 59, 23],
+    "exposure": 191,
+    "events": 2,
+    "lambda_per_day": 0.01047120418848,
+    "median_days": 66.195555743475
+  },
+  "unreachable": {
+    "target": 150,
+    "capacity": 140,
+    "reached": 0,
+    "median_day": "Inf"
+  },
+  "R": "R version 4.6.0 (2026-04-24)",
+  "seed": 20261006
+}

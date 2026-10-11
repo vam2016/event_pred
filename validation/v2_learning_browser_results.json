@@ -1,0 +1,98 @@
+{
+  "status": "passed",
+  "passed": 53,
+  "checks": [
+    "all historical and added formulas finish rendering (378)",
+    "no MathJax formula errors",
+    "no fallback math strings",
+    "no broken encoding or visible TeX leakage",
+    "tables preserve rendered inline formulas (27 tables)",
+    "all seven diagrams decode from embedded SVG",
+    "all twelve original self-tests available",
+    "chapter 1 has one anchor and navigation entry",
+    "chapter 2 has one anchor and navigation entry",
+    "chapter 3 has one anchor and navigation entry",
+    "chapter 4 has one anchor and navigation entry",
+    "chapter 5 has one anchor and navigation entry",
+    "chapter 6 has one anchor and navigation entry",
+    "chapter 7 has one anchor and navigation entry",
+    "chapter 8 has one anchor and navigation entry",
+    "chapter 9 has one anchor and navigation entry",
+    "chapter 10 has one anchor and navigation entry",
+    "chapter 11 has one anchor and navigation entry",
+    "chapter 12 has one anchor and navigation entry",
+    "chapter 13 has one anchor and navigation entry",
+    "chapter 14 has one anchor and navigation entry",
+    "chapter 15 has one anchor and navigation entry",
+    "chapter 16 has one anchor and navigation entry",
+    "chapter 17 has one anchor and navigation entry",
+    "chapter 18 has one anchor and navigation entry",
+    "chapter 19 has one anchor and navigation entry",
+    "chapter 20 has one anchor and navigation entry",
+    "chapter 21 has one anchor and navigation entry",
+    "chapter 22 has one anchor and navigation entry",
+    "chapter 23 has one anchor and navigation entry",
+    "chapter 24 has one anchor and navigation entry",
+    "chapter 25 has one anchor and navigation entry",
+    "chapter 26 has one anchor and navigation entry",
+    "chapter 27 has one anchor and navigation entry",
+    "chapter 28 has one anchor and navigation entry",
+    "chapter 29 has one anchor and navigation entry",
+    "chapter 30 has one anchor and navigation entry",
+    "chapter 31 has one anchor and navigation entry",
+    "chapter 32 has one anchor and navigation entry",
+    "chapter 33 has one anchor and navigation entry",
+    "chapter 34 has one anchor and navigation entry",
+    "current shared case log_time is readable",
+    "current shared case bootstrap is readable",
+    "current shared case validation is readable",
+    "current shared case event_simulation is readable",
+    "desktop reading fits viewport",
+    "added chapter navigation lands below fixed header",
+    "self-test disclosure opens",
+    "390px reading has no document overflow",
+    "mobile navigation reaches last new chapter",
+    "print stylesheet hides controls and navigation",
+    "offline reading makes zero network requests",
+    "zero uncaught browser errors"
+  ],
+  "formulas": 378,
+  "tables": 27,
+  "tableFormulas": 70,
+  "images": [
+    {
+      "loaded": true,
+      "embedded": true
+    },
+    {
+      "loaded": true,
+      "embedded": true
+    },
+    {
+      "loaded": true,
+      "embedded": true
+    },
+    {
+      "loaded": true,
+      "embedded": true
+    },
+    {
+      "loaded": true,
+      "embedded": true
+    },
+    {
+      "loaded": true,
+      "embedded": true
+    },
+    {
+      "loaded": true,
+      "embedded": true
+    }
+  ],
+  "details": 12,
+  "errors": [],
+  "requests": [],
+  "html_sha256": "659d8d42dcf25f542c86263d913dcbbf8acc364c0cde5aea98efc1232a22aaf1",
+  "manifest_sha256": "fe3704544676d412f2b984593a56c54c4c6d7ec1677d6630bf750a01406d3e35",
+  "scope": "Actual standalone HTML; desktop1440 and mobile390; blocked network; print CSS, not PDF pagination"
+}

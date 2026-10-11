@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "files": 44,
+  "verified_entries": 43,
+  "package_sha256": "d3a8fbe8f1ac74aa56dd02a2b40e6885e0cbb621fc0420cfda5f80b15ecbefe1",
+  "html_sha256": "659d8d42dcf25f542c86263d913dcbbf8acc364c0cde5aea98efc1232a22aaf1",
+  "manifest_sha256": "fe3704544676d412f2b984593a56c54c4c6d7ec1677d6630bf750a01406d3e35",
+  "package": "reports/learning-v2/SurvCast-learning-2.0-dev.zip",
+  "scope": "Every ZIP payload matches verified learning folder; application source intentionally separate"
+}

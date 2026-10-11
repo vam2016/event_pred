@@ -1,0 +1,62 @@
+{
+  "status": "passed",
+  "passed": 186,
+  "checks": ["archived v1 Markdown is byte-identical to verified historical source", "recorded three-copy source verification and original ZIP integrity remain distinguishable from this run", "original source has exactly 28 ordered chapter anchors", "current source preserves 28 chapters and adds six ordered unique chapters", "current appended six chapters equal editable addendum", "all 12 original self-tests are retained", "six historical workflow scenarios retain their source index", "current capability dictionary reflects five plugin models, restricted Bootstrap and event DCO", "versioned file checksum R/_disable_autoload.R", "versioned file checksum R/adaptation.R", "versioned file checksum R/adaptation_server.R", "versioned file checksum R/adaptation_ui.R", "versioned file checksum R/adaptive_batch.R", "versioned file checksum R/adaptive_batch_server.R", "versioned file checksum R/adaptive_batch_ui.R", "versioned file checksum R/batch_analysis.R", "versioned file checksum R/batch_research.R", "versioned file checksum R/batch_research_server.R", "versioned file checksum R/batch_research_ui.R", "versioned file checksum R/batch_sequential.R", "versioned file checksum R/batch_workspace.R", "versioned file checksum R/batch_workspace_server.R", "versioned file checksum R/batch_workspace_ui.R", "versioned file checksum R/bayes.R", "versioned file checksum R/conditional_batch.R", "versioned file checksum R/conditional_prediction.R", "versioned file checksum R/conditional_prediction_server.R", "versioned file checksum R/conditional_simulation.R", "versioned file checksum R/conditional_ui.R", "versioned file checksum R/core_cases.R", "versioned file checksum R/core_handbook.R", "versioned file checksum R/core_results.R", "versioned file checksum R/core_simulation_server.R", "versioned file checksum R/core_ui.R", "versioned file checksum R/core_validation.R", "versioned file checksum R/core_workflow.R", "versioned file checksum R/design_search.R", "versioned file checksum R/expansion_help.R", "versioned file checksum R/expansion_two_server.R", "versioned file checksum R/expansion_two_ui.R", "versioned file checksum R/fitting.R", "versioned file checksum R/flexible_models.R", "versioned file checksum R/flexible_prediction.R", "versioned file checksum R/flexible_splines.R", "versioned file checksum R/forecast.R", "versioned file checksum R/group_ui.R", "versioned file checksum R/groups.R", "versioned file checksum R/handbook.R", "versioned file checksum R/help.R", "versioned file checksum R/heterogeneity.R", "versioned file checksum R/history_inference.R", "versioned file checksum R/history_inference_server.R", "versioned file checksum R/history_inference_ui.R", "versioned file checksum R/ia_history.R", "versioned file checksum R/ia_reverse_calibration.R", "versioned file checksum R/inputs.R", "versioned file checksum R/joint_marginal.R", "versioned file checksum R/joint_research.R", "versioned file checksum R/joint_research_server.R", "versioned file checksum R/joint_research_ui.R", "versioned file checksum R/joint_sequential.R", "versioned file checksum R/joint_survival.R", "versioned file checksum R/joint_survival_server.R", "versioned file checksum R/joint_survival_ui.R", "versioned file checksum R/models.R", "versioned file checksum R/multiarm_design.R", "versioned file checksum R/multiarm_multiplicity.R", "versioned file checksum R/multistate_prediction.R", "versioned file checksum R/nph.R", "versioned file checksum R/observation_process.R", "versioned file checksum R/panel_multistate.R", "versioned file checksum R/parameter_calibration.R", "versioned file checksum R/parameter_server.R", "versioned file checksum R/parameter_ui.R", "versioned file checksum R/parameters.R", "versioned file checksum R/patient_adaptation.R", "versioned file checksum R/patient_adaptation_server.R", "versioned file checksum R/patient_adaptation_ui.R", "versioned file checksum R/patient_adaptive_prediction.R", "versioned file checksum R/patient_prediction_process.R", "versioned file checksum R/research_runtime.R", "versioned file checksum R/research_sources.R", "versioned file checksum R/research_workbench_server.R", "versioned file checksum R/research_workbench_ui.R", "versioned file checksum R/reverse_calibration.R", "versioned file checksum R/round_five_server.R", "versioned file checksum R/round_five_ui.R", "versioned file checksum R/round_four_server.R", "versioned file checksum R/round_four_ui.R", "versioned file checksum R/round_three_server.R", "versioned file checksum R/round_three_ui.R", "versioned file checksum R/round_two_help.R", "versioned file checksum R/sequential.R", "versioned file checksum R/sequential_beta.R", "versioned file checksum R/sequential_inference.R", "versioned file checksum R/sequential_ordering.R", "versioned file checksum R/sequential_repeated_binding.R", "versioned file checksum R/sequential_server.R", "versioned file checksum R/shared_adaptation.R", "versioned file checksum R/shared_adaptation_server.R", "versioned file checksum R/shared_adaptation_ui.R", "versioned file checksum R/shared_riskset.R", "versioned file checksum R/simulation.R", "versioned file checksum R/simulation_server.R", "versioned file checksum R/simulation_ui.R", "versioned file checksum R/study.R", "versioned file checksum R/study_server.R", "versioned file checksum R/study_ui.R", "versioned file checksum R/units.R", "versioned file checksum R/validation.R", "versioned file checksum R/workflow.R", "versioned file checksum app_core.R", "versioned file checksum docs/CORE_CASES.md", "versioned file checksum docs/LEARNING_V2_ADDENDUM.md", "versioned file checksum docs/SurvCast_STATISTICIAN_GUIDE.md", "versioned file checksum docs/learning-assets/adtte-learning-example.csv", "versioned file checksum docs/learning-assets/conditional-survival.svg", "versioned file checksum docs/learning-assets/count-forecast.svg", "versioned file checksum docs/learning-assets/count-mass.svg", "versioned file checksum docs/learning-assets/example-results.json", "versioned file checksum docs/learning-assets/km-observed.svg", "versioned file checksum docs/learning-assets/patient-clocks.svg", "versioned file checksum docs/learning-assets/prediction-example-curves.csv", "versioned file checksum docs/learning-assets/prediction-example-mass.csv", "versioned file checksum docs/learning-assets/pwe-hazard.svg", "versioned file checksum docs/learning-assets/simulation-example-km.csv", "versioned file checksum docs/learning-assets/simulation-example-overview.csv", "versioned file checksum docs/learning-assets/survival-hazard.svg", "versioned file checksum docs/learning-guide.css", "versioned file checksum docs/learning-history/SurvCast_STATISTICIAN_GUIDE_v1.md", "versioned file checksum docs/learning-history/guide-manifest-v1.json", "versioned file checksum docs/learning-history/reading-checks-v1.json", "versioned file checksum docs/learning-history/source-inventory.json", "versioned file checksum scripts/build_learning_guide.R", "versioned file checksum scripts/check_learning_guide.R", "versioned file checksum scripts/check_learning_guide.cjs", "versioned file checksum scripts/learning_examples.R", "versioned file checksum scripts/package_learning_guide.py", "versioned file checksum scripts/plot_learning_figures.py", "versioned file checksum www/core-mathjax.js", "embedded new case guide agrees with shared engine definitions", "built HTML embeds all four shared current cases", "seven diagrams are embedded for offline reading", "case A independent Binomial mean, SD and exact quantiles", "case A simulated mean falls within four independent analytical MCSE", "case B capped Poisson entry integral and dropout agree with archived analytical references", "case B Monte Carlo mean agrees with independent competing-risk and capped-entry integral", "case C inclusive-date conversion, 191 days exposure and independent event/exposure MLE", "case D all 20 trials and three DCOs conserve observed status counts", "rerun legacy figure/input data matches retained CSV adtte-learning-example.csv", "rerun legacy figure/input data matches retained CSV prediction-example-curves.csv", "rerun legacy figure/input data matches retained CSV prediction-example-mass.csv", "rerun legacy figure/input data matches retained CSV simulation-example-km.csv", "rerun legacy figure/input data matches retained CSV simulation-example-overview.csv", "legacy numerical JSON matches historical reference benchmark", "legacy numerical JSON matches historical reference process", "legacy numerical JSON matches historical reference weibull", "legacy numerical JSON matches historical reference pwe", "legacy numerical JSON matches historical reference adtte", "legacy numerical JSON matches historical reference unreachable", "legacy numerical JSON matches historical reference seed", "log_time built case JSON reproduces source-defined tables", "log_time built replay script matches online download source", "log_time packaged R script executes successfully", "log_time summary packaged script CSV reproduces every saved table value", "log_time diagnostics packaged script CSV reproduces every saved table value", "bootstrap built case JSON reproduces source-defined tables", "bootstrap built replay script matches online download source", "bootstrap packaged R script executes successfully", "bootstrap summary packaged script CSV reproduces every saved table value", "bootstrap diagnostics packaged script CSV reproduces every saved table value", "bootstrap bundled ADTTE preserves every prediction path", "validation built case JSON reproduces source-defined tables", "validation built replay script matches online download source", "validation packaged R script executes successfully", "validation summary packaged script CSV reproduces every saved table value", "validation diagnostics packaged script CSV reproduces every saved table value", "validation backtest packaged script CSV reproduces every saved table value", "validation scenario packaged script CSV reproduces every saved table value", "validation bundled ADTTE preserves every prediction path", "event_simulation built case JSON reproduces source-defined tables", "event_simulation built replay script matches online download source", "event_simulation packaged R script executes successfully", "event_simulation summary packaged script CSV reproduces every saved table value", "event_simulation cuts packaged script CSV reproduces every saved table value", "event_simulation overview packaged script CSV reproduces every saved table value"],
+  "manifest_sha256": "fe3704544676d412f2b984593a56c54c4c6d7ec1677d6630bf750a01406d3e35",
+  "html_sha256": "659d8d42dcf25f542c86263d913dcbbf8acc364c0cde5aea98efc1232a22aaf1",
+  "R": "R version 4.6.0 (2026-04-24)",
+  "legacy_results": {
+    "benchmark": {
+      "analytic_mean": 90,
+      "analytic_sd": 5,
+      "analytic_quantiles": [80, 90, 100],
+      "simulated_mean": 89.765,
+      "simulated_sd": 5.0152694771,
+      "simulated_quantiles": [80, 90, 99]
+    },
+    "process": {
+      "lambda_month": 0.05776226504666,
+      "dropout_mu_month": 0.005,
+      "active_prob_12": 0.4869651967423,
+      "active_expected_100": 48.696519674233,
+      "future_expected_capped_60": 23.525516587245,
+      "uncapped_future_expected": 32.851265591565,
+      "simulated_total_mean": 112.11,
+      "analytic_total_mean": 112.222036261479
+    },
+    "weibull": {
+      "median": 12,
+      "shape": 2,
+      "eta": 14.413468905437,
+      "age": 8,
+      "u": 0.4,
+      "cumhaz_age": 0.3080654135822,
+      "target_cumhaz": 1.224356145456,
+      "total_time": 15.948593845972,
+      "remaining_time": 7.948593845972,
+      "remaining_event_prob_6": 0.4702684528204
+    },
+    "pwe": {
+      "survival_at_cuts": [0.9139311852712, 0.7633794943369, 0.4448580662229],
+      "median": 10.701635339555,
+      "cumhaz_age8": 0.45,
+      "total_time_u04": 21.271512197903
+    },
+    "adtte": {
+      "continuous_times": [45, 64, 59, 23],
+      "exposure": 191,
+      "events": 2,
+      "lambda_per_day": 0.01047120418848,
+      "median_days": 66.195555743475
+    },
+    "unreachable": {
+      "target": 150,
+      "capacity": 140,
+      "reached": 0,
+      "median_day": "Inf"
+    },
+    "R": "R version 4.6.0 (2026-04-24)",
+    "seed": 20261006
+  },
+  "scope": "archived provenance; current synthetic numerical and packaged replay checks; six scenarios are narrative workflows, not six numerical validations"
+}

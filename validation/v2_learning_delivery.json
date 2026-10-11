@@ -1,0 +1,91 @@
+{
+  "work_item": "V2-402",
+  "date": "2026-10-11",
+  "branch": "development/v2.0",
+  "core_version": "2.0.0-dev",
+  "base_sha": "98fe9b1263c22a55cede8eb1060c805d5f67b91e",
+  "local_status": "passed",
+  "remote_status": "not_run",
+  "remote_delivery_status": "authorized_pending_sync",
+  "checks": {
+    "v2_learning_results.json": {
+      "status": "passed",
+      "passed": 186
+    },
+    "v2_learning_browser_results.json": {
+      "status": "passed",
+      "passed": 53,
+      "formulas": 378,
+      "tables": 27,
+      "details": 12
+    },
+    "v2_learning_figures_results.json": {
+      "status": "passed",
+      "passed": 7
+    },
+    "v2_learning_package_results.json": {
+      "status": "passed",
+      "files": 44,
+      "verified_entries": 43
+    },
+    "v2_learning_extension_load_results.json": {
+      "status": "passed",
+      "parsed_files": 153,
+      "checks_passed": 9
+    }
+  },
+  "next_work_item": "V2-403",
+  "limits": [
+    "All patient examples are synthetic",
+    "Six source scenarios are workflows, not six numerical test sets",
+    "Historical source checks are preserved separately from current checks",
+    "Learning ZIP is not an application release candidate",
+    "Actual offline browser and figure regeneration were local; no target Windows browser or PDF pagination checked"
+  ],
+  "upload_files": [
+    ".github/workflows/check.yml",
+    "README.md",
+    "docs/CORE_DEVELOPMENT_STATUS.md",
+    "docs/LEARNING_V2_ADDENDUM.md",
+    "docs/SurvCast_STATISTICIAN_GUIDE.md",
+    "docs/V2_0_DEVELOPMENT_PLAN.md",
+    "docs/V2_0_LEARNING_VALIDATION.md",
+    "docs/V2_0_STATUS_INVENTORY.md",
+    "docs/V2_0_WORK_PLAN.md",
+    "docs/learning-assets/adtte-learning-example.csv",
+    "docs/learning-assets/conditional-survival.svg",
+    "docs/learning-assets/count-forecast.svg",
+    "docs/learning-assets/count-mass.svg",
+    "docs/learning-assets/example-results.json",
+    "docs/learning-assets/guide-manifest.json",
+    "docs/learning-assets/km-observed.svg",
+    "docs/learning-assets/patient-clocks.svg",
+    "docs/learning-assets/prediction-example-curves.csv",
+    "docs/learning-assets/prediction-example-mass.csv",
+    "docs/learning-assets/pwe-hazard.svg",
+    "docs/learning-assets/simulation-example-km.csv",
+    "docs/learning-assets/simulation-example-overview.csv",
+    "docs/learning-assets/survival-hazard.svg",
+    "docs/learning-guide.css",
+    "docs/learning-history/SurvCast_STATISTICIAN_GUIDE_v1.md",
+    "docs/learning-history/guide-manifest-v1.json",
+    "docs/learning-history/reading-checks-v1.json",
+    "docs/learning-history/source-inventory.json",
+    "scripts/build_learning_guide.R",
+    "scripts/check_learning_guide.R",
+    "scripts/check_learning_guide.cjs",
+    "scripts/learning_examples.R",
+    "scripts/package_learning_guide.py",
+    "scripts/plot_learning_figures.py",
+    "validation/v2_learning_browser_results.json",
+    "validation/v2_learning_delivery.json",
+    "validation/v2_learning_extension_load_results.json",
+    "validation/v2_learning_figures_results.json",
+    "validation/v2_learning_package_results.json",
+    "validation/v2_learning_results.json"
+  ],
+  "upload_file_count": 40,
+  "local_source_commit": "14466ba0470f18ec34b02a3436308bffb150514d",
+  "upload_rejection": "Automatic approval rejected export of 40 V2-402 project documents, scripts, resources and synthetic validation records to vam2016/event_pred because prior explicit authorization covered V2-401 only; current batch and destination require human approval.",
+  "remote_authorization": "User corrected the accidental local-only choice and explicitly requested V2-402 GitHub sync on 2026-10-11, referring to the complete preceding 40-file sync, automatic checks and same-batch document/JSON backfill request."
+}

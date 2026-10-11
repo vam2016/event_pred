@@ -1,0 +1,153 @@
+{
+  "schema": "survcast-learning-provenance-1",
+  "verified_date": "2026-10-11",
+  "source_kind": "original local output mirror, v1 learning folder, standalone HTML and ZIP",
+  "guide_text_date": "2026-10-07",
+  "manifest_authored_date": "2026-10-06",
+  "date_difference": "Retained historical manifest; current text update is one day later.",
+  "feature_snapshot": "4d115d79a954a90294e16f4798929cc267a61146",
+  "validation_snapshot": "83555c112eca6231c4e8e254bf2a726704e546fb",
+  "chapters": 28,
+  "worked_cases": 4,
+  "practical_scenarios": 6,
+  "figures": 7,
+  "self_tests": 12,
+  "markdown_sha256": "d499ccf82c4c5c3d86cf2c3309d34b5e0fb5e721523789f71deb1f1cdda80a43",
+  "markdown_copies": {
+    "output_mirror": "d499ccf82c4c5c3d86cf2c3309d34b5e0fb5e721523789f71deb1f1cdda80a43",
+    "learning_folder": "d499ccf82c4c5c3d86cf2c3309d34b5e0fb5e721523789f71deb1f1cdda80a43",
+    "ZIP_entry": "d499ccf82c4c5c3d86cf2c3309d34b5e0fb5e721523789f71deb1f1cdda80a43"
+  },
+  "html_sha256": "1240b1b75eaa49a3ad1f91400ce145fb60e2df56cbe3a24d5709e46376cd72b3",
+  "html_copies": {
+    "output_mirror": "1240b1b75eaa49a3ad1f91400ce145fb60e2df56cbe3a24d5709e46376cd72b3",
+    "learning_folder": "1240b1b75eaa49a3ad1f91400ce145fb60e2df56cbe3a24d5709e46376cd72b3",
+    "standalone": "1240b1b75eaa49a3ad1f91400ce145fb60e2df56cbe3a24d5709e46376cd72b3"
+  },
+  "zip_sha256": "977040e11fd10caec295363f6f3e84d978bd8fa09aba7320f97b176ae61ce2ea",
+  "zip_integrity_ok": true,
+  "bundle_files": [
+    {
+      "file": "README.md",
+      "recorded_sha256": "a308ca4d26130b01fa1037f2fbcadb01567b8c9a592268168aa96741a6983d18",
+      "actual_sha256": "a308ca4d26130b01fa1037f2fbcadb01567b8c9a592268168aa96741a6983d18",
+      "matches": true
+    },
+    {
+      "file": "SurvCast_STATISTICIAN_GUIDE.html",
+      "recorded_sha256": "1240b1b75eaa49a3ad1f91400ce145fb60e2df56cbe3a24d5709e46376cd72b3",
+      "actual_sha256": "1240b1b75eaa49a3ad1f91400ce145fb60e2df56cbe3a24d5709e46376cd72b3",
+      "matches": true
+    },
+    {
+      "file": "SurvCast_STATISTICIAN_GUIDE.md",
+      "recorded_sha256": "d499ccf82c4c5c3d86cf2c3309d34b5e0fb5e721523789f71deb1f1cdda80a43",
+      "actual_sha256": "d499ccf82c4c5c3d86cf2c3309d34b5e0fb5e721523789f71deb1f1cdda80a43",
+      "matches": true
+    },
+    {
+      "file": "build_learning_guide.R",
+      "recorded_sha256": "2a016a3d84a3fbf8257799e3b53deac1973597fb8b1f27862871989b58d4a84e",
+      "actual_sha256": "2a016a3d84a3fbf8257799e3b53deac1973597fb8b1f27862871989b58d4a84e",
+      "matches": true
+    },
+    {
+      "file": "learning-assets/adtte-learning-example.csv",
+      "recorded_sha256": "086274950f5c244e44a4a85b9fd5407063d922b69213fc44556eeaba642d89e1",
+      "actual_sha256": "086274950f5c244e44a4a85b9fd5407063d922b69213fc44556eeaba642d89e1",
+      "matches": true
+    },
+    {
+      "file": "learning-assets/conditional-survival.svg",
+      "recorded_sha256": "91fc1fa70045f36eec4131d41fbac88dcd0f33d916d220faccdd57889e545cfd",
+      "actual_sha256": "91fc1fa70045f36eec4131d41fbac88dcd0f33d916d220faccdd57889e545cfd",
+      "matches": true
+    },
+    {
+      "file": "learning-assets/count-forecast.svg",
+      "recorded_sha256": "b34724935e6075f34ad37b3ac860e6bf35a2ebb824e036c84139995c6b046cef",
+      "actual_sha256": "b34724935e6075f34ad37b3ac860e6bf35a2ebb824e036c84139995c6b046cef",
+      "matches": true
+    },
+    {
+      "file": "learning-assets/count-mass.svg",
+      "recorded_sha256": "125f48f9410c1e51564ffae4d71bb8c3cf5db5a07a307d744cc63649aaab5d22",
+      "actual_sha256": "125f48f9410c1e51564ffae4d71bb8c3cf5db5a07a307d744cc63649aaab5d22",
+      "matches": true
+    },
+    {
+      "file": "learning-assets/example-results.json",
+      "recorded_sha256": "3d6209012575c1955f07d39d527a271373d0b7c20e4057b5b3aa98dd76d5d845",
+      "actual_sha256": "3d6209012575c1955f07d39d527a271373d0b7c20e4057b5b3aa98dd76d5d845",
+      "matches": true
+    },
+    {
+      "file": "learning-assets/km-observed.svg",
+      "recorded_sha256": "b48286421d555ca539d03bac3f50e8cae7ae4649a4cc098898a190113ac95192",
+      "actual_sha256": "b48286421d555ca539d03bac3f50e8cae7ae4649a4cc098898a190113ac95192",
+      "matches": true
+    },
+    {
+      "file": "learning-assets/patient-clocks.svg",
+      "recorded_sha256": "7edbd8b4e20d415e31b2424ae3ac6ef0ae2df2d8eb6dc6fd95eb15e8280d6923",
+      "actual_sha256": "7edbd8b4e20d415e31b2424ae3ac6ef0ae2df2d8eb6dc6fd95eb15e8280d6923",
+      "matches": true
+    },
+    {
+      "file": "learning-assets/prediction-example-curves.csv",
+      "recorded_sha256": "04cee438cf3c24484be6586af252b6e6ec39218d96ef8ad1622f78ba05cb0424",
+      "actual_sha256": "04cee438cf3c24484be6586af252b6e6ec39218d96ef8ad1622f78ba05cb0424",
+      "matches": true
+    },
+    {
+      "file": "learning-assets/prediction-example-mass.csv",
+      "recorded_sha256": "055ef1e75ecdc1082ed0e0a5ce22a8c3a2a69e43014e901d50b9dfc2f5a7f9d9",
+      "actual_sha256": "055ef1e75ecdc1082ed0e0a5ce22a8c3a2a69e43014e901d50b9dfc2f5a7f9d9",
+      "matches": true
+    },
+    {
+      "file": "learning-assets/pwe-hazard.svg",
+      "recorded_sha256": "613a79f84969c2c619afae3b792c7a0c900b655f166f88685afc350cb34446b5",
+      "actual_sha256": "613a79f84969c2c619afae3b792c7a0c900b655f166f88685afc350cb34446b5",
+      "matches": true
+    },
+    {
+      "file": "learning-assets/simulation-example-km.csv",
+      "recorded_sha256": "8ef4cf69c2a74f8376172ef0f927e946bacd1e40a660abdd9ad734cfe5097762",
+      "actual_sha256": "8ef4cf69c2a74f8376172ef0f927e946bacd1e40a660abdd9ad734cfe5097762",
+      "matches": true
+    },
+    {
+      "file": "learning-assets/simulation-example-overview.csv",
+      "recorded_sha256": "033b497fc2e487a925e0fe022754f47f7f0054c686c909baa4d154266796734f",
+      "actual_sha256": "033b497fc2e487a925e0fe022754f47f7f0054c686c909baa4d154266796734f",
+      "matches": true
+    },
+    {
+      "file": "learning-assets/survival-hazard.svg",
+      "recorded_sha256": "bf7bc3d4abc267b58a3ffa896b5f0bb85bc9644acf9322adc3445568fbf2f5d6",
+      "actual_sha256": "bf7bc3d4abc267b58a3ffa896b5f0bb85bc9644acf9322adc3445568fbf2f5d6",
+      "matches": true
+    },
+    {
+      "file": "learning-guide.css",
+      "recorded_sha256": "286948fb057d66731a6f27e4340807f9eeef2140506cba90792ce7081f864768",
+      "actual_sha256": "286948fb057d66731a6f27e4340807f9eeef2140506cba90792ce7081f864768",
+      "matches": true
+    },
+    {
+      "file": "learning_examples.R",
+      "recorded_sha256": "ad80ff10d0854f4033ac2256be37fc07643387a914111376a0bd7934143dde20",
+      "actual_sha256": "ad80ff10d0854f4033ac2256be37fc07643387a914111376a0bd7934143dde20",
+      "matches": true
+    },
+    {
+      "file": "plot_learning_figures.py",
+      "recorded_sha256": "a091b28b2b4406a066b298e9e682ea90902ed6b14aa7d6045d1963207b3d99f3",
+      "actual_sha256": "a091b28b2b4406a066b298e9e682ea90902ed6b14aa7d6045d1963207b3d99f3",
+      "matches": true
+    }
+  ],
+  "archive_markdown": "docs/learning-history/SurvCast_STATISTICIAN_GUIDE_v1.md",
+  "history_policy": "Historical source and checks retained verbatim; current v2 guide has its own scope and checks."
+}

@@ -2,9 +2,9 @@ name: Core and extension loading checks
 on:
   push:
     branches: [development/v2.0]
-    paths: ['**/*.R', '.github/workflows/check.yml', 'scripts/*.cjs', 'www/**']
+    paths: ['**/*.R', '.github/workflows/check.yml', 'scripts/*.cjs', 'www/**', 'docs/SurvCast_STATISTICIAN_GUIDE.md', 'docs/LEARNING_V2_ADDENDUM.md', 'docs/learning-*', 'docs/learning-assets/**', 'docs/learning-history/**', 'scripts/*learning*.py']
   pull_request:
-    paths: ['**/*.R', '.github/workflows/check.yml', 'scripts/*.cjs', 'www/**']
+    paths: ['**/*.R', '.github/workflows/check.yml', 'scripts/*.cjs', 'www/**', 'docs/SurvCast_STATISTICIAN_GUIDE.md', 'docs/LEARNING_V2_ADDENDUM.md', 'docs/learning-*', 'docs/learning-assets/**', 'docs/learning-history/**', 'scripts/*learning*.py']
   workflow_dispatch:
 jobs:
   core:
@@ -43,6 +43,10 @@ jobs:
         run: Rscript scripts/check_validation.R
       - name: Verify frozen charts and same-source teaching cases
         run: Rscript scripts/check_core_cases.R
+      - name: Build and verify versioned learning guide and packaged case inputs
+        run: |
+          Rscript scripts/build_learning_guide.R
+          Rscript scripts/check_learning_guide.R
       - name: Verify synthetic SAS input equivalence
         run: Rscript scripts/check_sas_inputs.R
   windows-launch:
