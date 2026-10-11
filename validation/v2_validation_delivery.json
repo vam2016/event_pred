@@ -48,9 +48,38 @@
       "passed": 37
     }
   },
-  "remote_status": "authorized_pending_sync",
-  "remote_source_sha": null,
-  "remote_run": null,
+  "remote_status": "passed",
+  "remote_source_sha": "2a9992b41eb42895dce937ff21ff617040cf84a6",
+  "remote_run": {
+    "id": 38116185124,
+    "url": "https://github.com/vam2016/event_pred/actions/runs/38116185124",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 114401423014,
+        "name": "core",
+        "conclusion": "success",
+        "checks": {
+          "parsed_files": 147,
+          "loading": 9,
+          "core_numeric": 52,
+          "core_display": 13,
+          "log_models": 43,
+          "bootstrap": 33,
+          "event_simulation": 45,
+          "validation_scenarios": 54,
+          "sas_inputs": 37
+        }
+      },
+      {
+        "id": 114401423226,
+        "name": "windows-launch",
+        "conclusion": "success",
+        "scope": "Windows launcher prepare-only"
+      }
+    ]
+  },
   "next_work_item": "V2-401",
   "limits": [
     "historical final file cannot reconstruct report or visit versions; no calibrated coverage claim",
@@ -62,5 +91,18 @@
   "local_source_commit": "110558525ddf6806db97d5769848330f778f2d1a",
   "upload_file_count": 20,
   "upload_rejection": "Automatic approval rejected V2-302 20-file export to vam2016/event_pred development/v2.0 because previous explicit authorization covered V2-301 only.",
-  "remote_authorization": "User explicitly authorized V2-302 20-file sync to vam2016/event_pred development/v2.0 and remote automated checks on 2026-10-11."
+  "remote_authorization": "User explicitly authorized V2-302 20-file sync to vam2016/event_pred development/v2.0 and remote automated checks on 2026-10-11.",
+  "local_tree_matches_remote": true,
+  "local_code_matches_remote": true,
+  "remote_delivery_status": "synced",
+  "remote_delivery_files": [
+    "README.md",
+    "docs/V2_0_DEVELOPMENT_PLAN.md",
+    "docs/V2_0_STATUS_INVENTORY.md",
+    "docs/V2_0_VALIDATION_SCENARIOS_VALIDATION.md",
+    "docs/V2_0_WORK_PLAN.md",
+    "validation/v2_validation_delivery.json"
+  ],
+  "remote_delivery_rejection": "Automatic approval rejected CI follow-up edits to six V2-302 documents/JSON files as outside the expressly authorized first 20-file payload.",
+  "remote_delivery_authorization": "User explicitly authorized synchronization of the six V2-302 CI follow-up documentation/JSON files to vam2016/event_pred development/v2.0 on 2026-10-11."
 }
