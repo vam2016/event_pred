@@ -10,7 +10,7 @@
 |V2-002|P0|核对main/扩展核心改动、启动与依赖|001|逐文件差异与取舍；两个入口分别加载；核心51项及展示13项回归|本机验证通过；核心文件一致，扩展依赖准备已补齐|
 |V2-003|P0|自动扩展解析/加载检查与核心回归|001、002|push/PR自动执行；报告仅声明实际检查范围|已完成；远程Linux加载/回归、Windows启动准备通过|
 
-M0本机恢复完成，记录见[V2_0_M0_VALIDATION.md](V2_0_M0_VALIDATION.md)。M0远程CI已通过。V2-101本机验收已完成，见[SAS输入报告](V2_0_SAS_VALIDATION.md)。V2-102本机验收见[对数时间模型报告](V2_0_LOG_MODELS_VALIDATION.md)。V2-201本机验收见[Bootstrap报告](V2_0_BOOTSTRAP_VALIDATION.md)。V2-301事件驱动本机验收见[事件驱动报告](V2_0_EVENT_SIMULATION_VALIDATION.md)。下一开发单元为V2-302。
+M0本机恢复完成，记录见[V2_0_M0_VALIDATION.md](V2_0_M0_VALIDATION.md)。M0远程CI已通过。V2-101本机验收已完成，见[SAS输入报告](V2_0_SAS_VALIDATION.md)。V2-102本机验收见[对数时间模型报告](V2_0_LOG_MODELS_VALIDATION.md)。V2-201本机验收见[Bootstrap报告](V2_0_BOOTSTRAP_VALIDATION.md)。V2-301事件驱动本机验收见[事件驱动报告](V2_0_EVENT_SIMULATION_VALIDATION.md)。V2-302回测与风险情景本机验收完成（54项数值、41项浏览器、59项实际下载重放），远程待本批同步与自动检查，见[回测/情景验收](V2_0_VALIDATION_SCENARIOS_VALIDATION.md)。下一开发单元为V2-401。
 
 ## M1–M3：首批功能
 
@@ -20,7 +20,7 @@ M0本机恢复完成，记录见[V2_0_M0_VALIDATION.md](V2_0_M0_VALIDATION.md)�
 |V2-102|M1|Log-normal/Log-logistic|models/parameters/parameter_ui/核心入口|独立分布与似然、条件抽样、单位、参数/数据/分组、导出帮助|本机通过：43项独立参照、34项浏览器、21项实际重放；远程CI已通过|
 |V2-201|M2|患者Bootstrap|forecast/groups/core_ui/core_results|逐患者/组别、种子、拟合失败、有效/请求次数、区间解释、下载重放|原三模型本机通过：33项数值、34项核心浏览器、4项扩展表格兼容、25项下载重放；远程Linux专项/回归与Windows启动准备均通过|
 |V2-301|M3|事件驱动模拟|simulation/core_simulation_server/core_ui|已达/不可达、并列、窗口端点、零风险、观察/真值/ADTTE、实际DCO及分母|本机45项数值、64项浏览器、64项下载重放通过；远程Linux专项/回归与Windows启动准备均通过|
-|V2-302|M3|回测与少量情景|validation/core_workflow/core_results|训练不含未来、未来计划与观察分开、误差与覆盖目标、冻结配置、有配对才给配对MCSE|已有代码待整理，轻量界面待开发|
+|V2-302|M3|回测与少量情景|validation/core_workflow/core_results|训练不含未来、未来计划与观察分开、误差与覆盖目标、冻结配置、有配对才给配对MCSE|本机54项数值、41项浏览器、59项下载重放通过；独立情景差值MCSE，远程CI待同步|
 
 M1先完善数据和常用模型，M2先覆盖原三模型Bootstrap；扩展模型Bootstrap在模型验收后逐项开放。先小规模可复现示例，再补必要数值与模拟检查。
 
@@ -46,4 +46,4 @@ D批：共享患者、多臂/独立两阶段、搜索确认、反向校准与研
 
 记录工作项ID、输入/结果契约、修改文件、提交、示例/导出、检查命令/环境/结果、方法限制及下一项；保留失败与未执行项。源码变化后重新判断历史证据覆盖范围。
 
-M0完成加载修复与本机验收；没有将高级统计方法标记验证通过。V2-101已完成本机接入与验收，远程CI已通过；V2-102本机验收和远程CI均完成；V2-201原三模型本机验收完成，远程Linux专项/回归与Windows启动准备均通过；V2-301事件驱动本机验收完成，远程Linux专项/回归与Windows启动准备均通过；下一项V2-302（回测与少量情景），不重复整体规划。
+M0完成加载修复与本机验收；没有将高级统计方法标记验证通过。V2-101已完成本机接入与验收，远程CI已通过；V2-102本机验收和远程CI均完成；V2-201原三模型本机验收完成，远程Linux专项/回归与Windows启动准备均通过；V2-301事件驱动本机验收完成，远程Linux专项/回归与Windows启动准备均通过；V2-302回测与风险情景本机验收完成（54项数值、41项浏览器、59项实际下载重放），远程待本批同步与自动检查，见[回测/情景验收](V2_0_VALIDATION_SCENARIOS_VALIDATION.md)。下一项V2-401（结果图表、帮助、手册和案例）。

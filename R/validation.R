@@ -33,8 +33,8 @@ backtest_forecast <- function(data, cfg, cuts, truth_cut, progress = function(va
     plan <- plan[at,required,drop=FALSE]
   }
   if (any(plan$future_n < 0 | plan$future_n > 1000 | plan$future_n != floor(plan$future_n)) || any(plan$enroll_rate < 0)) stop("历史剩余人数需为0–1000整数，历史入组率需非负。")
-  validate_data(data, truth_cut, gap_mode = cfg$gap_mode)
-  rows <- list(); curves <- list(); snapshots <- list(); failures <- list()
+  data <- validate_data(data, truth_cut, gap_mode = cfg$gap_mode)
+  rows <- list(); curves <- list(); snapshots <- list(); failures <- list(); forecasts <- list(); configurations <- list(); diagnostics <- list(); simulation_failures <- list()
   for (j in seq_along(cuts)) {
     early <- cuts[j]
     d <- snapshot_at(data, early)
@@ -49,9 +49,13 @@ backtest_forecast <- function(data, cfg, cuts, truth_cut, progress = function(va
     c2$enroll_mode <- "constant"
     c2$cut <- early; c2$horizon <- min(cfg$horizon, truth_cut - early)
     c2$recruit_end <- min(cfg$recruit_end, early)
-    c2$seed <- cfg$seed + j - 1L
+    c2$seed <- as.integer((as.double(cfg$seed) + j - 1L) %% (as.double(.Machine$integer.max)+1))
     r <- run_forecast(d, c2, function(value, detail) progress((j - 1 + value) / length(cuts), detail))
     if (length(r$failures)) failures[[length(failures) + 1L]] <- data.frame(cut = early, method = names(r$failures), message = unname(r$failures))
+    key <- as.character(early)
+    forecasts[[key]] <- r; configurations[[key]] <- r$config
+    dg <- r$diagnostics; dg$cut <- early; diagnostics[[key]] <- dg
+    sf <- r$simulation_failures; sf$cut <- rep(early,nrow(sf)); simulation_failures[[key]] <- sf
     actual_dates <- sort(data$obs_day[data$status == "event"])
     truth_hit <- if (length(actual_dates) >= cfg$target) actual_dates[cfg$target] else Inf
     actual_hit <- if (truth_hit <= early + c2$horizon) truth_hit else Inf
@@ -60,7 +64,8 @@ backtest_forecast <- function(data, cfg, cuts, truth_cut, progress = function(va
       s <- r$summary[r$summary$method == m, ]
       end <- nrow(q)
       rows[[length(rows) + 1L]] <- data.frame(cut = early, end = early + c2$horizon, method = m,
-        model = s$model, planned_future_n = c2$future_n, historical_enroll_rate_per_day = c2$enroll_rate,
+        model = s$model, requested = s$requested, simulations = s$simulations, failed = s$failed,
+        probability_mcse = s$reached_mcse, planned_future_n = c2$future_n, historical_enroll_rate_per_day = c2$enroll_rate,
         enrollment_source = if (c2$process_uncertainty == "gamma") "historical_posterior" else "historical_plan",
         observed_events = actual[end], predicted_events = q$median[end],
         error = q$median[end] - actual[end], count_lower = q$lower[end], count_upper = q$upper[end],
@@ -77,6 +82,8 @@ backtest_forecast <- function(data, cfg, cuts, truth_cut, progress = function(va
   list(summary = do.call(rbind, rows), curves = do.call(rbind, curves), snapshots = snapshots,
     failures = if (length(failures)) do.call(rbind, failures) else data.frame(cut = numeric(), method = character(), message = character()),
     config = cfg, cuts = cuts, truth_cut = truth_cut, plan = plan,
+    configurations = configurations, forecasts = forecasts, diagnostics = do.call(rbind,diagnostics),
+    simulation_failures = do.call(rbind,simulation_failures),
     note = "按逐截点历史剩余人数和恒定入组率回测；过程后验模式按截至各截点的数据更新率。其余情景参数沿用最近预测。仅评价实际发生事件；单一最终文件不能恢复历史报告或访视版本。")
 }
 

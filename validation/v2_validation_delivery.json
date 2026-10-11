@@ -1,0 +1,66 @@
+{
+  "work_item": "V2-302",
+  "date": "2026-10-11",
+  "branch": "development/v2.0",
+  "core_version": "2.0.0-dev",
+  "base_sha": "56ff88085a6dac688943438f988a0f440df32fcf",
+  "local_status": "passed",
+  "checks": {
+    "v2_validation_results.json": {
+      "status": "passed",
+      "passed": 54
+    },
+    "v2_validation_browser_results.json": {
+      "status": "passed",
+      "passed": 41
+    },
+    "v2_validation_replay_results.json": {
+      "status": "passed",
+      "passed": 59
+    },
+    "v2_validation_extension_load_results.json": {
+      "status": "passed",
+      "parsed_files": 147,
+      "checks_passed": 9
+    },
+    "v2_core_check_results.json": {
+      "status": "passed",
+      "passed": 52
+    },
+    "v2_core_display_results.json": {
+      "status": "passed",
+      "passed": 13
+    },
+    "v2_log_models_results.json": {
+      "status": "passed",
+      "passed": 43
+    },
+    "v2_bootstrap_results.json": {
+      "status": "passed",
+      "passed": 33
+    },
+    "v2_event_simulation_results.json": {
+      "status": "passed",
+      "passed": 45
+    },
+    "v2_sas_input_results.json": {
+      "status": "passed",
+      "passed": 37
+    }
+  },
+  "remote_status": "authorized_pending_sync",
+  "remote_source_sha": null,
+  "remote_run": null,
+  "next_work_item": "V2-401",
+  "limits": [
+    "historical final file cannot reconstruct report or visit versions; no calibrated coverage claim",
+    "scenario difference MCSE assumes independent simulations; no paired MCSE",
+    "fixed-fit five models; bootstrap original three models only",
+    "all checked data synthetic; browser and actual download replay local only",
+    "no release package or deployment"
+  ],
+  "local_source_commit": "110558525ddf6806db97d5769848330f778f2d1a",
+  "upload_file_count": 20,
+  "upload_rejection": "Automatic approval rejected V2-302 20-file export to vam2016/event_pred development/v2.0 because previous explicit authorization covered V2-301 only.",
+  "remote_authorization": "User explicitly authorized V2-302 20-file sync to vam2016/event_pred development/v2.0 and remote automated checks on 2026-10-11."
+}

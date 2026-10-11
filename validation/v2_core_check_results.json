@@ -42,6 +42,10 @@
       "status": "passed"
     },
     {
+      "label": "R parses R/core_validation.R",
+      "status": "passed"
+    },
+    {
       "label": "R parses R/core_workflow.R",
       "status": "passed"
     },
@@ -250,7 +254,7 @@
       "tolerance": 0.163270196161454
     }
   },
-  "passed": 51,
+  "passed": 52,
   "tolerance_rule": "analytical means: 4 empirical Monte Carlo SE + 1e-6; deterministic default 1e-8; independent Weibull optimization 2e-5",
   "status": "passed"
 }

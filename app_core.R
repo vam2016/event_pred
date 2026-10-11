@@ -12,6 +12,7 @@ source("R/forecast.R", local = TRUE)
 source("R/inputs.R", local = TRUE)
 source("R/bayes.R", local = TRUE)
 source("R/groups.R", local = TRUE)
+source("R/validation.R", local = TRUE)
 
 
 core_version <- "2.0.0-dev"
@@ -39,6 +40,7 @@ source("R/simulation_ui.R",local=TRUE)
 source("R/core_simulation_server.R",local=TRUE)
 source("R/core_workflow.R",local=TRUE)
 source("R/core_results.R",local=TRUE)
+source("R/core_validation.R",local=TRUE)
 source("R/core_ui.R",local=TRUE)
 source("R/core_handbook.R",local=TRUE)
 
@@ -368,5 +370,6 @@ server <- function(input, output, session) {
   })
 
   register_core_forecast_results(input,output,session,result)
+  register_core_validation_server(input,output,session,result)
 }
 shinyApp(ui, server)

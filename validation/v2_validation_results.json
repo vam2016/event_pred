@@ -1,0 +1,28 @@
+{
+  "status": "passed",
+  "version": "2.0.0-dev",
+  "R": "R version 4.6.0 (2026-04-24)",
+  "passed": 54,
+  "checks": ["historical plans match cut keys rather than final remaining count or input row order", "future entrants are excluded from both training snapshots", "future event and exit observations become active at the historical cut", "historical observed events retain only events known by the cut", "historical exponential refit matches independently counted snapshot likelihood", "each frozen historical horizon stops at truth cut and uses its own plan", "altering only post-cut truth leaves refits and all forecast paths unchanged", "event error is forecast median minus independently counted final-window truth", "event interval inclusion and width match independent endpoint comparisons", "historical diagnostics conserve requested and effective attempts", "event-count backtest omits dummy-target scoring fields", "target truth and Brier use independently sorted event order and window attainment", "unreached target stays infinite with undefined timing error and correct Brier", "target backtest exposes probability and window-truncated date scoring separately", "missing, incomplete or invalid historical plan is rejected", "missing, incomplete or invalid historical plan is rejected", "missing, incomplete or invalid historical plan is rejected", "duplicate and future historical cuts are rejected", "parameter input cannot invent historical individual records", "scenario baseline is retained and seeds differ without a pairing claim", "1 mean and its MCSE match sample moments", "1 count difference uses the independent variance sum", "1 probability difference uses effective counts and independent binomial MCSE", "0.75 mean and its MCSE match sample moments", "0.75 count difference uses the independent variance sum", "0.75 probability difference uses effective counts and independent binomial MCSE", "1.25 mean and its MCSE match sample moments", "1.25 count difference uses the independent variance sum", "1.25 probability difference uses effective counts and independent binomial MCSE", "scenario baseline replays the original frozen seed exactly", "frozen scenario configuration reproduces summaries and attempt counts", "duplicate, empty, out-of-range or oversized scenario list is rejected", "duplicate, empty, out-of-range or oversized scenario list is rejected", "duplicate, empty, out-of-range or oversized scenario list is rejected", "duplicate, empty, out-of-range or oversized scenario list is rejected", "duplicate, empty, out-of-range or oversized scenario list is rejected", "scenario seeds remain valid near the integer limit", "1 risk multiplier agrees with an independent exponential/Binomial expectation", "0.5 risk multiplier agrees with an independent exponential/Binomial expectation", "2 risk multiplier agrees with an independent exponential/Binomial expectation", "group historical plan matches named groups and conserves combined planned recruitment", "duplicate group plans do not silently fill the missing group", "two-group scenario changes both risks and combines synchronized group counts", "scenario bootstrap retains failures by factor and uses effective denominator without replacement", "historical bootstrap failures carry cut and stage into frozen diagnostics", "five core models support fixed-fit scenarios and historical refits", "CSV retains canonical continuous days and frozen selected-unit values", "localized table handles frozen time units and unreachable dates", "historical API normalizes raw records before truth scoring and snapshot reconstruction", "historical plan CSV explicitly distinguishes daily and frozen weekly enrollment rates", "historical multi-cut seeds wrap safely at integer limit", "whole alternative failure remains explicit and does not erase baseline or later success", "failed scenario configuration is retained without fabricating zero probability or effective paths", "baseline failure stops scenario batch explicitly"],
+  "measurements": {
+    "1": {
+      "expected": 45.4974020506617,
+      "observed": 45.4875,
+      "mcse": 0.0470694129963388,
+      "tolerance": 0.188278651985355
+    },
+    "0.5": {
+      "expected": 41.6287929817625,
+      "observed": 41.715,
+      "mcse": 0.0440267722907227,
+      "tolerance": 0.176108089162891
+    },
+    "2": {
+      "expected": 49.9836571173283,
+      "observed": 50,
+      "mcse": 0.0389584250123092,
+      "tolerance": 0.155834700049237
+    }
+  },
+  "tolerances": "deterministic 1e-10; analytic exponential mean four empirical MCSE plus 1e-6; no historical coverage-rate claim"
+}
