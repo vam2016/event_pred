@@ -4,7 +4,7 @@
 
 V2-401新增风险情景比较图、历史回测逐点预测区间，及四个可下载/复现的合成案例。页面、案例JSON、病例CSV、复现脚本和案例指南取同一案例定义；图表从已保存的分析结果读取，不重新计算。工作手册现有九章，公式运行时随包提供。验收详情见[V2-401报告](V2_0_PRESENTATION_CASES_VALIDATION.md)；各单元的实际范围见[执行清单](V2_0_WORK_PLAN.md)。
 
-V2-402学习资料来源核对及34章离线稿本机验收完成，用户已授权本批同步、自动检查及结果回填，远程同步/CI待执行。见[学习资料验收](V2_0_LEARNING_VALIDATION.md)。下一项V2-403完成整批验收与独立候选包启动；V2-404完成目标环境及正式发布。本机启动使用Start-Mac.command、Start-Windows.cmd或Start-Linux.sh。完整源码的核心入口是app_core.R；main保留1.0候选入口。高级扩展能力不因核心验收而自动成为已验收功能。
+V2-402学习资料来源核对及34章离线稿本机验收完成，[远程CI](https://github.com/vam2016/event_pred/actions/runs/38146737132)已通过（源码539f574，Linux学习资料186项/既有回归及Windows启动准备）。见[学习资料验收](V2_0_LEARNING_VALIDATION.md)。下一项V2-403完成整批验收与独立候选包启动；V2-404完成目标环境及正式发布。本机启动使用Start-Mac.command、Start-Windows.cmd或Start-Linux.sh。完整源码的核心入口是app_core.R；main保留1.0候选入口。高级扩展能力不因核心验收而自动成为已验收功能。
 
 以下保留1.0历史记录。
 

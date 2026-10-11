@@ -5,8 +5,8 @@
   "core_version": "2.0.0-dev",
   "base_sha": "98fe9b1263c22a55cede8eb1060c805d5f67b91e",
   "local_status": "passed",
-  "remote_status": "not_run",
-  "remote_delivery_status": "authorized_pending_sync",
+  "remote_status": "passed",
+  "remote_delivery_status": "synced",
   "checks": {
     "v2_learning_results.json": {
       "status": "passed",
@@ -87,5 +87,50 @@
   "upload_file_count": 40,
   "local_source_commit": "14466ba0470f18ec34b02a3436308bffb150514d",
   "upload_rejection": "Automatic approval rejected export of 40 V2-402 project documents, scripts, resources and synthetic validation records to vam2016/event_pred because prior explicit authorization covered V2-401 only; current batch and destination require human approval.",
-  "remote_authorization": "User corrected the accidental local-only choice and explicitly requested V2-402 GitHub sync on 2026-10-11, referring to the complete preceding 40-file sync, automatic checks and same-batch document/JSON backfill request."
+  "remote_authorization": "User corrected the accidental local-only choice and explicitly requested V2-402 GitHub sync on 2026-10-11, referring to the complete preceding 40-file sync, automatic checks and same-batch document/JSON backfill request.",
+  "remote_source_sha": "539f574d1716a963726b2a6ea9418b8429318e49",
+  "remote_run": {
+    "id": 38146737132,
+    "url": "https://github.com/vam2016/event_pred/actions/runs/38146737132",
+    "status": "completed",
+    "conclusion": "success",
+    "head_sha": "539f574d1716a963726b2a6ea9418b8429318e49",
+    "jobs": [
+      {
+        "id": 114491577135,
+        "name": "windows-launch",
+        "conclusion": "success",
+        "scope": "Windows launcher prepare-only"
+      },
+      {
+        "id": 114491577427,
+        "name": "core",
+        "conclusion": "success",
+        "checks": {
+          "parsed_files": 153,
+          "loading": 9,
+          "core_numeric": 53,
+          "core_display": 13,
+          "log_models": 43,
+          "bootstrap": 33,
+          "event_simulation": 45,
+          "validation_scenarios": 54,
+          "core_cases": 30,
+          "learning": 186,
+          "sas_inputs": 37
+        }
+      }
+    ]
+  },
+  "local_code_matches_remote": true,
+  "local_tree_matches_remote": true,
+  "remote_delivery_files": [
+    "README.md",
+    "docs/CORE_DEVELOPMENT_STATUS.md",
+    "docs/V2_0_DEVELOPMENT_PLAN.md",
+    "docs/V2_0_STATUS_INVENTORY.md",
+    "docs/V2_0_WORK_PLAN.md",
+    "docs/V2_0_LEARNING_VALIDATION.md",
+    "validation/v2_learning_delivery.json"
+  ]
 }

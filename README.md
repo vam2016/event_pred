@@ -16,7 +16,7 @@ R Shiny 生存数据模拟与事件数/目标日期预测平台。当前为 **2.
 
 2026-10-11：V2-401补齐风险情景比较图、历史回测预测区间与图例联动，整理核心帮助、九章手册和四个可下载复现的合成案例。本机30项病例/图表、28项浏览器、25项下载脚本重放及既有回归通过；[远程CI](https://github.com/vam2016/event_pred/actions/runs/38118377506)已通过（源码4e3bca7，Linux专项/回归及Windows启动准备）。详见[图表与案例验收](docs/V2_0_PRESENTATION_CASES_VALIDATION.md)和[案例指南](docs/CORE_CASES.md)。下一单元V2-402。
 
-2026-10-11：V2-402已核对原28章/4案例/6场景来源，学习稿更新为34章，附新版4个同源可复现案例。186项来源/数值/脚本重放、53项离线浏览器、7图重绘和44项ZIP核对通过；当前离线稿378公式、27表、7图、12自测支持390px阅读。用户已授权本批同步、自动检查及结果回填，远程同步/CI待执行，见[学习资料验收](docs/V2_0_LEARNING_VALIDATION.md)及[当前学习稿](docs/SurvCast_STATISTICIAN_GUIDE.md)。下一单元V2-403。
+2026-10-11：V2-402已核对原28章/4案例/6场景来源，学习稿更新为34章，附新版4个同源可复现案例。186项来源/数值/脚本重放、53项离线浏览器、7图重绘和44项ZIP核对通过；当前离线稿378公式、27表、7图、12自测支持390px阅读。[远程CI](https://github.com/vam2016/event_pred/actions/runs/38146737132)已通过（源码539f574，Linux学习资料186项/既有回归及Windows启动准备），见[学习资料验收](docs/V2_0_LEARNING_VALIDATION.md)及[当前学习稿](docs/SurvCast_STATISTICIAN_GUIDE.md)。下一单元V2-403。
 
 ## 核心入口本机启动
 
