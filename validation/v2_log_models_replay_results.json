@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "passed": 21,
+  "checks": ["lognormal actual downloaded full prediction curves replay", "lognormal downloaded row and event counts replay", "lognormal downloaded equivalent parameter table includes mu and sigma", "loglogistic actual downloaded full prediction curves replay", "loglogistic downloaded row and event counts replay", "loglogistic downloaded equivalent parameter table includes mu and sigma", "actual heavy-tail equivalent-parameter CSV retains infinite mean", "grouped actual downloaded full prediction curves replay", "grouped downloaded row and event counts replay", "actual individual group curves replay from distinct distributions", "mixed-distribution joint counts equal pathwise group sum", "fitted actual downloaded full prediction curves replay", "fitted downloaded row and event counts replay", "fitted-grouped actual downloaded full prediction curves replay", "fitted-grouped downloaded row and event counts replay", "actual log-logistic target download replays including unreached mass and denominator", "target downloaded row and event counts replay", "actual downloaded log-time simulation script reproduces all fixed-DCO summaries", "actual downloaded script reproduces separate latent event and exit clocks", "actual downloaded observations replay and exclude latent times", "actual log-time simulation ADTTE preserves date offset and censor codes"],
+  "R": "R version 4.6.0 (2026-04-24)",
+  "scope": "actual browser-download replay, no new random configuration or real patient data"
+}

@@ -12,7 +12,7 @@ jobs:
     env:
       CORE_NUMERIC_OUTPUT: validation/v2_core_check_results.json
       CORE_DISPLAY_OUTPUT: validation/v2_core_display_results.json
-      EXTENSION_CHECK_OUTPUT: validation/v2_sas_extension_load_results.json
+      EXTENSION_CHECK_OUTPUT: validation/v2_log_models_extension_load_results.json
     steps:
       - uses: actions/checkout@v4
       - name: Install system libraries
@@ -33,6 +33,8 @@ jobs:
         run: Rscript scripts/check_extensions.R
       - run: Rscript scripts/check_core.R
       - run: Rscript scripts/check_core_results.R
+      - name: Verify log-time models against independent references
+        run: Rscript scripts/check_log_models.R
       - name: Verify synthetic SAS input equivalence
         run: Rscript scripts/check_sas_inputs.R
   windows-launch:

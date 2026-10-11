@@ -1,5 +1,7 @@
 # SurvCast 生存事件预测与模拟工作台
 
+当前 `development/v2.0` 的核心入口为2.0.0-dev，支持CSV/XPT/SAS7BDAT及指数、Weibull、PWE、Log-normal、Log-logistic。2.0工作状态与复现见[执行清单](V2_0_WORK_PLAN.md)及[模型验收](V2_0_LOG_MODELS_VALIDATION.md)。以下保留1.0候选包的历史说明，不作为2.0发布声明。
+
 版本 1.0.0-rc.1，2026-10-05。核心本机检查已通过；尚未部署公网，目标部署环境检查待完成。
 
 三个任务：未来事件数、达标日期、单终点生存数据生成。指数、Weibull、PWE；合并或已知两组；预测采用参数或 ADTTE CSV。日/周/月可选，默认月。

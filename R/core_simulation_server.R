@@ -51,7 +51,7 @@ register_core_simulation_server <- function(input,output,session) {
       groups <- lapply(seq_len(n),function(j) {
         pre <- paste0("s",j,"_"); defaults <- simulation_defaults(unit,j)
         v <- setNames(lapply(names(defaults),function(x)input[[paste0(pre,x)]] %||% defaults[[x]]),names(defaults))
-        if (!v$design_model %in% core_models) stop("核心模型为指数、Weibull 或 PWE。")
+        if (!v$design_model %in% core_models) stop("核心模型为指数、Weibull、PWE、Log-normal 或 Log-logistic。")
         list(name=v$name,weight=v$weight,dropout_rate=dropout_input_rate(v)/f,model=simulation_parameter_model(v$design_model,v,unit),entered=v)
       })
       cfg <- list(n=input$sim_n,reps=input$sim_reps,seed=input$sim_seed,origin=as.character(input$sim_origin),paramcd=input$sim_endpoint,

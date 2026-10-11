@@ -1,6 +1,6 @@
 # SurvCast 生存事件预测与模拟工作台 · 核心工作手册
 
-版本：2.0.0-dev，2026-10-10。本文对应2.0开发分支核心入口 `app_core.R`，提供单终点事件数、达标日期及给定参数的生存数据生成；完整扩展入口另行保留。1.0核心历史验收见 `docs/CORE_VALIDATION.md`，2.0阶段验收见 `docs/V2_0_WORK_PLAN.md`；开发版本尚未正式发布。
+版本：2.0.0-dev，2026-10-11。本文对应2.0开发分支核心入口 `app_core.R`，提供单终点事件数、达标日期及给定参数的生存数据生成；完整扩展入口另行保留。1.0核心历史验收见 `docs/CORE_VALIDATION.md`，2.0阶段验收见 `docs/V2_0_WORK_PLAN.md`；开发版本尚未正式发布。
 
 <a id="core-section-1"></a>
 
@@ -22,7 +22,7 @@
 
 内部计算采用连续日；1 周为 7 日，1 月为 365.25/12=30.4375 日，是固定经过时间。研究起点日期对应研究时间 0，研究截点 c 以该起点计算。患者入组研究时间为 e，截点时随访年龄为 a=c-e。中位时间、尺度和切点属于随访时间，不能直接当作研究日期。
 
-设所选单位对应 f 日，则时间转为内部日乘 f，风险率/入组率转为每天除 f，Weibull 形状和概率不变。改变显示单位保持同一分布；最近成功结果和下载保留该次提交单位。
+设所选单位对应 f 日，则时间转为内部日乘 f，风险率/入组率转为每天除 f，Weibull 形状、对数时间尺度 sigma 和概率不变；对数位置换算为 mu_day=mu_unit+log(f)。改变显示单位保持同一分布；最近成功结果和下载保留该次提交单位。
 
 ADTTE 文件支持 CSV、XPT v5/v8 和 SAS7BDAT，共用下列规范。XPT/SAS7BDAT 需要可选 haven 包；没有该包时 CSV 和参数输入仍可使用。安装方法为在源码目录运行 `Rscript scripts/install_core.R --with-sas`。选择 PARAMCD 和可选分析标志后，每位 USUBJID 只保留一行：
 
@@ -99,7 +99,9 @@ $$p(a,u)=\frac{\lambda}{\lambda+\mu}\{1-e^{-(\lambda+\mu)u}\}.$$
 
 <a id="core-section-5"></a>
 
-## 5. Weibull 模型
+## 5. Weibull 与对数时间模型
+
+### 5.1 Weibull
 
 采用形状 k>0、时间尺度 eta>0：
 
@@ -120,6 +122,30 @@ $$\ell(k,\eta)=\sum_i\delta_i\{\log k-k\log\eta+(k-1)\log t_i\}-\sum_i(t_i/\eta)
 $$T_a=\eta\{(a/\eta)^k-\log U\}^{1/k}.$$
 
 应减去 a 得到剩余时间。切换单位只换算 eta 和 m，不改变 k。独立退出通过另一个指数时钟与 R_T 竞争；一般情形下上述累计事件积分由模型或模拟处理，不能直接把 1−S(u) 代替已有年龄患者的条件事件概率。
+
+### 5.2 Log-normal / Log-logistic
+
+两者采用位置 mu 与无量纲尺度 sigma>0；界面可填写中位时间 m 或 mu=log(m/所选时间单位)，均满足 m=exp(mu)。这里的 sigma 不是原始时间标准差，也不是 Weibull 的时间尺度 eta。
+
+Log-normal 定义 log(T)=mu+sigma Z，Z 为标准正态变量。令 Phi 为标准正态分布函数：
+
+$$S(t)=1-\Phi\{(\log t-\mu)/\sigma\},\qquad f(t)=\frac{\exp\{-(\log t-\mu)^2/(2\sigma^2)\}}{t\sigma\sqrt{2\pi}}.$$
+
+均值为 exp(mu+sigma²/2)，中位数为 exp(mu)。Log-logistic 的 log(T) 服从位置 mu、尺度 sigma 的 Logistic 分布：
+
+$$S(t)=\frac{1}{1+(t/e^\mu)^{1/\sigma}},\qquad f(t)=\frac{(t/e^\mu)^{1/\sigma}}{\sigma t\{1+(t/e^\mu)^{1/\sigma}\}^2}.$$
+
+其均值仅在 sigma<1 时有限，为 exp(mu)×pi×sigma/sin(pi×sigma)；sigma≥1 时均值为无穷，有限窗口事件概率、中位数和条件预测仍有定义。无穷均值不表示存在永不发生事件的概率质量；两者 S(t) 随 t 趋于无穷均趋于零。
+
+右删失拟合使用事件的 log f 与删失的 log S：
+
+$$\ell(\mu,\sigma)=\sum_i\{\delta_i\log f(t_i)+(1-\delta_i)\log S(t_i)\},\qquad \operatorname{AIC}=4-2\ell(\widehat\mu,\widehat\sigma).$$
+
+通过 `survival::survreg` 的 lognormal/loglogistic AFT 分布估计 mu/sigma；拟合警告、非有限参数/协方差或似然会拒绝该候选。数据至少需要两个事件，这一最低限制不保证外推可靠。模型之间单独展示，不自动混合。
+
+条件抽样仍使用第3节的累计风险反演。数值计算保留 log S，避免极小尾部生存率直接下溢后失去已有年龄的条件信息。单位变化只平移对数位置，sigma 不变；所选单位 f 日时 mu_day=mu_unit+log(f)。两组可分别使用不同分布，固定 DCO 数据模拟也使用同一参数定义。
+
+参数化参照：[R survival 分布说明](https://stat.ethz.ch/R-manual/R-devel/library/survival/html/survreg.distributions.html)及[survreg 拟合说明](https://stat.ethz.ch/R-manual/R-devel/library/survival/html/survreg.html)。2.0本阶段核验范围见 `docs/V2_0_LOG_MODELS_VALIDATION.md`。预测区间仍条件于给定/拟合参数；患者 Bootstrap 在后续工作项中开发。
 
 <a id="core-section-6"></a>
 

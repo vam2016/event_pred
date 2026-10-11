@@ -15,7 +15,7 @@ source("R/groups.R", local = TRUE)
 
 
 core_version <- "2.0.0-dev"
-core_models <- c("exponential", "weibull", "pwe")
+core_models <- c("exponential", "weibull", "pwe", "lognormal", "loglogistic")
 catalog <- model_catalog(); catalog <- catalog[catalog$id %in% core_models,,drop=FALSE]
 choices <- setNames(catalog$id, catalog$label)
 parameter_choices <- choices
@@ -217,7 +217,7 @@ server <- function(input, output, session) {
       cfg$dropout_rate <- 0; cfg$multiplier <- 1; cfg$lag <- 0 # Actual values reside in each group configuration.
     }
     if (!cfg$task %in% c("count","target")) stop("请先选择事件数或达标日期任务。")
-    if (!length(cfg$methods) || any(!cfg$methods %in% core_models)) stop("当前核心入口使用指数、Weibull 或 PWE 模型。")
+    if (!length(cfg$methods) || any(!cfg$methods %in% core_models)) stop("当前核心入口使用指数、Weibull、PWE、Log-normal 或 Log-logistic 模型。")
     cfg$core_version <- core_version
     list(data = d, config = cfg, override = override)
   }

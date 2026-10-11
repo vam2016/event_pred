@@ -1,0 +1,49 @@
+{
+  "status": "passed",
+  "version": "2.0.0-dev",
+  "R": "R version 4.6.0 (2026-04-24)",
+  "survival": "3.8.6",
+  "passed": 43,
+  "checks": ["core entry opens both log-time models", "lognormal survival agrees with Gaussian/logistic definition including zero age", "lognormal cumulative hazard agrees with independent log survival", "lognormal inverse cumulative hazard matches reference quantiles", "lognormal conditional event age preserves existing follow-up", "lognormal log-tail conditioning remains finite after survival underflows", "lognormal days median/mu forms and display parameters represent the same distribution", "lognormal weeks median/mu forms and display parameters represent the same distribution", "lognormal months median/mu forms and display parameters represent the same distribution", "lognormal pooled/grouped log locations shift with units while sigma stays fixed", "lognormal equivalent parameters give independently calculated median and mean", "lognormal nonpositive or nonfinite sigma fails", "lognormal invalid or unrepresentable mu fails visibly", "lognormal AFT fit agrees with independent censored-likelihood optimization", "lognormal log likelihood and two-parameter AIC agree with reference", "lognormal fewer than two events rejects fit", "lognormal degenerate tied-event fit is rejected rather than used for prediction", "lognormal finite-window count with permanent exits agrees with independent integral within four MCSE", "lognormal count trajectories retain known events and increase monotonically", "lognormal unreachable target retains all paths and infinite target dates", "loglogistic survival agrees with Gaussian/logistic definition including zero age", "loglogistic cumulative hazard agrees with independent log survival", "loglogistic inverse cumulative hazard matches reference quantiles", "loglogistic conditional event age preserves existing follow-up", "loglogistic log-tail conditioning remains finite after survival underflows", "loglogistic days median/mu forms and display parameters represent the same distribution", "loglogistic weeks median/mu forms and display parameters represent the same distribution", "loglogistic months median/mu forms and display parameters represent the same distribution", "loglogistic pooled/grouped log locations shift with units while sigma stays fixed", "loglogistic equivalent parameters give independently calculated median and mean", "loglogistic nonpositive or nonfinite sigma fails", "loglogistic invalid or unrepresentable mu fails visibly", "loglogistic AFT fit agrees with independent censored-likelihood optimization", "loglogistic log likelihood and two-parameter AIC agree with reference", "loglogistic fewer than two events rejects fit", "loglogistic degenerate tied-event fit is rejected rather than used for prediction", "loglogistic finite-window count with permanent exits agrees with independent integral within four MCSE", "loglogistic count trajectories retain known events and increase monotonically", "loglogistic unreachable target retains all paths and infinite target dates", "heavy-tail log-logistic has infinite mean but finite median and window probabilities", "lognormal generated latent times pass independent survival-PIT decile checks", "loglogistic generated latent times pass independent survival-PIT decile checks", "log-time simulation applies each fixed DCO and keeps latent truth out of observation data"],
+  "measurements": {
+    "lognormal_fit": {
+      "events": 443,
+      "survreg": {
+        "location": 5.14125880630811,
+        "scale": 0.644243378147138
+      },
+      "independent": [
+        5.14125888307604,
+        0.644243627801699
+      ],
+      "loglik": -2749.19877106485,
+      "reference_loglik": -2749.19877106491
+    },
+    "lognormal_count": {
+      "expected": 56.9982881258169,
+      "observed": 57.0715,
+      "mcse": 0.119893206919878,
+      "tolerance": 0.479573827679512
+    },
+    "loglogistic_fit": {
+      "events": 394,
+      "survreg": {
+        "location": 5.2034068857071,
+        "scale": 0.656059345902945
+      },
+      "independent": [
+        5.20340708885433,
+        0.656059320023122
+      ],
+      "loglik": -2589.475434704,
+      "reference_loglik": -2589.475434704
+    },
+    "loglogistic_count": {
+      "expected": 46.8592223876095,
+      "observed": 46.9045,
+      "mcse": 0.118174330805089,
+      "tolerance": 0.472698323220356
+    }
+  },
+  "tolerances": "deterministic 1e-9; independent fitted parameters 2e-5, likelihood/AIC 1e-8; forecast means and PIT deciles 4 MCSE; no bootstrap validation"
+}

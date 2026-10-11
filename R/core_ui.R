@@ -3,7 +3,7 @@ parameter_help["group_count"] <- "核心版的已知组别预测使用两组；�
 parameter_help["sim_groups"] <- "1 为单组，2 为已知两组。组名及分配权重在组别与分布页填写；两组各用自己的分布参数。"
 parameter_help["sim_cut_mode"] <- "核心版采用固定 DCO；多个截点共享同一患者轨迹。"
 parameter_help["median"] <- "事件时间分布中位数 m>0，单位随日/周/月选择。例如 m=12 月。指数风险率为 log(2)/m；Weibull 还需给定形状 k。"
-parameter_help["methods"] <- "右删失数据候选模型：指数、Weibull、PWE。至少选择一个；PWE 需指定切点。各模型单独预测，不计算模型混合。"
+parameter_help["methods"] <- "右删失数据候选模型：指数、Weibull、PWE、Log-normal、Log-logistic。至少选择一个；PWE 需指定切点。对数时间模型通过 AFT 拟合；各模型单独预测，不计算模型混合。"
 for (i in 1:2) {
   parameter_help[paste0("g",i,"_median")] <- parameter_help["median"]
   parameter_help[paste0("s",i,"_median")] <- parameter_help["median"]
@@ -15,7 +15,10 @@ event_parameter_fields <- function(prefix="",unit="months",d=group_input_default
   tagList(selectInput(id("design_model"),"事件时间分布",parameter_choices,"weibull"),
     cond("GROUPdesign_model === 'exponential'",selectInput(id("exp_input"),"指数输入形式",c("中位时间 m"="median","风险率 lambda"="rate"))),
     cond("GROUPdesign_model === 'weibull'",selectInput(id("weibull_input"),"Weibull 输入形式",c("中位时间 m + 形状 k"="median","尺度 eta + 形状 k"="eta"))),
-    cond("(GROUPdesign_model === 'exponential' && GROUPexp_input !== 'rate') || (GROUPdesign_model === 'weibull' && GROUPweibull_input !== 'eta')",numericInput(id("median"),paste0("中位事件时间 m（",u,"）"),d$median,min=.01)),
+    cond("GROUPdesign_model === 'lognormal' || GROUPdesign_model === 'loglogistic'",selectInput(id("log_input"),"对数时间输入形式",c("中位时间 m + 尺度 sigma"="median","对数位置 mu + 尺度 sigma"="mu"))),
+    cond("(GROUPdesign_model === 'exponential' && GROUPexp_input !== 'rate') || (GROUPdesign_model === 'weibull' && GROUPweibull_input !== 'eta') || ((GROUPdesign_model === 'lognormal' || GROUPdesign_model === 'loglogistic') && GROUPlog_input !== 'mu')",numericInput(id("median"),paste0("中位事件时间 m（",u,"）"),d$median,min=.01)),
+    cond("(GROUPdesign_model === 'lognormal' || GROUPdesign_model === 'loglogistic') && GROUPlog_input === 'mu'",numericInput(id("log_mu"),paste0("对数时间位置 mu = log(m/",u,")"),d$log_mu)),
+    cond("GROUPdesign_model === 'lognormal' || GROUPdesign_model === 'loglogistic'",numericInput(id("scale"),"对数时间尺度 sigma（无量纲）",d$scale,min=.01),p(class="field-note","sigma 不是原始时间标准差。Log-logistic 在 sigma≥1 时均值为无穷，中位数和有限窗口预测仍有定义。")),
     cond("GROUPdesign_model === 'exponential' && GROUPexp_input === 'rate'",numericInput(id("exp_rate"),paste0("事件风险率 lambda（每",u,"）"),d$exp_rate,min=.000001)),
     cond("GROUPdesign_model === 'weibull' && GROUPweibull_input === 'eta'",numericInput(id("eta"),paste0("Weibull 尺度 eta（",u,"）"),d$eta,min=.01)),
     cond("GROUPdesign_model === 'weibull'",numericInput(id("shape"),"Weibull 形状 k",d$shape,min=.01)),
