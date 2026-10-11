@@ -6,7 +6,7 @@
 
 三个任务：未来事件数、达标日期、单终点生存数据生成。指数、Weibull、PWE；合并或已知两组；预测采用参数或 ADTTE CSV。日/周/月可选，默认月。
 
-本机运行：Mac 双击 `Start-Mac.command`，Windows 双击 `Start-Windows.cmd`；Linux 执行 `sh Start-Linux.sh`。另一台电脑先安装 R，再完整解压 ZIP、运行对应入口；首次缺少依赖时联网安装。浏览器自动打开，窗口保持运行。详见[本机启动与转移说明](docs/LOCAL_START.md)。
+本机运行：Mac 双击 `Start-Mac.command`，Windows 双击 `Start-Windows.cmd`；Linux 执行 `sh Start-Linux.sh`。另一台电脑先安装 R，再完整解压 ZIP、运行对应入口；首次缺少依赖时联网安装。浏览器自动打开，窗口保持运行。详见[本机启动与转移说明](LOCAL_START.md)。
 
 在解压目录的 R 中执行 `source("scripts/start_core.R")` 也可启动；终端执行 `Rscript --vanilla scripts/start_core.R`。默认优先本机 3839，占用时另选端口；实际地址显示在启动窗口。
 
@@ -14,7 +14,7 @@
 
 main 分支及核心包的 `app.R` 对应完整源码中的 `app_core.R`。v0.35 扩展开发稿保存在 `development/v0.35`，新增高级分支仍待专项验证。通用计算文件中未开放的方法定义不表示核心入口支持这些方法。
 
-[核心工作手册](docs/CORE_HANDBOOK.md)详述模型、推导、数据与复现。公式运行时随包提供，页面可下载离线 HTML。实际检查范围、修复和环境见[核心验证报告](docs/CORE_VALIDATION.md)；[1.0 发布计划](docs/V1_0_RELEASE_PLAN.md)与[2.0 计划](docs/V2_0_DEVELOPMENT_PLAN.md)说明后续工作。
+[核心工作手册](CORE_HANDBOOK.md)详述模型、推导、数据与复现。公式运行时随包提供，页面可下载离线 HTML。实际检查范围、修复和环境见[核心验证报告](CORE_VALIDATION.md)；[1.0 发布计划](V1_0_RELEASE_PLAN.md)与[2.0 计划](V2_0_DEVELOPMENT_PLAN.md)说明后续工作。
 
 Dockerfile 为部署准备文件，未构建；镜像 R 4.5.1 与本机检查 R 4.6.0 不同，目标环境需重新确认。安装脚本安装缺失依赖，尚未锁定版本。正式 v1.0.0 标记在目标环境启动、资源限制和核心示例检查完成后创建。
 
@@ -28,3 +28,10 @@ Linux 从源码安装 R 依赖时需要 libuv、libcurl 开发头文件与 pkg-c
 - 图表支持悬停、缩放、图例筛选和 PNG；表格支持排序，较长表格支持检索和翻页。新增时点读数 CSV。
 
 显示设置不重新模拟。完整曲线、配置及报告保留原运行全部模型；观察数据/ADTTE 保留所选试验/截点全部组别。说明见工作手册第 8 章。
+
+
+## 2.0 图表与案例
+
+历史回测图显示预测中位数、实际值与逐点预测分位区间；风险情景图显示窗口末事件数分位数或达标概率，MCSE在悬停中单独标注。图表使用保存的成功分析结果，与汇总CSV一致。
+
+工作手册顶部可选择四个2.0合成案例，下载案例JSON、复现R脚本和适用的ADTTE CSV。精确设置及操作见[案例指南](CORE_CASES.md)。同版本源码根目录执行R脚本即可输出结果CSV；不同案例请分别保存。验收见[V2-401报告](V2_0_PRESENTATION_CASES_VALIDATION.md)。

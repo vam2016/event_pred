@@ -41,6 +41,7 @@ source("R/core_simulation_server.R",local=TRUE)
 source("R/core_workflow.R",local=TRUE)
 source("R/core_results.R",local=TRUE)
 source("R/core_validation.R",local=TRUE)
+source("R/core_cases.R",local=TRUE)
 source("R/core_ui.R",local=TRUE)
 source("R/core_handbook.R",local=TRUE)
 
@@ -60,6 +61,7 @@ server <- function(input, output, session) {
   sim_result <- register_core_simulation_server(input,output,session)
   register_core_simulation_results(input,output,session,sim_result)
   register_core_workflow_server(input,output,session,result)
+  register_core_cases_server(input,output,session)
   output$input_context <- renderUI({
     u <- time_label(input_unit()); div(class="context-strip",
       div(span("输入方式"),strong(if(input$input_mode=="adtte")"ADTTE" else "参数")),

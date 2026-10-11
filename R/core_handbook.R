@@ -14,7 +14,8 @@ core_math_head <- function() tagList(
 core_handbook_ui <- function() div(class="handbook core-handbook",
   div(class="handbook-toolbar",div(span(class="manual-label","SurvCast · 2.0 核心开发手册"),p("操作、参数、模型推导与结果解释")),
     div(class="manual-actions",downloadButton("handbook_download","Markdown"),downloadButton("handbook_html_download","离线 HTML"),tags$button(type="button",class="btn btn-outline-secondary",onclick="window.print()","打印 / PDF"))),
-  tags$nav(class="handbook-toc",`aria-label`="核心手册章节",lapply(1:8,function(i)tags$a(href=paste0("#core-section-",i),paste(i,c("任务与操作","时间与数据","条件预测","指数","Weibull与对数时间模型","PWE","入组与模拟","结果与复现")[i])))),
+  core_cases_ui(),
+  tags$nav(class="handbook-toc",`aria-label`="核心手册章节",lapply(1:9,function(i)tags$a(href=paste0("#core-section-",i),paste(i,c("任务与操作","时间与数据","条件预测","指数","Weibull与对数时间模型","PWE","入组与模拟","结果与复现","合成案例")[i])))),
   div(class="reading-layout handbook-content",HTML(handbook_html("docs/CORE_HANDBOOK.md"))))
 core_handbook_standalone_html <- function() {
   css <- paste(readLines("www/handbook.css",warn=FALSE),collapse="\n")

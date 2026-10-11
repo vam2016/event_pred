@@ -1,0 +1,77 @@
+{
+  "work_item": "V2-401",
+  "date": "2026-10-11",
+  "branch": "development/v2.0",
+  "core_version": "2.0.0-dev",
+  "base_sha": "b542593ea8b53d5bd8196905061d128970c5f5c6",
+  "local_status": "passed",
+  "remote_status": "not_run",
+  "remote_delivery_status": "authorized_pending_sync",
+  "checks": {
+    "v2_cases_extension_load_results.json": {
+      "status": "passed",
+      "parsed_files": 150,
+      "checks_passed": 9
+    },
+    "v2_core_cases_results.json": {
+      "status": "passed",
+      "passed": 30
+    },
+    "v2_core_cases_browser_results.json": {
+      "status": "passed",
+      "passed": 28
+    },
+    "v2_core_cases_replay_results.json": {
+      "status": "passed",
+      "passed": 25
+    }
+  },
+  "regression": {
+    "core_numeric": 53,
+    "core_display": 13,
+    "log_models": 43,
+    "bootstrap": 33,
+    "event_simulation": 45,
+    "validation_scenarios": 54,
+    "sas_inputs": 37,
+    "validation_browser": 41,
+    "validation_download_replay": 59
+  },
+  "next_work_item": "V2-402",
+  "limits": [
+    "synthetic teaching cases only; no clinical validity, coverage or power claim",
+    "local browser and actual download replay only",
+    "no release package or deployment",
+    "learning source reconciliation deferred to V2-402"
+  ],
+  "upload_file_count": 24,
+  "local_source_commit": "3ad6eee06e729d9acb7bb5cf0f38a1803be07f08",
+  "upload_rejection": "Automatic approval rejected export of 24 V2-401 source, workflow, documentation and synthetic validation files to vam2016/event_pred because previous authorization covered earlier batches only and this destination was not verified by trusted configuration.",
+  "remote_authorization": "User explicitly authorized V2-401 24-file sync to vam2016/event_pred development/v2.0, automated checks and same-batch documentation/JSON result updates on 2026-10-11.",
+  "upload_files": [
+    ".github/workflows/check.yml",
+    "R/core_cases.R",
+    "R/core_handbook.R",
+    "R/core_ui.R",
+    "R/core_validation.R",
+    "README.md",
+    "app_core.R",
+    "docs/CORE_CASES.md",
+    "docs/CORE_DEVELOPMENT_STATUS.md",
+    "docs/CORE_HANDBOOK.md",
+    "docs/README_CORE.md",
+    "docs/V2_0_DEVELOPMENT_PLAN.md",
+    "docs/V2_0_PRESENTATION_CASES_VALIDATION.md",
+    "docs/V2_0_STATUS_INVENTORY.md",
+    "docs/V2_0_WORK_PLAN.md",
+    "scripts/check_core_cases.R",
+    "scripts/check_core_cases_browser.cjs",
+    "scripts/check_validation_browser.cjs",
+    "scripts/replay_core_cases_downloads.R",
+    "validation/v2_cases_delivery.json",
+    "validation/v2_cases_extension_load_results.json",
+    "validation/v2_core_cases_browser_results.json",
+    "validation/v2_core_cases_replay_results.json",
+    "validation/v2_core_cases_results.json"
+  ]
+}

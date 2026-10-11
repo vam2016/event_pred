@@ -41,6 +41,8 @@ jobs:
         run: Rscript scripts/check_event_simulation.R
       - name: Verify historical snapshots and independent scenario comparisons
         run: Rscript scripts/check_validation.R
+      - name: Verify frozen charts and same-source teaching cases
+        run: Rscript scripts/check_core_cases.R
       - name: Verify synthetic SAS input equivalence
         run: Rscript scripts/check_sas_inputs.R
   windows-launch:

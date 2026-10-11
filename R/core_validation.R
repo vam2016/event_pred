@@ -86,7 +86,8 @@ core_validation_ui <- function() nav_panel("回测与情景",value="validation",
     nav_panel("历史回测",value="backtest",p(class="field-note","仅用于最近成功的ADTTE预测。逐截点重新拟合，必须填写当时的计划，不从最终资料反推剩余人数。"),
       textInput("cv_cuts","历史截点（使用原预测单位，逗号分隔）",""),uiOutput("cv_plan_inputs"),actionButton("cv_backtest_run","运行历史回测",class="btn-primary"),uiOutput("cv_backtest_status"),DTOutput("cv_backtest_table",fill=FALSE),plotlyOutput("cv_backtest_plot",height="360px"),uiOutput("cv_backtest_note"),core_validation_downloads_ui("backtest")),
     nav_panel("风险情景",value="scenario",textInput("cv_values","累计风险倍数（1–5个，基准1自动保留）","0.75,1.25"),
-      p(class="field-note","范围0.1–5。固定原始队列、入组与退出计划，只调整事件累计风险；独立随机种子，不提供配对MCSE。"),actionButton("cv_scenario_run","运行风险情景",class="btn-primary"),uiOutput("cv_scenario_status"),DTOutput("cv_scenario_table",fill=FALSE),uiOutput("cv_scenario_note"),core_validation_downloads_ui("scenario"))))
+      p(class="field-note","范围0.1–5。固定原始队列、入组与退出计划，只调整事件累计风险；独立随机种子，不提供配对MCSE。"),actionButton("cv_scenario_run","运行风险情景",class="btn-primary"),uiOutput("cv_scenario_status"),DTOutput("cv_scenario_table",fill=FALSE),plotlyOutput("cv_scenario_plot",height="360px"),
+      p(class="field-note","事件数图：点为窗口末中位数，竖线为2.5%–97.5%预测分位数；达标图：点为窗口内达标概率。悬停查看有效次数及MCSE；连线仅辅助比较，不代表插值预测。"),uiOutput("cv_scenario_note"),core_validation_downloads_ui("scenario"))))
 core_validation_downloads_ui <- function(kind) div(class="export-bar",
   if(kind=="backtest")downloadButton("cv_backtest_plan","历史计划CSV"),
   downloadButton(paste0("cv_",kind,"_candidate_failures"),"候选模型失败CSV"),downloadButton(paste0("cv_",kind,"_summary"),"汇总CSV"),downloadButton(paste0("cv_",kind,"_diagnostics"),"计算次数CSV"),downloadButton(paste0("cv_",kind,"_failures"),"失败记录CSV"),downloadButton(paste0("cv_",kind,"_config"),"配置JSON"),downloadButton(paste0("cv_",kind,"_input"),"逐人复现输入RDS"),downloadButton(paste0("cv_",kind,"_script"),"复现R脚本"))
@@ -130,7 +131,45 @@ register_core_validation_server <- function(input,output,session,result) {
     output[[paste0(pre,"script")]]<-shiny::downloadHandler(filename=paste0(k,"_replay.R"),content=function(file){shiny::req(rv());writeLines(c('# 在同版本源码根目录执行；将对应复现输入RDS放在当前目录。','e <- new.env(parent=globalenv()); invisible(sys.source("app_core.R", envir=e))',paste0('x <- readRDS("',k,'_input.rds")'),if(k=="backtest")'r <- e$backtest_forecast(x$data,x$config,x$cuts,x$truth_cut,plan=x$plan)' else 'r <- e$core_scenarios(x$data,x$config,x$values,x$models_override)',paste0('write.csv(e$core_validation_export(r,"',k,'"),"',k,'_replayed_summary.csv",row.names=FALSE)')),file,useBytes=TRUE)})
   })
   output$cv_backtest_plan<-shiny::downloadHandler(filename="backtest_plan.csv",content=function(file){x<-backtest();shiny::req(x);write.csv(core_validation_plan_export(x),file,row.names=FALSE)})
-  output$cv_backtest_plot<-plotly::renderPlotly({x<-backtest();if(is.null(x))return(core_empty_plot("运行回测后显示预测与实际"));d<-x$curves;d$series<-paste(d$backtest_cut/time_factor(x$config$display_unit),time_label(x$config$display_unit),d$model)
-    p<-plotly::plot_ly();for(s in unique(d$series)){z<-d[d$series==s,];p<-plotly::add_lines(p,x=z$day/time_factor(x$config$display_unit),y=z$median,name=paste(s,"预测"));p<-plotly::add_lines(p,x=z$day/time_factor(x$config$display_unit),y=z$actual,name=paste(s,"实际"),line=list(dash="dot"))};core_plot_finish(p,paste0("研究时间（",time_label(x$config$display_unit),"）"),"累计事件数")})
+  output$cv_backtest_plot<-plotly::renderPlotly(core_backtest_plot(backtest()))
+  output$cv_scenario_plot<-plotly::renderPlotly(core_scenario_plot(scenario()))
   invisible(list(backtest=backtest,scenario=scenario))
+}
+
+# Read only saved results: neither plotting helper fits models nor consumes RNG.
+core_scenario_plot_data <- function(x) {
+  d <- core_validation_summary(x,"scenario")
+  d[order(d$method,d$multiplier),,drop=FALSE]
+}
+core_scenario_plot <- function(x) {
+  if(is.null(x))return(core_empty_plot("运行风险情景后显示比较"))
+  d <- core_scenario_plot_data(x); prob <- identical(x$config$task,"target"); p <- plotly::plot_ly()
+  ids <- unique(d$method)
+  for(j in seq_along(ids)) {
+    z <- d[d$method==ids[j],,drop=FALSE]; color <- core_result_palette[(j-1)%%length(core_result_palette)+1]
+    text <- paste0(z$model,"<br>累计风险倍数：",z$multiplier,
+      if(prob)paste0("<br>窗口内达标概率：",round(100*z$reached,3),"%<br>概率MCSE：",round(100*z$reached_mcse,3)," 个百分点") else
+        paste0("<br>窗口末中位事件数：",z$median_events_end,"<br>逐点95%预测区间：",z$lower_events_end,"–",z$upper_events_end,"<br>均值：",round(z$mean_events_end,3),"<br>均值MCSE：",round(z$count_mcse,3)),
+      "<br>请求 / 有效 / 失败：",z$requested," / ",z$simulations," / ",z$failed)
+    p <- plotly::add_trace(p,x=z$multiplier,y=if(prob)z$reached else z$median_events_end,
+      type="scatter",mode="lines+markers",name=z$model[1],legendgroup=ids[j],
+      line=list(color=color),marker=list(color=color,size=8),text=text,hoverinfo="text",
+      error_y=if(prob)NULL else list(type="data",color=color,symmetric=FALSE,array=z$upper_events_end-z$median_events_end,arrayminus=z$median_events_end-z$lower_events_end))
+  }
+  core_plot_finish(p,"累计风险倍数",if(prob)"窗口内达标概率" else "窗口末累计事件数",probability=prob)
+}
+core_backtest_plot <- function(x) {
+  if(is.null(x))return(core_empty_plot("运行回测后显示预测与实际"))
+  d <- x$curves; f <- time_factor(x$config$display_unit); u <- time_label(x$config$display_unit)
+  d$series <- paste(d$backtest_cut/f,u,d$model); p <- plotly::plot_ly()
+  for(j in seq_along(unique(d$series))) {
+    s <- unique(d$series)[j]; z <- d[d$series==s,,drop=FALSE];z<-z[order(z$day),,drop=FALSE]
+    color <- core_result_palette[(j-1)%%length(core_result_palette)+1]
+    p <- plotly::add_trace(p,x=z$day/f,y=z$lower,type="scatter",mode="lines",line=list(width=0),showlegend=FALSE,legendgroup=s,hoverinfo="skip")
+    p <- plotly::add_trace(p,x=z$day/f,y=z$upper,type="scatter",mode="lines",line=list(width=0),fill="tonexty",fillcolor=grDevices::adjustcolor(color,alpha.f=.13),showlegend=FALSE,legendgroup=s,hoverinfo="skip")
+    text <- paste0(s,"<br>研究时间：",round(z$day/f,3),u,"<br>预测中位数：",z$median,"<br>实际：",z$actual,"<br>逐点95%预测区间：",z$lower,"–",z$upper)
+    p <- plotly::add_trace(p,x=z$day/f,y=z$median,type="scatter",mode="lines",name=paste(s,"预测"),legendgroup=s,line=list(color=color),text=text,hoverinfo="text")
+    p <- plotly::add_trace(p,x=z$day/f,y=z$actual,type="scatter",mode="lines",name=paste(s,"实际"),legendgroup=s,line=list(color=color,dash="dot"),text=text,hoverinfo="text")
+  }
+  core_plot_finish(p,paste0("研究时间（",u,"）"),"累计事件数（阴影为逐点95%预测区间）")
 }

@@ -35,7 +35,7 @@ const checks=[],errors=[];const check=(ok,label)=>{if(!ok)throw Error(label);che
   await fill('cv_cuts','40,60');await fill('cv_pooled_n','0,3');await fill('cv_pooled_rate','0,0.1');await run('backtest');const count=await save('backtest','pooled-count');
   check(count.summary.length===9&&count.failures.some(x=>x.cut===40&&x.method==='pwe')&&count.configurations['40'].future_n===0&&count.configurations['60'].future_n===3,'two-cut historical forecast retains per-cut plans and the unsupported PWE segment failure');
   check(!Object.keys(count.summary[0]).some(k=>/target|brier|probability/.test(k)),'count backtest CSV/JSON excludes dummy-target fields');
-  await page.waitForFunction(()=>document.getElementById('cv_backtest_plot')?.data?.length===18);check((await page.locator('#cv_backtest_table').innerText()).includes('实际累计事件数'),'backtest table and prediction/truth plot render');
+  await page.waitForFunction(()=>document.getElementById('cv_backtest_plot')?.data?.length===36);check((await page.locator('#cv_backtest_table').innerText()).includes('实际累计事件数'),'backtest table and prediction/truth plot render');
   await tab('风险情景');await run('scenario');const scenario=await save('scenario','pooled-count');
   check(scenario.pairing==='independent_seeds'&&scenario.summary.length===15&&new Set(Object.values(scenario.configurations).map(x=>x.seed)).size===3,'five-model scenario retains baseline plus two independent seeded alternatives');
   check(scenario.summary.filter(s=>s.multiplier===1).every(s=>s.count_difference===0&&s.count_difference_mcse===0),'baseline self-comparison is identically zero');

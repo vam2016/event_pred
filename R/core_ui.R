@@ -6,6 +6,10 @@ parameter_help["sim_target"] <- "总体累计目标事件数D*，整数1–10000
 parameter_help["sim_max"] <- "事件驱动的最大研究窗口，换算后在(0,3650]日。窗口内未达标也保留窗口末观察记录；此时实际DCO不是达标时间。"
 parameter_help["median"] <- "事件时间分布中位数 m>0，单位随日/周/月选择。例如 m=12 月。指数风险率为 log(2)/m；Weibull 还需给定形状 k。"
 parameter_help["methods"] <- "右删失数据候选模型：指数、Weibull、PWE、Log-normal、Log-logistic。至少选择一个；PWE 需指定切点。对数时间模型通过 AFT 拟合；各模型单独预测，不计算模型混合。"
+parameter_help["design_model"] <- "核心参数模型为指数、Weibull、PWE、Log-normal、Log-logistic；选择后只填写该模型参数。给定参数预测不估计参数不确定性。"
+parameter_help["enroll_mode"] <- "未来入组使用恒定或分段Poisson强度；切点从当前DCO开始计时，达到计划人数后停止。核心使用给定入组率。"
+for(pre in c("g1_","g2_","s1_","s2_"))parameter_help[paste0(pre,"design_model")] <- parameter_help["design_model"]
+for(pre in c("g1_","g2_"))parameter_help[paste0(pre,"enroll_mode")] <- parameter_help["enroll_mode"]
 for (i in 1:2) {
   parameter_help[paste0("g",i,"_median")] <- parameter_help["median"]
   parameter_help[paste0("s",i,"_median")] <- parameter_help["median"]
