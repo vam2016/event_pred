@@ -12,7 +12,7 @@ jobs:
     env:
       CORE_NUMERIC_OUTPUT: validation/v2_core_check_results.json
       CORE_DISPLAY_OUTPUT: validation/v2_core_display_results.json
-      EXTENSION_CHECK_OUTPUT: validation/v2_bootstrap_extension_load_results.json
+      EXTENSION_CHECK_OUTPUT: validation/v2_event_simulation_extension_load_results.json
     steps:
       - uses: actions/checkout@v4
       - name: Install system libraries
@@ -37,6 +37,8 @@ jobs:
         run: Rscript scripts/check_log_models.R
       - name: Verify patient bootstrap and failure denominators
         run: Rscript scripts/check_bootstrap.R
+      - name: Verify event-driven simulation and actual DCO denominators
+        run: Rscript scripts/check_event_simulation.R
       - name: Verify synthetic SAS input equivalence
         run: Rscript scripts/check_sas_inputs.R
   windows-launch:

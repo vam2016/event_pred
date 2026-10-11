@@ -1,0 +1,61 @@
+{
+  "work_item": "V2-301",
+  "date": "2026-10-11",
+  "branch": "development/v2.0",
+  "core_version": "2.0.0-dev",
+  "base_sha": "bb3310033073894835e7235763dc68580851d43d",
+  "local_status": "passed",
+  "checks": {
+    "v2_event_simulation_results.json": {
+      "status": "passed",
+      "passed": 45
+    },
+    "v2_event_simulation_browser_results.json": {
+      "status": "passed",
+      "passed": 64
+    },
+    "v2_event_simulation_replay_results.json": {
+      "status": "passed",
+      "passed": 64
+    },
+    "v2_event_simulation_extension_load_results.json": {
+      "status": "passed",
+      "parsed_files": 144,
+      "checks_passed": 9
+    },
+    "v2_core_check_results.json": {
+      "status": "passed",
+      "passed": 51
+    },
+    "v2_core_display_results.json": {
+      "status": "passed",
+      "passed": 13
+    },
+    "v2_log_models_results.json": {
+      "status": "passed",
+      "passed": 43
+    },
+    "v2_bootstrap_results.json": {
+      "status": "passed",
+      "passed": 33
+    },
+    "v2_sas_input_results.json": {
+      "status": "passed",
+      "passed": 37
+    }
+  },
+  "remote_status": "authorized_pending_sync",
+  "remote_source_sha": null,
+  "remote_run": null,
+  "next_work_item": "V2-302",
+  "limits": [
+    "given parameters; independent dropout; no stopping-rule coverage, power or type-I-error calibration",
+    "core allows one or two groups and constant/piecewise Poisson only",
+    "all data synthetic; browser/download replay local only",
+    "no release package or deployment"
+  ],
+  "local_source_commit": "c347b28106ad47094d3b2706ed9f52af89b68eae",
+  "upload_file_count": 21,
+  "previous_upload_rejection": "Automatic approval rejected V2-301 21-file export to vam2016/event_pred development/v2.0 because existing explicit authorization covered V2-201 only.",
+  "remote_authorization": "User explicitly authorized V2-301 21-file sync to vam2016/event_pred development/v2.0 and remote automated checks on 2026-10-11."
+}

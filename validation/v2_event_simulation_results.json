@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "passed": 45,
+  "checks": ["hand-declared second observable event stops at day ten", "all tied DCO events retained; entry exactly at DCO and later entries excluded", "exit-before-event excludes latent event; exact event/exit tie counts as event", "target exactly attained at window endpoint counts as reached", "first event beyond window cannot fabricate attainment or target date", "first-event target analyzes immediately at the earliest observable event", "calendar membership retains exact DCO event despite subtractive roundoff", "KM fixed values match independent hand product of risk-set fractions without unsupported extrapolation", "independent risk-set counts retain event subjects immediately before each follow-up time", "group observed event counts sum to overall count at the same joint DCO", "all requested trials receive actual DCO, including zero-event and no-entry misses", "attainment proportion and binomial MCSE use all trials rather than only reached trials", "missing hit dates remain distinct from real window-end analysis dates", "no-entry trial keeps all group summaries and unsupported fixed-time states", "analysis observation data excludes latent truth clocks", "observation data uses only positive follow-up before each actual DCO", "date-floor export preserves same-day rows, original event status and inclusive-day offset", "same-day export warning does not shift or remove continuous-time observations", "exponential seed exactly reproduces target cuts, truth and KM analyses", "exponential actual DCO agrees with independent observable-event order statistic", "exponential fixed DCO keeps identical latent trajectories and does not invent target summary", "weibull seed exactly reproduces target cuts, truth and KM analyses", "weibull actual DCO agrees with independent observable-event order statistic", "weibull fixed DCO keeps identical latent trajectories and does not invent target summary", "pwe seed exactly reproduces target cuts, truth and KM analyses", "pwe actual DCO agrees with independent observable-event order statistic", "pwe fixed DCO keeps identical latent trajectories and does not invent target summary", "lognormal seed exactly reproduces target cuts, truth and KM analyses", "lognormal actual DCO agrees with independent observable-event order statistic", "lognormal fixed DCO keeps identical latent trajectories and does not invent target summary", "loglogistic seed exactly reproduces target cuts, truth and KM analyses", "loglogistic actual DCO agrees with independent observable-event order statistic", "loglogistic fixed DCO keeps identical latent trajectories and does not invent target summary", "zero event hazard retains all misses and undefined conditional hit quantiles", "zero enrollment intensity keeps every empty trial without producing latent observations", "empty event-driven curves pass the core display filter safely", "unreachable target above planned population is a retained window-end scenario", "attainment proportion agrees with independent binomial probability within predeclared four MCSE", "mean actual DCO agrees with integrated stopped order-statistic expectation within four MCSE", "display unit does not alter canonical event-driven simulation or RNG", "invalid target rejected 0", "invalid target rejected 1.5", "invalid target rejected NA", "invalid target rejected 100001", "event-driven maximum window obeys engine limit"],
+  "measurements": {
+    "analytic_exponential": {
+      "n": 20,
+      "target": 10,
+      "window_day": 20,
+      "rate": 0.05,
+      "trials": 200,
+      "seed": 7301,
+      "expected_probability": 0.925365676055048,
+      "observed_probability": 0.91,
+      "probability_tolerance": 0.0793311733442879,
+      "expected_actual_dco": 13.1710735540272,
+      "observed_actual_dco": 13.187475750023,
+      "dco_mcse": 0.271632554948281,
+      "dco_tolerance": 1.08653121979313
+    }
+  },
+  "R": "R version 4.6.0 (2026-04-24)",
+  "scope": "synthetic fixtures; independent KM/order-statistic/binomial references; not stopping-rule coverage or power"
+}

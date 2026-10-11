@@ -10,7 +10,7 @@ core_workflow_home <- function() {
     div(class="task-grid",
       task_card("task_count","预测未来事件数","当前队列、事件模型、入组/退出和预测窗口","新增及累计事件数、预测区间"),
       task_card("task_target","预测达标日期","当前队列、事件模型、未来计划、D* 和预测窗口","达标日期、窗口内达标概率"),
-      task_card("task_design","生成生存数据","人数、分组、事件分布、入组/退出和固定 DCO","观察数据、真值、ADTTE、KM 与生存摘要")))
+      task_card("task_design","生成生存数据","人数、分组、事件分布、入组/退出和固定或事件驱动 DCO","观察数据、真值、ADTTE、KM 与生存摘要")))
 }
 register_core_workflow_server <- function(input,output,session,result) {
   for(g in c("count","target","design")) local({ task <- g

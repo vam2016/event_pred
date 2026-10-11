@@ -111,29 +111,54 @@ analyze_simulated_survival <- function(observed, cfg, sim_id, cut_id, dco) {
   list(summary=do.call(rbind,summary_rows),fixed=do.call(rbind,fixed_rows),curves=do.call(rbind,curve_rows))
 }
 
+# Stop on observable events, including all events tied at the actual DCO.
+# A subject entering at DCO has no positive follow-up and is not observed.
+simulation_cut_schedule <- function(truth,cfg) {
+  eligible <- is.finite(truth$entry_day)&is.finite(truth$event_day)&
+    truth$entry_day<truth$event_day&truth$event_time_day<=truth$dropout_time_day&truth$event_day<=cfg$max_day
+  usable <- sort(truth$event_day[eligible])
+  hit <- length(usable)>=cfg$target
+  target_day <- if(hit)usable[cfg$target] else NA_real_
+  dco <- if(cfg$cut_mode=="fixed")cfg$cuts else if(hit)target_day else cfg$max_day
+  data.frame(DCO_DAY=dco,target_day=ifelse(hit & target_day<=dco,target_day,NA_real_),
+    cut_reason=if(cfg$cut_mode=="fixed")"fixed_dco" else if(hit)"event_target" else "window_end")
+}
+
 run_survival_simulation <- function(cfg,progress=function(value,detail)NULL) {
   validate_simulation_config(cfg); set.seed(cfg$seed)
   truth_rows <- obs_rows <- summary_rows <- fixed_rows <- curve_rows <- cut_rows <- list()
   for(b in seq_len(cfg$reps)) {
     truth <- simulate_survival_truth(cfg,b); truth_rows[[b]] <- truth
-    usable <- sort(truth$event_day[is.finite(truth$event_day)&truth$event_time_day<=truth$dropout_time_day&truth$event_day<=cfg$max_day])
-    hit <- length(usable)>=cfg$target
-    target_day <- if(hit)usable[cfg$target] else NA_real_
-    cuts <- if(cfg$cut_mode=="fixed") cfg$cuts else if(hit)target_day else cfg$max_day
-    for(k in seq_along(cuts)) {
-      dco <- cuts[k]; observed <- survival_at_cut(truth,dco,k)
+    schedule <- simulation_cut_schedule(truth,cfg)
+    for(k in seq_len(nrow(schedule))) {
+      dco <- schedule$DCO_DAY[k]; observed <- survival_at_cut(truth,dco,k)
       a <- analyze_simulated_survival(observed,cfg,b,k,dco)
       obs_rows[[length(obs_rows)+1L]] <- observed; summary_rows[[length(summary_rows)+1L]] <- a$summary
       fixed_rows[[length(fixed_rows)+1L]] <- a$fixed; curve_rows[[length(curve_rows)+1L]] <- a$curves
       cut_rows[[length(cut_rows)+1L]] <- data.frame(SIMID=b,CUTID=k,DCO_DAY=dco,n=nrow(observed),events=sum(observed$event),
-        target_reached=sum(observed$event)>=cfg$target,target_day=if(hit && target_day<=dco)target_day else NA_real_,
-        analysis_status=if(cfg$cut_mode=="target"&&!hit)"窗口内未达标，按窗口末分析" else "已按设定截点分析")
+        target_reached=sum(observed$event)>=cfg$target,target_day=schedule$target_day[k],
+        analysis_status=if(schedule$cut_reason[k]=="window_end")"窗口内未达标，按窗口末分析" else "已按设定截点分析",
+        cut_reason=schedule$cut_reason[k])
     }
     progress(b/cfg$reps,paste("试验",b,"/",cfg$reps))
   }
   bind <- function(x) {y<-do.call(rbind,x);if(is.null(y))data.frame() else {rownames(y)<-NULL;y}}
   list(config=cfg,truth=bind(truth_rows),observed=bind(obs_rows),summary=bind(summary_rows),fixed=bind(fixed_rows),
     curves=bind(curve_rows),cuts=bind(cut_rows),created_at=format(Sys.time(),tz="UTC",usetz=TRUE),version="0.30.0")
+}
+
+# The target proportion and actual-DCO quantiles retain every requested trial.
+# Target-time quantiles below are explicitly conditional on attaining the target.
+simulation_target_overview <- function(result) {
+  cfg <- result$config
+  if(cfg$cut_mode!="target")return(NULL)
+  d <- result$cuts; hit <- d$target_reached; b <- nrow(d); p <- mean(hit)
+  actual <- quantile_with_inf(d$DCO_DAY)
+  reached <- if(any(hit))quantile_with_inf(d$target_day[hit]) else rep(NA_real_,3)
+  data.frame(requested=cfg$reps,trials=b,reached=sum(hit),unreached=sum(!hit),target=cfg$target,window_day=cfg$max_day,
+    reached_probability=p,reached_mcse=sqrt(p*(1-p)/b),
+    actual_dco_lower_day=actual[1],actual_dco_median_day=actual[2],actual_dco_upper_day=actual[3],
+    conditional_target_lower_day=reached[1],conditional_target_median_day=reached[2],conditional_target_upper_day=reached[3])
 }
 
 # Date-level export preserves zero-day records and never changes event status.

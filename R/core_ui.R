@@ -1,7 +1,9 @@
 parameter_help["group_column"] <- "选择本次分析组别变量，如 TRTP 或 TRTA。所选终点/分析标志筛选后每人一行、恰好两组且组别不缺失。"
 parameter_help["group_count"] <- "核心版的已知组别预测使用两组；分别设置各组当前队列、事件分布和未来计划。"
 parameter_help["sim_groups"] <- "1 为单组，2 为已知两组。组名及分配权重在组别与分布页填写；两组各用自己的分布参数。"
-parameter_help["sim_cut_mode"] <- "核心版采用固定 DCO；多个截点共享同一患者轨迹。"
+parameter_help["sim_cut_mode"] <- "固定 DCO 可设多个截点；事件驱动按总体首次累计达到D*的可观察事件时间分析。窗口末事件计入，并列事件全部保留，可能超过D*；未达标仍按最大窗口末分析，不排除该试验。"
+parameter_help["sim_target"] <- "总体累计目标事件数D*，整数1–100000。超过计划人数允许作为不可达情景；退出后的潜在事件不计入。达标比例分母保留全部重复试验。"
+parameter_help["sim_max"] <- "事件驱动的最大研究窗口，换算后在(0,3650]日。窗口内未达标也保留窗口末观察记录；此时实际DCO不是达标时间。"
 parameter_help["median"] <- "事件时间分布中位数 m>0，单位随日/周/月选择。例如 m=12 月。指数风险率为 log(2)/m；Weibull 还需给定形状 k。"
 parameter_help["methods"] <- "右删失数据候选模型：指数、Weibull、PWE、Log-normal、Log-logistic。至少选择一个；PWE 需指定切点。对数时间模型通过 AFT 拟合；各模型单独预测，不计算模型混合。"
 for (i in 1:2) {
@@ -94,14 +96,16 @@ core_simulation_ui <- function() {
         selectInput("sim_enroll_mode","总体入组方式",c("恒定 Poisson"="constant","分段 Poisson"="piecewise")),
         conditionalPanel("input.sim_enroll_mode === 'constant'",numericInput("sim_enroll_rate","总体入组率（人/月）",15,min=.000001)),
         conditionalPanel("input.sim_enroll_mode === 'piecewise'",fields(textInput("sim_enroll_cuts","入组切点（研究月数）","3,6"),textInput("sim_enroll_rates","各段入组率（人/月）","9,18,12"))),
-        div(style="display:none",selectInput("sim_cut_mode","分析截点规则",c("固定 DCO"="fixed"),"fixed")),
-        textInput("sim_cuts","分析 DCO（研究月数，可多个）","12,24,36"),textInput("sim_fixed","描述生存率的随访时点（月）","6,12,18"),
+        selectInput("sim_cut_mode","分析截点规则",c("固定 DCO"="fixed","首次达到目标事件数"="target"),"fixed"),
+        conditionalPanel("input.sim_cut_mode === 'fixed'",textInput("sim_cuts","分析 DCO（研究月数，可多个）","12,24,36")),
+        conditionalPanel("input.sim_cut_mode === 'target'",fields(numericInput("sim_target","总体目标事件数 D*",180,min=1,max=100000,step=1),numericInput("sim_max","最大研究窗口（月）",48,min=1/30.4375,max=3650/30.4375))),
+        textInput("sim_fixed","描述生存率的随访时点（月）","6,12,18"),
         fields(numericInput("sim_reps","重复生成次数",1,min=1,max=200,step=1),numericInput("sim_seed","随机种子",20261004,min=0,max=.Machine$integer.max,step=1))),
       nav_panel("组别与分布",uiOutput("sim_group_inputs")),
       nav_panel("模拟结果",uiOutput("sim_status"),
-        fields(selectInput("sim_trial","查看试验",character()),selectInput("sim_view_cut","查看截点",character())),
+        fields(selectInput("sim_trial","查看试验",character()),selectInput("sim_view_cut","查看截点",character())),uiOutput("sim_cut_status"),
         core_simulation_display_ui()),
-      nav_panel("导出",div(class="export-bar",downloadButton("sim_truth_download","模拟真值 CSV"),downloadButton("sim_summary_download","生存摘要 CSV"),downloadButton("sim_fixed_download","固定时点 CSV"),downloadButton("sim_cuts_download","截点 CSV"),downloadButton("sim_config_download","配置 JSON"),downloadButton("sim_script_download","复现 R 脚本"),downloadButton("sim_report_download","报告 Markdown")))))
+      nav_panel("导出",div(class="export-bar",downloadButton("sim_truth_download","模拟真值 CSV"),downloadButton("sim_summary_download","生存摘要 CSV"),downloadButton("sim_fixed_download","固定时点 CSV"),downloadButton("sim_cuts_download","截点 CSV"),conditionalPanel("output.sim_is_target",downloadButton("sim_target_summary_download","达标与实际DCO汇总 CSV")),downloadButton("sim_config_download","配置 JSON"),downloadButton("sim_script_download","复现 R 脚本"),downloadButton("sim_report_download","报告 Markdown")))))
 }
 core_ui <- function() page_fillable(title=platform_title,theme=theme,fillable=FALSE,
   tags$head(tags$link(rel="icon",href="data:,"),tags$link(rel="stylesheet",href="style.css"),tags$link(rel="stylesheet",href="handbook.css"),core_math_head()),
