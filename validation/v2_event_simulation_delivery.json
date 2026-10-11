@@ -44,9 +44,37 @@
       "passed": 37
     }
   },
-  "remote_status": "authorized_pending_sync",
-  "remote_source_sha": null,
-  "remote_run": null,
+  "remote_status": "passed",
+  "remote_source_sha": "6f7c024c8afba46f75f929779227ec6d5bbb0b00",
+  "remote_run": {
+    "id": 38113429695,
+    "url": "https://github.com/vam2016/event_pred/actions/runs/38113429695",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 114393503683,
+        "name": "core",
+        "conclusion": "success",
+        "checks": {
+          "parsed_files": 144,
+          "loading": 9,
+          "core_numeric": 51,
+          "core_display": 13,
+          "log_models": 43,
+          "bootstrap": 33,
+          "event_simulation": 45,
+          "sas_inputs": 37
+        }
+      },
+      {
+        "id": 114393503534,
+        "name": "windows-launch",
+        "conclusion": "success",
+        "scope": "Windows launcher prepare-only"
+      }
+    ]
+  },
   "next_work_item": "V2-302",
   "limits": [
     "given parameters; independent dropout; no stopping-rule coverage, power or type-I-error calibration",
@@ -57,5 +85,6 @@
   "local_source_commit": "c347b28106ad47094d3b2706ed9f52af89b68eae",
   "upload_file_count": 21,
   "previous_upload_rejection": "Automatic approval rejected V2-301 21-file export to vam2016/event_pred development/v2.0 because existing explicit authorization covered V2-201 only.",
-  "remote_authorization": "User explicitly authorized V2-301 21-file sync to vam2016/event_pred development/v2.0 and remote automated checks on 2026-10-11."
+  "remote_authorization": "User explicitly authorized V2-301 21-file sync to vam2016/event_pred development/v2.0 and remote automated checks on 2026-10-11.",
+  "local_tree_matches_remote": true
 }
