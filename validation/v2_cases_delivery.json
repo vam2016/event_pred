@@ -5,8 +5,8 @@
   "core_version": "2.0.0-dev",
   "base_sha": "b542593ea8b53d5bd8196905061d128970c5f5c6",
   "local_status": "passed",
-  "remote_status": "not_run",
-  "remote_delivery_status": "authorized_pending_sync",
+  "remote_status": "passed",
+  "remote_delivery_status": "synced",
   "checks": {
     "v2_cases_extension_load_results.json": {
       "status": "passed",
@@ -73,5 +73,48 @@
     "validation/v2_core_cases_browser_results.json",
     "validation/v2_core_cases_replay_results.json",
     "validation/v2_core_cases_results.json"
-  ]
+  ],
+  "remote_source_sha": "4e3bca7c21ac1a9b172b75acaa8c51e847303500",
+  "remote_run": {
+    "id": 38118377506,
+    "url": "https://github.com/vam2016/event_pred/actions/runs/38118377506",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 114407820084,
+        "name": "windows-launch",
+        "conclusion": "success",
+        "scope": "Windows launcher prepare-only"
+      },
+      {
+        "id": 114407820154,
+        "name": "core",
+        "conclusion": "success",
+        "checks": {
+          "parsed_files": 150,
+          "loading": 9,
+          "core_numeric": 53,
+          "core_display": 13,
+          "log_models": 43,
+          "bootstrap": 33,
+          "event_simulation": 45,
+          "validation_scenarios": 54,
+          "core_cases": 30,
+          "sas_inputs": 37
+        }
+      }
+    ]
+  },
+  "local_code_matches_remote": true,
+  "local_tree_matches_remote": true,
+  "remote_delivery_files": [
+    "README.md",
+    "docs/V2_0_DEVELOPMENT_PLAN.md",
+    "docs/V2_0_STATUS_INVENTORY.md",
+    "docs/V2_0_WORK_PLAN.md",
+    "docs/V2_0_PRESENTATION_CASES_VALIDATION.md",
+    "validation/v2_cases_delivery.json"
+  ],
+  "remote_delivery_authorization": "User explicitly authorized same-batch V2-401 automated-check result updates alongside the 24-file sync on 2026-10-11."
 }
